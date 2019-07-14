@@ -53,60 +53,6 @@ namespace MazeGenerator
         }
 
         /// <summary>
-        /// Метод поиска возможных для посещения точек для алгоритма абсолютного рандома
-        /// </summary>
-        /// <param name="mazeArray">Массив лабиринта</param>
-        /// <param name="x">Кордината Х текущей точки</param>
-        /// <param name="y">Кордината Y текущей точки</param>
-        /// <returns></returns>
-        public List<Point> AllPossiblePoints(int[,] mazeArray, int x, int y)
-        {
-            directions.Clear();
-            possPoints.Clear();
-            try
-            {
-                if (mazeArray[x + 2, y] != 0 && mazeArray[x + 1, y] != 0)
-                {
-                    possPoints.Add(new Point(x + 2, y));
-                    directions.Add(0);
-                }
-            }
-            catch
-            { }
-            try
-            {
-                if (mazeArray[x, y + 2] != 0 && mazeArray[x, y + 1] != 0)
-                {
-                    possPoints.Add(new Point(x, y + 2));
-                    directions.Add(1);
-                }
-            }
-            catch
-            { }
-            try
-            {
-                if (mazeArray[x - 2, y] != 0 && mazeArray[x - 1, y] != 0)
-                {
-                    possPoints.Add(new Point(x - 2, y));
-                    directions.Add(2);
-                }
-            }
-            catch
-            { }
-            try
-            {
-                if (mazeArray[x, y - 2] != 0 && mazeArray[x, y - 1] != 0)
-                {
-                    possPoints.Add(new Point(x, y - 2));
-                    directions.Add(3);
-                }
-            }
-            catch
-            { }
-            return possPoints;
-        }
-
-        /// <summary>
         /// Поиск возможных точек для посещения + поиск возможных направлений движения
         /// </summary>
         /// <returns>Возвращает список точек, возможных для посещения</returns>

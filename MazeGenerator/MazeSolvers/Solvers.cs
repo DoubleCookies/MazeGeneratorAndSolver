@@ -14,9 +14,9 @@ namespace MazeGenerator.MazeSolvers
             get { return mazeArray; }
         }
 
-        public bool Result { get { return result; } set { result = value; } }
-        public int FeatureCode { get { return featureCode; } set { featureCode = value; } }
-        public int Sleep { get { return sleep; } set { sleep = value; } }
+        public bool Result { get => result; set => result = value; }
+        public int FeatureCode { get => featureCode; set => featureCode = value; }
+        public int Sleep { get => sleep; set => sleep = value; }
 
         List<Point> points; // Список посещённых точек в текущем "решении"
         List<Point> allPoints; // Список всех посещённых точек во время решения
@@ -166,36 +166,6 @@ namespace MazeGenerator.MazeSolvers
                 result = true;
             else
                 result = false;
-            return steps;
-        }
-
-        /// <summary>
-        /// Метод АБСОЛЮТНО случайных поворотов - поворачивает куда хочет, ничего не запоминает
-        /// </summary>
-        /// <returns>Возвращает кол-во шагов, затраченное на решение лабиринта</returns>
-        public int AbsoluteRandomSolver()
-        {
-            Random rand = new Random();
-            int selected = -1; // Выбранный элемент из массива возможных ходов
-            SolversInit();
-            bool finFound = false;
-            List<Point> pointsMove;
-            int count;
-            while (!finFound)
-            {
-                Thread.Sleep(sleep);
-                view.DrawChange(current, Color.White);
-                pointsMove = founders.AllPossiblePoints(mazeArray, current.X, current.Y);
-                count = pointsMove.Count;
-                selected = rand.Next(0, count);
-                current = pointsMove[selected];
-                view.DrawChange(pointsMove[selected], Color.Red);
-                mazeArray[pointsMove[selected].X, pointsMove[selected].Y] = 2;
-                steps++;
-                if (current.X == finishpoint.X && current.Y == finishpoint.Y) // Если мы в финишной точке, то завершаем цикл
-                    finFound = true;
-            }
-            result = true;
             return steps;
         }
 

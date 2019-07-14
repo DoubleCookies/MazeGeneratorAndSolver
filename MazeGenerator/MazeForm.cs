@@ -84,7 +84,7 @@ namespace MazeGenerator
                 view.MazeDraw(maze.GetMaze.GetLength(0), maze.GetMaze.GetLength(1), pictureBoxLabirint.Width, pictureBoxLabirint.Height);
                 if (black)
                 {
-                    view.DrawBlackPoints(maze.Generator.Black);
+                    view.DrawBlackPoints(maze.Generator.BlackPoints);
                     maze.Generator.BlackClear();
                 }
                 if (isHuntMethod)
@@ -112,15 +112,10 @@ namespace MazeGenerator
                 SolverSelect s = new SolverSelect(maze.RightRotateSolver);
                 SolverRunner(s, "правых поворотов");
             }
-            else if (radioButtonRandR.Checked)
+            else
             {
                 SolverSelect s = new SolverSelect(maze.RandomSolver);
                 SolverRunner(s, "случайных поворотов");
-            }
-            else
-            {
-                SolverSelect s = new SolverSelect(maze.AbsoluteRandomSolver);
-                SolverRunner(s, "абсолютно случайных поворотов");
             }
         }
 
@@ -175,11 +170,6 @@ namespace MazeGenerator
         private void ButtonGenPicture_Click(object sender, EventArgs e)
         {
             bool success;
-            if (radioButtonAbsoluteRand.Checked && checkBoxWithSolution.Checked)
-            {
-                MessageBox.Show("Невозможно использовать данный метод решения для отрисовки!");
-                return;
-            }
             int size = 0;
             try
             {
@@ -196,7 +186,7 @@ namespace MazeGenerator
                 view.MazeDrawBitmap(maze.GetMaze, size);
                 if (black)
                 {
-                    view.DrawBlackPoints(maze.Generator.Black);
+                    view.DrawBlackPoints(maze.Generator.BlackPoints);
                     maze.Generator.BlackClear();
                 }
                 maze.MazeGenerateRec();
@@ -215,11 +205,6 @@ namespace MazeGenerator
 
         private void ButtonGenerateBatch_Click(object sender, EventArgs e)
         {
-            if (radioButtonAbsoluteRand.Checked && checkBoxWithSolution.Checked)
-            {
-                MessageBox.Show("Невозможно использовать данный метод решения для отрисовки!");
-                return;
-            }
             bool success;
             int size = 0;
             int count = 0;
@@ -248,7 +233,7 @@ namespace MazeGenerator
                         view.MazeDrawBitmap(maze.GetMaze, size);
                         if (black)
                         {
-                            view.DrawBlackPoints(maze.Generator.Black);
+                            view.DrawBlackPoints(maze.Generator.BlackPoints);
                             maze.Generator.BlackClear();
                         }
                         //pictureBoxLabirint.Image = view.bit;
@@ -438,12 +423,6 @@ namespace MazeGenerator
                     MessageBox.Show("Лабиринт решён!");
                 }
             }
-        }
-
-        private void radioButtonAbsoluteRand_CheckedChanged(object sender, EventArgs e)
-        {
-            if(radioButtonAbsoluteRand.Checked)
-                MessageBox.Show("Внимание! Данный способ решения крайне времязатратный!");
         }
 
         private void checkBoxBlack_CheckedChanged(object sender, EventArgs e)

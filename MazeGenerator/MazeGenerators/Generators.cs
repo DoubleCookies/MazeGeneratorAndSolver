@@ -20,10 +20,7 @@ namespace MazeGenerator.MazeGenerators
         int lastX; // Точка последней посещённой вертикали для повышения эффективности алгоритма Hunt-And-Kill
 
         List<Point> blackPoints; // Список сгенерированных "препятствий" в лабиринте (используется не всегда)
-        public List<Point> Black
-        {
-            get { return blackPoints; }
-        }
+        public List<Point> BlackPoints { get => blackPoints; set => blackPoints = value; }
 
         int featureCode; // Код особенности отрисовки
         int sleep; // Время остановки потока при отрисовке
@@ -31,6 +28,7 @@ namespace MazeGenerator.MazeGenerators
         {
             set { sleep = value; }
         }
+
         bool ignored; // Были ли проигнорированные точки в алгоритме Hunt-And-Kill (если к ним не было прямого доступа)
         int ignoredCount; // Счётчик циклов игнорирования
 
@@ -52,7 +50,7 @@ namespace MazeGenerator.MazeGenerators
             this.finishpoint = finishpoint;
             this.founders = founders;
             points = new List<Point>();
-            blackPoints = new List<Point>();
+            BlackPoints = new List<Point>();
             this.sleep = sleep;
             this.view = view;
             featureCode = featurecode;
@@ -79,7 +77,7 @@ namespace MazeGenerator.MazeGenerators
                             if (random.NextDouble() < prob || (i == startpoint.X && j == startpoint.Y) || (i == finishpoint.X && j == finishpoint.Y))
                                 mazeArray[i, j] = 1;
                             else
-                                blackPoints.Add(new Point(i, j));
+                                BlackPoints.Add(new Point(i, j));
                         }
                     }
                 }
@@ -397,7 +395,7 @@ namespace MazeGenerator.MazeGenerators
         /// </summary>
         public void BlackClear()
         {
-            blackPoints.Clear();
+            BlackPoints.Clear();
         }
     }
 }

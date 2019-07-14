@@ -155,18 +155,6 @@ namespace MazeGenerator
         }
 
         /// <summary>
-        /// Метод АБСОЛЮТНО случайных поворотов
-        /// </summary>
-        /// <returns>Возвращает количество шагов для прохождения лабиринта</returns>
-        public int AbsoluteRandomSolver()
-        {
-            ParamsUpdate();
-            int stepsCount = solver.AbsoluteRandomSolver();
-            Result = solver.Result;
-            return stepsCount;
-        }
-
-        /// <summary>
         /// Обновление параметров для изменения отрисовки решения лабиринта
         /// </summary>
         private void ParamsUpdate()

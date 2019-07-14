@@ -38,7 +38,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.buttongenMazeHunt = new System.Windows.Forms.Button();
-            this.radioButtonAbsoluteRand = new System.Windows.Forms.RadioButton();
             this.textBoxWhiteSpaceProb = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.checkBoxWhiteSpaces = new System.Windows.Forms.CheckBox();
@@ -151,7 +150,6 @@
             // 
             this.groupBox1.Controls.Add(this.richTextBoxInfo);
             this.groupBox1.Controls.Add(this.buttongenMazeHunt);
-            this.groupBox1.Controls.Add(this.radioButtonAbsoluteRand);
             this.groupBox1.Controls.Add(this.textBoxWhiteSpaceProb);
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.checkBoxWhiteSpaces);
@@ -220,18 +218,6 @@
             this.buttongenMazeHunt.Text = "Создать методом Hunt-And-Kill";
             this.buttongenMazeHunt.UseVisualStyleBackColor = true;
             this.buttongenMazeHunt.Click += new System.EventHandler(this.buttongenMazeHunt_Click);
-            // 
-            // radioButtonAbsoluteRand
-            // 
-            this.radioButtonAbsoluteRand.AutoSize = true;
-            this.radioButtonAbsoluteRand.Location = new System.Drawing.Point(5, 348);
-            this.radioButtonAbsoluteRand.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButtonAbsoluteRand.Name = "radioButtonAbsoluteRand";
-            this.radioButtonAbsoluteRand.Size = new System.Drawing.Size(165, 21);
-            this.radioButtonAbsoluteRand.TabIndex = 50;
-            this.radioButtonAbsoluteRand.Text = "Абсолютный рандом";
-            this.radioButtonAbsoluteRand.UseVisualStyleBackColor = true;
-            this.radioButtonAbsoluteRand.CheckedChanged += new System.EventHandler(this.radioButtonAbsoluteRand_CheckedChanged);
             // 
             // textBoxWhiteSpaceProb
             // 
@@ -786,7 +772,6 @@
         private System.Windows.Forms.TextBox textBoxWhiteSpaceProb;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.CheckBox checkBoxWhiteSpaces;
-        private System.Windows.Forms.RadioButton radioButtonAbsoluteRand;
         private System.Windows.Forms.Button buttongenMazeHunt;
         private System.Windows.Forms.RadioButton radioButtonFeatureYellow;
         private System.Windows.Forms.RadioButton radioButtonFeatureTurquoise;
