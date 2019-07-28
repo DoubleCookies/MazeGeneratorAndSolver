@@ -8,12 +8,14 @@ namespace MazeGenerator
     {
         public Graphics gr; // Объект для отрисовки
         public Bitmap bit; // Битмап
+
         // Набор кистей
         Brush brushBlack = new SolidBrush(Color.FromArgb(255, 60, 60, 60));
         Brush brushWhite = new SolidBrush(Color.White);
         Brush brushOrange = new SolidBrush(Color.Orange);
         Brush brushLimeGreen = new SolidBrush(Color.LimeGreen);
         Brush brushViolet = new SolidBrush(Color.Violet);
+
         Point start; // Стартовая тчока
         Point finish; // Конечная точка
         int mult; // Множитель размера одного квадрата отрисовки
@@ -70,85 +72,67 @@ namespace MazeGenerator
         /// <param name="code">Код фичи</param>
         public void DrawChange(Point change, int code)
         {
-
-            // Отрисовка идёт, если точка не является начальной или конечной
-            if (isNotStartPoint(change) && isNotFinishPoint(change))
+            Color newColor;
+            switch (code)
             {
-                Color newColor;
-                SolidBrush brush;
-                switch (code)
-                {
-                    case 1:
-                        {// Почти полный рандом
-                            newColor = Color.FromArgb(255, rnd.Next(30, 256), rnd.Next(30, 256), rnd.Next(30, 256));
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                    case 2:
-                        {// Красный
-                            newColor = Color.FromArgb(255, rnd.Next(190, 256), rnd.Next(60, 120), rnd.Next(80, 150));
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                    case 3:
-                        {// Зелёный
-                            newColor = Color.FromArgb(255, rnd.Next(80, 120), rnd.Next(200, 250), rnd.Next(80, 150));
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                    case 4:
-                        {// Синий
-                            newColor = Color.FromArgb(255, rnd.Next(50, 130), rnd.Next(60, 130), rnd.Next(190, 256));
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                    case 50:
-                        {// 50 оттенков серого (wat)
-                            int a = rnd.Next(150, 200);
-                            newColor = Color.FromArgb(255, a, a, a);
-                            brush = new SolidBrush(newColor);
-                            break; }
-                    case 23:
-                        {// Желтый
-                            newColor = Color.FromArgb(255, rnd.Next(180, 230), rnd.Next(180, 240), rnd.Next(40, 120));
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                    case 34:
-                        {// Бирюзовый
-                            newColor = Color.FromArgb(255, rnd.Next(40, 120), rnd.Next(175, 250), rnd.Next(180, 230));
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                    case 42:
-                        {// Фиолетовый
-                            newColor = Color.FromArgb(255, rnd.Next(170, 220), rnd.Next(40, 120), rnd.Next(175, 250));
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                    case 48:
-                        {// тёмная цветовая гамма
-                            newColor = Color.FromArgb(255, rnd.Next(80, 140), rnd.Next(80, 140), rnd.Next(80, 140));
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                    case 49:
-                        {// Светлая цветовая гамма
-                            newColor = Color.FromArgb(255, rnd.Next(190, 256), rnd.Next(190, 256), rnd.Next(190, 256));
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                    default:
-                        {
-                            newColor = Color.FromArgb(255, 255, 170, 102);
-                            brush = new SolidBrush(newColor);
-                            break;
-                        }
-                }
-                gr.FillRectangle(brush, change.X * mult, change.Y * mult, mult, mult);
-                brush.Dispose();
-               
+                case 1:
+                    {// Почти полный рандом
+                        newColor = Color.FromArgb(255, rnd.Next(30, 256), rnd.Next(30, 256), rnd.Next(30, 256));
+                        break;
+                    }
+                case 2:
+                    {// Красный
+                        newColor = Color.FromArgb(255, rnd.Next(190, 256), rnd.Next(60, 120), rnd.Next(80, 150));
+                        break;
+                    }
+                case 3:
+                    {// Зелёный
+                        newColor = Color.FromArgb(255, rnd.Next(80, 120), rnd.Next(200, 250), rnd.Next(80, 150));
+                        break;
+                    }
+                case 4:
+                    {// Синий
+                        newColor = Color.FromArgb(255, rnd.Next(50, 130), rnd.Next(60, 130), rnd.Next(190, 256));
+                        break;
+                    }
+                case 50:
+                    {// 50 оттенков серого (orly)
+                        int a = rnd.Next(150, 200);
+                        newColor = Color.FromArgb(255, a, a, a);
+                        break;
+                    }
+                case 23:
+                    {// Желтый
+                        newColor = Color.FromArgb(255, rnd.Next(180, 230), rnd.Next(180, 240), rnd.Next(40, 120));
+                        break;
+                    }
+                case 34:
+                    {// Бирюзовый
+                        newColor = Color.FromArgb(255, rnd.Next(40, 120), rnd.Next(175, 250), rnd.Next(180, 230));
+                        break;
+                    }
+                case 42:
+                    {// Фиолетовый
+                        newColor = Color.FromArgb(255, rnd.Next(170, 220), rnd.Next(40, 120), rnd.Next(175, 250));
+                        break;
+                    }
+                case 48:
+                    {// тёмная цветовая гамма
+                        newColor = Color.FromArgb(255, rnd.Next(80, 140), rnd.Next(80, 140), rnd.Next(80, 140));
+                        break;
+                    }
+                case 49:
+                    {// Светлая цветовая гамма
+                        newColor = Color.FromArgb(255, rnd.Next(190, 256), rnd.Next(190, 256), rnd.Next(190, 256));
+                        break;
+                    }
+                default:
+                    {
+                        newColor = Color.FromArgb(255, 255, 170, 102);
+                        break;
+                    }
             }
+            DrawChange(change, newColor);
         }
 
         /// <summary>
@@ -200,6 +184,9 @@ namespace MazeGenerator
             FillMazePicture();
         }
 
+        /// <summary>
+        /// Метод для стартовой отрисовки лабиринта
+        /// </summary>
         private void FillMazePicture()
         {
             // Отрисовка всего поля, старта и финиша
@@ -233,22 +220,32 @@ namespace MazeGenerator
         }
 
         /// <summary>
+        /// Проверка, является ли точка стартом лабиринта
+        /// </summary>
+        /// <param name="point">Точка</param>
+        /// <returns>true, если точка не является стартом лабиринта</returns>
+        private bool isNotStartPoint(Point point)
+        {
+            return point.X != start.X || point.Y != start.Y;
+        }
+
+        /// <summary>
+        /// Проверка, является ли точка финишем лабиринта
+        /// </summary>
+        /// <param name="point">Точка</param>
+        /// <returns>true, если точка не является финишем лабиринта</returns>
+        private bool isNotFinishPoint(Point point)
+        {
+            return point.X != finish.X || point.Y != finish.Y;
+        }
+
+        /// <summary>
         /// Освобождение ресурсов
         /// </summary>
         public void Dispose()
         {
             gr.Dispose();
             bit.Dispose();
-        }
-
-        private bool isNotStartPoint(Point change)
-        {
-            return change.X != start.X || change.Y != start.Y;
-        }
-
-        private bool isNotFinishPoint(Point change)
-        {
-            return change.X != finish.X || change.Y != finish.Y;
         }
     }
 }
