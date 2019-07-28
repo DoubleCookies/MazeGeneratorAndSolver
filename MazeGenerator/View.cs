@@ -9,16 +9,16 @@ namespace MazeGenerator
         public Graphics gr; // Объект для отрисовки
         public Bitmap bit; // Битмап
         // Набор кистей
-        Brush brB = new SolidBrush(Color.FromArgb(255, 60, 60, 60));
-        Brush brW = new SolidBrush(Color.White);
-        Brush brO = new SolidBrush(Color.Orange);
-        Brush brL = new SolidBrush(Color.LimeGreen);
-        Brush brV = new SolidBrush(Color.Violet);
+        Brush brushBlack = new SolidBrush(Color.FromArgb(255, 60, 60, 60));
+        Brush brushWhite = new SolidBrush(Color.White);
+        Brush brushOrange = new SolidBrush(Color.Orange);
+        Brush brushLimeGreen = new SolidBrush(Color.LimeGreen);
+        Brush brushViolet = new SolidBrush(Color.Violet);
         Point start; // Стартовая тчока
         Point finish; // Конечная точка
         int mult; // Множитель размера одного квадрата отрисовки
-        int mazew; // Ширина лабиринта
-        int mazeh; // Высота лабиринта
+        int mazeWidth; // Ширина лабиринта
+        int mazeHeight; // Высота лабиринта
         Random rnd = new Random();
 
         /// <summary>
@@ -39,36 +39,24 @@ namespace MazeGenerator
         public void MazeDraw(int mazewidth, int mazeheight, int width, int height)
         {
             gr.Clear(Color.FromArgb(255,240,240,240));
-            mazew = mazewidth;
-            mazeh = mazeheight;
+            mazeWidth = mazewidth;
+            mazeHeight = mazeheight;
 
-            int b1 = width / mazew;
-            int b2 = height / mazeh;
+            int b1 = width / mazeWidth;
+            int b2 = height / mazeHeight;
             mult = Math.Min(b1,b2);
-            gr.FillRectangle(brW, 0, 0, mazew * mult, mazeh * mult);
-            gr.FillRectangle(brV, mult*start.X, mult*start.Y, mult, mult);
-            gr.FillRectangle(brL, finish.X * mult, finish.Y * mult, mult, mult);
-            for (int i = 0; i < mazeh; i++)
-            {
-                if (i % 2 == 0)
-                    gr.FillRectangle(brB,0, i*mult, mazew * mult, mult);
-            }
-            for (int j = 0; j < mazew; j++)
-            {
-                if (j % 2 == 0)
-                    gr.FillRectangle(brB, j*mult,0, mult, mazeh * mult);
-            }
+            FillMazePicture();
         }
 
         /// <summary>
-        /// Отрисовка изменений при построении алгоритма
+        /// Отрисовка изменений при построении лабиринта
         /// </summary>
         /// <param name="change">Точка изменения</param>
         /// <param name="color">Цвет изменения</param>
         public void DrawChange(Point change, Color color)
         {
             // Отрисовка идёт, если точка не является начальной или конечной
-            if ((change.X != start.X || change.Y != start.Y) && (change.X != finish.X || change.Y != finish.Y))
+            if (isNotStartPoint(change) && isNotFinishPoint(change))
             {
                 SolidBrush brush = new SolidBrush(color);
                 gr.FillRectangle(brush, change.X * mult, change.Y * mult, mult, mult);
@@ -84,7 +72,7 @@ namespace MazeGenerator
         {
 
             // Отрисовка идёт, если точка не является начальной или конечной
-            if ((change.X != start.X || change.Y != start.Y) && (change.X != finish.X || change.Y != finish.Y))
+            if (isNotStartPoint(change) && isNotFinishPoint(change))
             {
                 Color newColor;
                 SolidBrush brush;
@@ -174,7 +162,7 @@ namespace MazeGenerator
         }
 
         /// <summary>
-        /// Отрисовка белых квадратов при генерации прооходов
+        /// Отрисовка белых квадратов при генерации новых проходов
         /// </summary>
         /// <param name="white">Список точек</param>
         public void DrawWhitePoints(List<Point> white)
@@ -201,31 +189,39 @@ namespace MazeGenerator
         /// <param name="size">Размер для отрисовки квадрата</param>
         public void MazeDrawBitmap(int[,] Maze, int size)
         {
-            mazew = Maze.GetLength(0);
-            mazeh = Maze.GetLength(1);
+            mazeWidth = Maze.GetLength(0);
+            mazeHeight = Maze.GetLength(1);
             mult = size;
-            int w = mazew * mult;
-            int h = mazeh * mult;
+            int w = mazeWidth * mult;
+            int h = mazeHeight * mult;
             bit = new Bitmap(w, h);
             gr = Graphics.FromImage(bit);
             gr.Clear(Color.FromArgb(255, 240, 240, 240));
-            gr.FillRectangle(brW, 0, 0, mazew * mult, mazeh * mult);
-            gr.FillRectangle(brV, mult * start.X, mult * start.Y, mult, mult);
-            gr.FillRectangle(brL, finish.X * mult, finish.Y * mult, mult, mult);
-            for (int i = 0; i < mazeh; i++) //Отрисовка стен
+            FillMazePicture();
+        }
+
+        private void FillMazePicture()
+        {
+            // Отрисовка всего поля, старта и финиша
+            gr.FillRectangle(brushWhite, 0, 0, mazeWidth * mult, mazeHeight * mult);
+            gr.FillRectangle(brushViolet, mult * start.X, mult * start.Y, mult, mult);
+            gr.FillRectangle(brushLimeGreen, finish.X * mult, finish.Y * mult, mult, mult);
+
+            //Отрисовка чёрных полос для создания поля
+            for (int i = 0; i < mazeHeight; i++)
             {
                 if (i % 2 == 0)
-                    gr.FillRectangle(brB, 0, i * mult, mazew * mult, mult);
+                    gr.FillRectangle(brushBlack, 0, i * mult, mazeWidth * mult, mult);
             }
-            for (int j = 0; j < mazew; j++)
+            for (int j = 0; j < mazeWidth; j++)
             {
                 if (j % 2 == 0)
-                    gr.FillRectangle(brB, j * mult, 0, mult, mazeh * mult);
+                    gr.FillRectangle(brushBlack, j * mult, 0, mult, mazeHeight * mult);
             }
         }
 
         /// <summary>
-        /// Отрисовка круга
+        /// Отрисовка круга при самостоятельном прохождении лабиринта
         /// </summary>
         /// <param name="change">Точка для отрисовки</param>
         /// <param name="color">Цвет точки</param>
@@ -243,6 +239,16 @@ namespace MazeGenerator
         {
             gr.Dispose();
             bit.Dispose();
+        }
+
+        private bool isNotStartPoint(Point change)
+        {
+            return change.X != start.X || change.Y != start.Y;
+        }
+
+        private bool isNotFinishPoint(Point change)
+        {
+            return change.X != finish.X || change.Y != finish.Y;
         }
     }
 }
