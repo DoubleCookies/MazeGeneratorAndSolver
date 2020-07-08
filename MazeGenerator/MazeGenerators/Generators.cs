@@ -19,8 +19,7 @@ namespace MazeGenerator.MazeGenerators
         Point current; // Текущая точка
         int lastX; // Точка последней посещённой вертикали для повышения эффективности алгоритма Hunt-And-Kill
 
-        List<Point> blackPoints; // Список сгенерированных "препятствий" в лабиринте (используется не всегда)
-        public List<Point> BlackPoints { get => blackPoints; set => blackPoints = value; }
+        public List<Point> BlackPoints { get; set; }
 
         int featureCode; // Код особенности отрисовки
         int sleep; // Время остановки потока при отрисовке
@@ -89,10 +88,14 @@ namespace MazeGenerator.MazeGenerators
         /// Генерация лабиринта BackTracking'ом
         /// </summary>
         /// <param name="fromStart">Начинать ли генерацию со старта</param>
-        /// <param name="whiteSpaces">Убирать ли часть стен</param>
+        
         /// <param name="whiteProb">Вероятность убрать стену</param>
-        public void BackTrackMazeGenerate(bool fromStart, bool whiteSpaces, double whiteProb)
+        public void BackTrackMazeGenerate(bool fromStart, double blackProb, double whiteProb)
         {
+            if (blackProb > 0) {
+                view.DrawBlackPoints(BlackPoints);
+                BlackClear();
+            }
             // 2 - уже посещенная вершина
             current = finishpoint;
             if (fromStart)
@@ -115,7 +118,7 @@ namespace MazeGenerator.MazeGenerators
                     PointRollback();
                 }
             }
-            if (whiteSpaces)
+            if (whiteProb > 0)
                 WhiteGen(whiteProb);
         }
 
@@ -125,8 +128,13 @@ namespace MazeGenerator.MazeGenerators
         /// <param name="fromStart">Начинать ли генерацию со старта</param>
         /// <param name="whiteSpaces">Убирать ли часть стен</param>
         /// <param name="whiteProb">Вероятность убрать стену</param>
-        public void HuntAndKillMazeGenerate(bool fromStart, bool whiteSpaces, double whiteProb)
+        public void HuntAndKillMazeGenerate(bool fromStart, double blackProb, double whiteProb)
         {
+            if (blackProb > 0)
+            {
+                view.DrawBlackPoints(BlackPoints);
+                BlackClear();
+            }
             ignored = false;
             ignoredCount = 0;
             current = finishpoint;
@@ -156,7 +164,7 @@ namespace MazeGenerator.MazeGenerators
                     isHereToGo = FindNewPoint(fSCopy);
                 }
             }
-            if (whiteSpaces)
+            if (whiteProb > 0)
                 WhiteGen(whiteProb);
         }
 

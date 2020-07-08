@@ -38,6 +38,7 @@ namespace MazeGenerator
         List<Point> allPoints; // Список всех посещённых точек при поиске решения (нужно только для режима "прямого эфира"
 
         bool whiteSpaces; //Убирать ли часть стен
+        double blackProb; //Вероятность появления доп. стен
         double whiteProb; //Вероятность убрать стену
 
         Point current; // Текущая точка
@@ -72,7 +73,6 @@ namespace MazeGenerator
         /// <param name="width">Ширина</param>
         /// <param name="height">Высота</param>
         /// <param name="sleep">Задержка отрисовки</param>
-        /// <param name="blackUse">Использование генерации пустых мест</param>
         /// <param name="blackProb">Вероятность генерации пустых мест</param>
         /// <param name="start">Точка старта</param>
         /// <param name="finish">Точка финиша</param>
@@ -80,7 +80,7 @@ namespace MazeGenerator
         /// <param name="fromStart">Начинать генерацию с начала (если true)</param>
         /// <param name="feature">Параметр для особой отрисовки лабиринта</param>
         /// <param name="bitmap">Используется ли отрисовка в файл</param>
-        public MazeMainClass(int width, int height, Point start, Point finish, bool blackUse, double blackProb, bool white, double whiteProb, bool fromStart, bool bitmap, int feature, int sleep, View view)
+        public MazeMainClass(int width, int height, Point start, Point finish, double blackProb, double whiteProb, bool fromStart, bool bitmap, int feature, int sleep, View view)
         {
             founders = new PointsFounders();
             mazeArray = new int[width * 2 + 1, height * 2 + 1];
@@ -89,16 +89,17 @@ namespace MazeGenerator
             startpoint = start;
             finishpoint = finish;
             this.whiteProb = 1 - whiteProb;
+            this.blackProb = blackProb;
             this.view = view;
             this.sleep = sleep;
             this.fromStart = fromStart;
-            whiteSpaces = white;
+            whiteSpaces = whiteProb == 0;
             featureCode = feature;
             view.SetStartAndFinish(startpoint, finishpoint);
             result = false;
             gameFinished = false;
             generator = new Generators(mazeArray, startpoint, finishpoint, founders, view, featureCode, sleep);
-            Generator.mazeFill(blackUse, 1 - blackProb);
+            Generator.mazeFill(blackProb > 0, 1 - blackProb);
             solver = new Solvers(mazeArray, startpoint, finishpoint, view, feature, sleep, bitmap);
         }
 
@@ -107,7 +108,7 @@ namespace MazeGenerator
         /// </summary>
         public void MazeGenerateRec()
         {
-            Generator.BackTrackMazeGenerate(fromStart, whiteSpaces, whiteProb);
+            Generator.BackTrackMazeGenerate(fromStart, blackProb, whiteProb);
         }
 
         /// <summary>
@@ -115,7 +116,7 @@ namespace MazeGenerator
         /// </summary>
         public void MazeGenerateHuntAndKill()
         {
-            Generator.HuntAndKillMazeGenerate(fromStart, whiteSpaces, whiteProb);
+            Generator.HuntAndKillMazeGenerate(fromStart, blackProb, whiteProb);
         }
 
         /// <summary>

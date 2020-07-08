@@ -20,8 +20,6 @@ namespace MazeGenerator
         int width; // Ширина лабиринта
         int height; // Высота лабиринта
         int sleep; // Тайм-аут отрисовки
-        bool black = false; // Использование генерации пустых мест
-        bool white = false; // Убирать ли часть стен
         bool gameInit = false; // Решает ли пользователь лабиринт
 
 
@@ -34,45 +32,19 @@ namespace MazeGenerator
             view = new View(drawingPicturebox);
         }
 
-        private void ButtonGenMaze_Click(object sender, EventArgs e)
+        private void buttonMazeGeneration_Click(object sender, EventArgs e)
         {
             gameInit = false;
-            Thread thr = new Thread(RunBacktracker);
+            Thread thr = new Thread(RunMazeGeneration);
             SwitchButtonStatus(false);
             thr.Start();
-            //RunBacktracker();
-        }
-
-        private void buttongenMazeHunt_Click(object sender, EventArgs e)
-        {
-            gameInit = false;
-            Thread thr = new Thread(RunHunt);
-            SwitchButtonStatus(false);
-            thr.Start();
-            //RunHunt();
-        }
-
-        /// <summary>
-        /// Метод для запуска генерации алгоритма методом бэктрекинга
-        /// </summary>
-        private void RunBacktracker()
-        {
-            Run(false);
-        }
-
-        /// <summary>
-        /// Метод для запуска генерации алгоритма методом Hunt-And-Kill
-        /// </summary>
-        private void RunHunt()
-        {
-            Run(true);
         }
 
         /// <summary>
         /// Генерация лабиринта и вывод информации о ней
         /// </summary>
         /// <param name="isHuntMethod">Используется ли метод Hunt-And-Kill</param>
-        private void Run(bool isHuntMethod)
+        private void RunMazeGeneration()
         {
             drawingPicturebox = pictureBoxLabirint.CreateGraphics();
             view = new View(drawingPicturebox);
@@ -82,12 +54,12 @@ namespace MazeGenerator
             if (success)
             {
                 view.MazeDraw(maze.GetMaze.GetLength(0), maze.GetMaze.GetLength(1), pictureBoxLabirint.Width, pictureBoxLabirint.Height);
-                if (black)
-                {
-                    view.DrawBlackPoints(maze.Generator.BlackPoints);
-                    maze.Generator.BlackClear();
-                }
-                if (isHuntMethod)
+                //if (black)
+                //{
+                //    view.DrawBlackPoints(maze.Generator.BlackPoints);
+                //    maze.Generator.BlackClear();
+                //}
+                if (radioButtonHuntAndKill.Checked)
                     maze.MazeGenerateHuntAndKill();
                 else
                     maze.MazeGenerateRec();
@@ -149,10 +121,9 @@ namespace MazeGenerator
         /// <param name="status">Статус кнопок: true - включить</param>
         private void SwitchButtonStatus(bool status)
         {
-            buttonGenMaze.Enabled = status;
+            buttonMazeGeneration.Enabled = status;
             buttonSolverStart.Enabled = status;
             buttonGame.Enabled = status;
-            buttongenMazeHunt.Enabled = status;
         }
 
         private void ButtonGame_Click(object sender, EventArgs e)
@@ -170,7 +141,7 @@ namespace MazeGenerator
         private void ButtonGenPicture_Click(object sender, EventArgs e)
         {
             bool success;
-            int size = 0;
+            int size;
             try
             {
                 size = int.Parse(textBoxSize.Text);
@@ -184,11 +155,11 @@ namespace MazeGenerator
             if (success)
             {
                 view.MazeDrawBitmap(maze.GetMaze, size);
-                if (black)
-                {
-                    view.DrawBlackPoints(maze.Generator.BlackPoints);
-                    maze.Generator.BlackClear();
-                }
+                //if (black)
+                //{
+                //    view.DrawBlackPoints(maze.Generator.BlackPoints);
+                //    maze.Generator.BlackClear();
+                //}
                 maze.MazeGenerateRec();
                 if (checkBoxWithSolution.Checked)
                     SolverSelection();
@@ -206,8 +177,8 @@ namespace MazeGenerator
         private void ButtonGenerateBatch_Click(object sender, EventArgs e)
         {
             bool success;
-            int size = 0;
-            int count = 0;
+            int size;
+            int count;
             try
             {
                 size = int.Parse(textBoxSize.Text);
@@ -223,19 +194,21 @@ namespace MazeGenerator
             success = MazeOp(true);
             if (success)
             {
-                FolderBrowserDialog dialog = new FolderBrowserDialog();
-                dialog.Description = "Выберите папку для сохранения набора изображений";
+                FolderBrowserDialog dialog = new FolderBrowserDialog
+                {
+                    Description = "Выберите папку для сохранения набора изображений"
+                };
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     progressform.Show();
                     for (int i = 0; i < count; i++)
                     {
                         view.MazeDrawBitmap(maze.GetMaze, size);
-                        if (black)
-                        {
-                            view.DrawBlackPoints(maze.Generator.BlackPoints);
-                            maze.Generator.BlackClear();
-                        }
+                        //if (black)
+                        //{
+                        //    view.DrawBlackPoints(maze.Generator.BlackPoints);
+                        //    maze.Generator.BlackClear();
+                        //}
                         //pictureBoxLabirint.Image = view.bit;
                         maze.MazeGenerateRec();
                         view.bit.Save(dialog.SelectedPath + "/maze" + i + ".png", ImageFormat.Png);
@@ -266,9 +239,9 @@ namespace MazeGenerator
             drawingPicturebox = pictureBoxLabirint.CreateGraphics();
             view = new View(drawingPicturebox);
             bool fromStart;
-            double prob = 0;
-            double whiteProb = 0;
             int featureCode = 0;
+            double prob;
+            double whiteProb;
             try
             {
                 width = int.Parse(textBoxWidth.Text);
@@ -295,15 +268,13 @@ namespace MazeGenerator
                     startpoint = new Point(int.Parse(textBoxStartX.Text) * 2 + 1, int.Parse(textBoxStartY.Text) * 2 + 1);
                 if (checkBoxFinish.Checked)
                     finishpoint = new Point(int.Parse(textBoxEndX.Text) * 2 + 1, int.Parse(textBoxEndY.Text) * 2 + 1);
-                black = checkBoxBlack.Checked;
                 fromStart = checkBoxFromBegin.Checked;
                 if (checkBoxFeatureUse.Checked)
                     featureCode = GetFeatureCode();
-                white = checkBoxWhiteSpaces.Checked;
                 if (!isBitmapUsed)
-                    maze = new MazeMainClass(width, height, startpoint, finishpoint, black, prob, white, whiteProb, fromStart, false, featureCode, sleep, view);
+                    maze = new MazeMainClass(width, height, startpoint, finishpoint, prob, whiteProb, fromStart, false, featureCode, sleep, view);
                 else
-                    maze = new MazeMainClass(width, height, startpoint, finishpoint, black, prob, white, whiteProb, fromStart, true, featureCode, 0, view);
+                    maze = new MazeMainClass(width, height, startpoint, finishpoint, prob, whiteProb, fromStart, true, featureCode, 0, view);
             }
             catch (OutOfMemoryException)
             {
@@ -425,19 +396,19 @@ namespace MazeGenerator
             }
         }
 
-        private void checkBoxBlack_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBoxBlack.Checked)
-            {
-                label10.Visible = true;
-                textBoxEmptyPlacesProb.Visible = true;
-            }
-            else
-            {
-                label10.Visible = false;
-                textBoxEmptyPlacesProb.Visible = false;
-            }
-        }
+        //private void checkBoxBlack_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (checkBoxBlack.Checked)
+        //    {
+        //        label10.Visible = true;
+        //        textBoxEmptyPlacesProb.Visible = true;
+        //    }
+        //    else
+        //    {
+        //        label10.Visible = false;
+        //        textBoxEmptyPlacesProb.Visible = false;
+        //    }
+        //}
 
         private void checkBoxFeatureUse_CheckedChanged(object sender, EventArgs e)
         {
@@ -447,19 +418,19 @@ namespace MazeGenerator
                 groupBoxDrawFeatures.Visible = false;
         }
 
-        private void checkBoxWhiteSpaces_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBoxWhiteSpaces.Checked)
-            {
-                label11.Visible = true;
-                textBoxWhiteSpaceProb.Visible = true;
-            }
-            else
-            {
-                label11.Visible = false;
-                textBoxWhiteSpaceProb.Visible = false;            
-            }
-        }
+        //private void checkBoxWhiteSpaces_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    if (checkBoxWhiteSpaces.Checked)
+        //    {
+        //        label11.Visible = true;
+        //        textBoxWhiteSpaceProb.Visible = true;
+        //    }
+        //    else
+        //    {
+        //        label11.Visible = false;
+        //        textBoxWhiteSpaceProb.Visible = false;            
+        //    }
+        //}
 
         private void checkBoxStart_CheckedChanged(object sender, EventArgs e)
         {
@@ -495,6 +466,14 @@ namespace MazeGenerator
                 textBoxEndX.Visible = false;
                 textBoxEndY.Visible = false;
             }
+        }
+
+        private void checkBoxAdditionalGeneration_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAdditionalGeneration.Checked)
+                groupBoxGenerationAdditionalParams.Visible = true;
+            else
+                groupBoxGenerationAdditionalParams.Visible = false;
         }
     }
 }
