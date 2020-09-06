@@ -38,7 +38,7 @@ namespace MazeGenerator
         /// <param name="Maze">Массив лабиринта</param>
         /// <param name="width">Ширина picturebox'a</param>
         /// <param name="height">Высота picturebox'a</param>
-        public void MazeDraw(int mazewidth, int mazeheight, int width, int height)
+        public void DrawMazeInitState(int mazewidth, int mazeheight, int width, int height)
         {
             gr.Clear(Color.FromArgb(255,240,240,240));
             mazeWidth = mazewidth;

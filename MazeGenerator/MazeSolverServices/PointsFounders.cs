@@ -3,6 +3,10 @@ using System.Drawing;
 
 namespace MazeGenerator
 {
+    public enum PointStatus { 
+        canVisit = 1,
+        alreadyVisited = 2
+    }
     public class PointsFounders
     {
         List<Point> possPoints; // Список для записи точек, которые можно посетить из определённой точки
