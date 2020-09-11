@@ -3,7 +3,8 @@ using System.Drawing;
 
 namespace MazeGenerator
 {
-    public enum PointStatus { 
+    public enum PointStatus
+    {
         canVisit = 1,
         alreadyVisited = 2
     }

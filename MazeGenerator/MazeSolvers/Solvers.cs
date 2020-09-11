@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
-using System.Drawing;
 
 namespace MazeGenerator.MazeSolvers
 {
@@ -177,7 +177,7 @@ namespace MazeGenerator.MazeSolvers
         public void GoToNewPoint(Point selected)
         {
             Point clr = ClearPoint(current, selected);
-            if(!isBitmapUsed)
+            if (!isBitmapUsed)
                 allPoints.Add(clr);
             mazeArray[clr.X, clr.Y] = 2;
             if (featureCode == 0)
@@ -191,7 +191,7 @@ namespace MazeGenerator.MazeSolvers
                 view.DrawChange(current, featureCode);
             }
             points.Add(selected);
-            if(!isBitmapUsed)
+            if (!isBitmapUsed)
                 allPoints.Add(selected);
             current = points.Last();
             view.DrawChange(current, Color.Red);

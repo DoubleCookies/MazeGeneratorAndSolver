@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using MazeGenerator.MazeGenerators;
+﻿using MazeGenerator.MazeGenerators;
 using MazeGenerator.MazeSolvers;
+using System;
+using System.Drawing;
 
 namespace MazeGenerator
 {
@@ -10,7 +10,7 @@ namespace MazeGenerator
         public Generators Generator { get; set; }
         public Solvers Solver { get; set; }
 
-        readonly PointsFounders pointsFounders;
+        static readonly PointsFounders pointsFounders = new PointsFounders();
 
         public bool IsMazeFinished { get; set; }
 
@@ -56,9 +56,9 @@ namespace MazeGenerator
         /// <param name="fromStart">Начинать генерацию с начала (если true)</param>
         /// <param name="feature">Параметр для особой отрисовки лабиринта</param>
         /// <param name="bitmap">Используется ли отрисовка в файл</param>
-        public MazeMainClass(int width, int height, Point start, Point finish, double blackProb, double whiteProb, bool fromStart, bool bitmap, int feature, int sleep, View view)
+        public MazeMainClass(int width, int height, Point start, Point finish, double blackProb, double whiteProb, bool fromStart, bool bitmap, int feature, int sleep, View view, Random random)
         {
-            pointsFounders = new PointsFounders();
+            //pointsFounders = new PointsFounders();
             mazeArray = new int[width * 2 + 1, height * 2 + 1];
             startpoint = start;
             finishpoint = finish;
@@ -71,7 +71,7 @@ namespace MazeGenerator
             view.SetStartAndFinish(startpoint, finishpoint);
             Result = false;
             IsMazeFinished = false;
-            Generator = new Generators(mazeArray, startpoint, finishpoint, pointsFounders, view, featureCode, sleep);
+            Generator = new Generators(mazeArray, startpoint, finishpoint, pointsFounders, view, featureCode, sleep, random);
             Generator.FillMazeArray(blackProb > 0, blackProb);
             Solver = new Solvers(mazeArray, startpoint, finishpoint, view, feature, sleep, bitmap);
         }

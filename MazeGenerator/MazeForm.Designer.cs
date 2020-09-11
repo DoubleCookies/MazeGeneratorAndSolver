@@ -56,7 +56,6 @@
             this.panelMazeGenerationMethod = new System.Windows.Forms.Panel();
             this.radioButtonHuntAndKill = new System.Windows.Forms.RadioButton();
             this.radioButtonBackTracking = new System.Windows.Forms.RadioButton();
-            this.richTextBoxInfo = new System.Windows.Forms.RichTextBox();
             this.groupBoxDrawFeatures = new System.Windows.Forms.GroupBox();
             this.radioButtonFeatureDarkStyle = new System.Windows.Forms.RadioButton();
             this.radioButtonFeatureLightStyle = new System.Windows.Forms.RadioButton();
@@ -145,7 +144,6 @@
             this.groupBox1.Controls.Add(this.groupBoxGenerationAdditionalParams);
             this.groupBox1.Controls.Add(this.buttonMazeGeneration);
             this.groupBox1.Controls.Add(this.panelMazeGenerationMethod);
-            this.groupBox1.Controls.Add(this.richTextBoxInfo);
             this.groupBox1.Controls.Add(this.groupBoxDrawFeatures);
             this.groupBox1.Controls.Add(this.checkBoxFeatureUse);
             this.groupBox1.Controls.Add(this.radioButtonRandR);
@@ -405,15 +403,6 @@
             this.radioButtonBackTracking.Text = "Backtracking";
             this.radioButtonBackTracking.UseVisualStyleBackColor = true;
             // 
-            // richTextBoxInfo
-            // 
-            this.richTextBoxInfo.Location = new System.Drawing.Point(4, 613);
-            this.richTextBoxInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.richTextBoxInfo.Name = "richTextBoxInfo";
-            this.richTextBoxInfo.Size = new System.Drawing.Size(313, 187);
-            this.richTextBoxInfo.TabIndex = 52;
-            this.richTextBoxInfo.Text = "";
-            // 
             // groupBoxDrawFeatures
             // 
             this.groupBoxDrawFeatures.Controls.Add(this.radioButtonFeatureDarkStyle);
@@ -426,7 +415,7 @@
             this.groupBoxDrawFeatures.Controls.Add(this.radioButtonFeatureRed);
             this.groupBoxDrawFeatures.Controls.Add(this.radioButtonFeatureFiftyShades);
             this.groupBoxDrawFeatures.Controls.Add(this.radioButtonFeatureChaos);
-            this.groupBoxDrawFeatures.Location = new System.Drawing.Point(0, 826);
+            this.groupBoxDrawFeatures.Location = new System.Drawing.Point(6, 647);
             this.groupBoxDrawFeatures.Margin = new System.Windows.Forms.Padding(4);
             this.groupBoxDrawFeatures.Name = "groupBoxDrawFeatures";
             this.groupBoxDrawFeatures.Padding = new System.Windows.Forms.Padding(4);
@@ -555,7 +544,7 @@
             // checkBoxFeatureUse
             // 
             this.checkBoxFeatureUse.AutoSize = true;
-            this.checkBoxFeatureUse.Location = new System.Drawing.Point(5, 806);
+            this.checkBoxFeatureUse.Location = new System.Drawing.Point(11, 627);
             this.checkBoxFeatureUse.Margin = new System.Windows.Forms.Padding(4);
             this.checkBoxFeatureUse.Name = "checkBoxFeatureUse";
             this.checkBoxFeatureUse.Size = new System.Drawing.Size(233, 21);
@@ -657,7 +646,7 @@
             // checkBoxWithSolution
             // 
             this.checkBoxWithSolution.AutoSize = true;
-            this.checkBoxWithSolution.Location = new System.Drawing.Point(31, 556);
+            this.checkBoxWithSolution.Location = new System.Drawing.Point(11, 557);
             this.checkBoxWithSolution.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxWithSolution.Name = "checkBoxWithSolution";
             this.checkBoxWithSolution.Size = new System.Drawing.Size(191, 21);
@@ -785,7 +774,6 @@
         private System.Windows.Forms.RadioButton radioButtonFeatureViolet;
         private System.Windows.Forms.RadioButton radioButtonFeatureLightStyle;
         private System.Windows.Forms.RadioButton radioButtonFeatureDarkStyle;
-        private System.Windows.Forms.RichTextBox richTextBoxInfo;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button buttonGenerateBatch;
         private System.Windows.Forms.CheckBox checkBoxWithSolution;
