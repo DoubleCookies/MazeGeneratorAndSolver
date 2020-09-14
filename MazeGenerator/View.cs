@@ -15,10 +15,10 @@ namespace MazeGenerator
 
         Point start; // Стартовая тчока
         Point finish; // Конечная точка
-        int mult; // Множитель размера одного квадрата отрисовки
+        int pixelSize; // Множитель размера одного квадрата отрисовки
         int mazeWidth; // Ширина лабиринта
         int mazeHeight; // Высота лабиринта
-        Random rnd = new Random();
+        private readonly Random rnd = new Random();
 
         // Объект для отрисовки
         public Graphics GraphicsObject { get; set; }
@@ -48,7 +48,7 @@ namespace MazeGenerator
 
             int b1 = width / mazeWidth;
             int b2 = height / mazeHeight;
-            mult = Math.Min(b1, b2);
+            pixelSize = Math.Min(b1, b2);
             FillMazePicture();
         }
 
@@ -59,11 +59,10 @@ namespace MazeGenerator
         /// <param name="color">Цвет изменения</param>
         public void DrawChange(Point change, Color color)
         {
-            // Отрисовка идёт, если точка не является начальной или конечной
             if (IsNotStartPoint(change) && IsNotFinishPoint(change))
             {
                 SolidBrush brush = new SolidBrush(color);
-                GraphicsObject.FillRectangle(brush, change.X * mult, change.Y * mult, mult, mult);
+                GraphicsObject.FillRectangle(brush, change.X * pixelSize, change.Y * pixelSize, pixelSize, pixelSize);
                 brush.Dispose();
             }
         }
@@ -119,7 +118,7 @@ namespace MazeGenerator
                         break;
                     }
                 case 48:
-                    {// тёмная цветовая гамма
+                    {// Тёмная цветовая гамма
                         newColor = Color.FromArgb(255, rnd.Next(80, 140), rnd.Next(80, 140), rnd.Next(80, 140));
                         break;
                     }
@@ -148,16 +147,6 @@ namespace MazeGenerator
         }
 
         /// <summary>
-        /// Отрисовка белых квадратов при генерации новых проходов
-        /// </summary>
-        /// <param name="white">Список точек</param>
-        public void DrawWhitePoints(List<Point> white)
-        {
-            for (int i = 0; i < white.Count; i++)
-                DrawChange(white[i], Color.White);
-        }
-
-        /// <summary>
         /// Метод, задающий точки старта и финиша
         /// </summary>
         /// <param name="st">Точка старта</param>
@@ -173,13 +162,13 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="Maze">Лабиринт</param>
         /// <param name="size">Размер для отрисовки квадрата</param>
-        public void MazeDrawBitmap(int[,] Maze, int size)
+        public void InitMazeBitmap(int[,] Maze, int size)
         {
             mazeWidth = Maze.GetLength(0);
             mazeHeight = Maze.GetLength(1);
-            mult = size;
-            int w = mazeWidth * mult;
-            int h = mazeHeight * mult;
+            pixelSize = size;
+            int w = mazeWidth * pixelSize;
+            int h = mazeHeight * pixelSize;
             MazeBitmap = new Bitmap(w, h);
             GraphicsObject = Graphics.FromImage(MazeBitmap);
             GraphicsObject.Clear(Color.FromArgb(255, 240, 240, 240));
@@ -192,20 +181,20 @@ namespace MazeGenerator
         private void FillMazePicture()
         {
             // Отрисовка всего поля, старта и финиша
-            GraphicsObject.FillRectangle(brushWhite, 0, 0, mazeWidth * mult, mazeHeight * mult);
-            GraphicsObject.FillRectangle(brushViolet, mult * start.X, mult * start.Y, mult, mult);
-            GraphicsObject.FillRectangle(brushLimeGreen, finish.X * mult, finish.Y * mult, mult, mult);
+            GraphicsObject.FillRectangle(brushWhite, 0, 0, mazeWidth * pixelSize, mazeHeight * pixelSize);
+            GraphicsObject.FillRectangle(brushViolet, pixelSize * start.X, pixelSize * start.Y, pixelSize, pixelSize);
+            GraphicsObject.FillRectangle(brushLimeGreen, finish.X * pixelSize, finish.Y * pixelSize, pixelSize, pixelSize);
 
             //Отрисовка чёрных полос для создания поля
             for (int i = 0; i < mazeHeight; i++)
             {
                 if (i % 2 == 0)
-                    GraphicsObject.FillRectangle(brushBlack, 0, i * mult, mazeWidth * mult, mult);
+                    GraphicsObject.FillRectangle(brushBlack, 0, i * pixelSize, mazeWidth * pixelSize, pixelSize);
             }
             for (int j = 0; j < mazeWidth; j++)
             {
                 if (j % 2 == 0)
-                    GraphicsObject.FillRectangle(brushBlack, j * mult, 0, mult, mazeHeight * mult);
+                    GraphicsObject.FillRectangle(brushBlack, j * pixelSize, 0, pixelSize, mazeHeight * pixelSize);
             }
         }
 
@@ -217,7 +206,7 @@ namespace MazeGenerator
         public void DrawCircle(Point change, Color color)
         {
             SolidBrush brush = new SolidBrush(color);
-            GraphicsObject.FillEllipse(brush, change.X * mult, change.Y * mult, mult, mult);
+            GraphicsObject.FillEllipse(brush, change.X * pixelSize, change.Y * pixelSize, pixelSize, pixelSize);
             brush.Dispose();
         }
 

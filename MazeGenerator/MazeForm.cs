@@ -127,7 +127,7 @@ namespace MazeGenerator
             isMazeValid = CreateMazeObject(true);
             if (isMazeValid)
             {
-                view.MazeDrawBitmap(maze.Maze, size);
+                view.InitMazeBitmap(maze.Maze, size);
                 maze.GenerateMazeWithRecursiveBacktracker();
                 if (checkBoxWithSolution.Checked)
                     SolverSelection();
@@ -165,7 +165,7 @@ namespace MazeGenerator
                     progressForm.Show();
                     for (int i = 0; i < count; i++)
                     {
-                        view.MazeDrawBitmap(maze.Maze, size);
+                        view.InitMazeBitmap(maze.Maze, size);
                         maze.GenerateMazeWithRecursiveBacktracker();
                         view.MazeBitmap.Save(dialog.SelectedPath + "/maze" + i + ".png", ImageFormat.Png);
                         if (checkBoxWithSolution.Checked)
@@ -174,7 +174,6 @@ namespace MazeGenerator
                             view.MazeBitmap.Save(dialog.SelectedPath + "/maze" + i + "solved.png", ImageFormat.Png);
                         }
                         progressForm.ProgressBarUpdate();
-                        //Thread.Sleep(25);
                         view.Dispose();
                         drawingPicturebox.Dispose();
                         CreateMazeObject(true);
@@ -184,6 +183,7 @@ namespace MazeGenerator
             }
         }
 
+        // TODO: Переписать, чтобы проверял, а не создавал (создание - в отдельный метод)
         /// <summary>
         /// Метод для создания нового обхекта лабиринат
         /// </summary>
@@ -191,6 +191,8 @@ namespace MazeGenerator
         /// <returns>Возвращает true, если был создан новый объект и false - если нет (например, если параметры некорректны)</returns>
         private bool CreateMazeObject(bool isBitmapUsed)
         {
+            if (maze != null)
+                maze.Clear();
             maze = null;
             bool isFromStart;
             int featureCode = 0;

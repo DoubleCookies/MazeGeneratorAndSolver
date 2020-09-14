@@ -11,7 +11,7 @@ namespace MazeGenerator
         private Solvers Solver { get; set; }
         public bool IsMazeFinished { get; set; }
         public bool Result { get; set; }
-        public int[,] Maze { get; }
+        public int[,] Maze { get; set; }
         public int Sleep { get; set; }
         public int FeatureCode { get; set; }
 
@@ -57,6 +57,12 @@ namespace MazeGenerator
             Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
             Generator.FillMazeArray(blackProb > 0, blackProb);
             Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
+        }
+
+        public void Clear() {
+            Generator = null;
+            Solver = null;
+            Maze = null;
         }
 
         /// <summary>
