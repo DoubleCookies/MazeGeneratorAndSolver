@@ -8,11 +8,10 @@ namespace MazeGenerator
     {
 
         // Набор кистей
-        Brush brushBlack = new SolidBrush(Color.FromArgb(255, 60, 60, 60));
-        Brush brushWhite = new SolidBrush(Color.White);
-        Brush brushOrange = new SolidBrush(Color.Orange);
-        Brush brushLimeGreen = new SolidBrush(Color.LimeGreen);
-        Brush brushViolet = new SolidBrush(Color.Violet);
+        private readonly Brush brushBlack = new SolidBrush(Color.FromArgb(255, 60, 60, 60));
+        private readonly Brush brushWhite = new SolidBrush(Color.White);
+        private readonly Brush brushLimeGreen = new SolidBrush(Color.LimeGreen);
+        private readonly Brush brushViolet = new SolidBrush(Color.Violet);
 
         Point start; // Стартовая тчока
         Point finish; // Конечная точка
@@ -61,7 +60,7 @@ namespace MazeGenerator
         public void DrawChange(Point change, Color color)
         {
             // Отрисовка идёт, если точка не является начальной или конечной
-            if (isNotStartPoint(change) && isNotFinishPoint(change))
+            if (IsNotStartPoint(change) && IsNotFinishPoint(change))
             {
                 SolidBrush brush = new SolidBrush(color);
                 GraphicsObject.FillRectangle(brush, change.X * mult, change.Y * mult, mult, mult);
@@ -227,7 +226,7 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="point">Точка</param>
         /// <returns>true, если точка не является стартом лабиринта</returns>
-        private bool isNotStartPoint(Point point)
+        private bool IsNotStartPoint(Point point)
         {
             return point.X != start.X || point.Y != start.Y;
         }
@@ -237,7 +236,7 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="point">Точка</param>
         /// <returns>true, если точка не является финишем лабиринта</returns>
-        private bool isNotFinishPoint(Point point)
+        private bool IsNotFinishPoint(Point point)
         {
             return point.X != finish.X || point.Y != finish.Y;
         }

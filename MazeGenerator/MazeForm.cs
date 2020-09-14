@@ -8,12 +8,12 @@ namespace MazeGenerator
 {
     public partial class MazeForm : Form
     {
-        readonly ProgressForm progressForm = new ProgressForm(); // Форма отображения прогресса при массовой генерации лабиринта
-        View view; // Класс отрисовки
-        Graphics drawingPicturebox; // Объект, на котором может производиться отрисовка
-        MazeMainClass maze; // Основной объект лабиринта
-        delegate int SolverSelect(); // Делагет для методов-решателей
-        Random random;
+        private readonly ProgressForm progressForm = new ProgressForm(); // Форма отображения прогресса при массовой генерации лабиринта
+        private View view; // Класс отрисовки
+        private Graphics drawingPicturebox; // Объект, на котором может производиться отрисовка
+        private MazeMainClass maze; // Основной объект лабиринта
+        private delegate int SolverSelect(); // Делегат для методов-решателей
+        private readonly Random random;
 
         int width; // Ширина лабиринта
         int height; // Высота лабиринта
@@ -23,10 +23,6 @@ namespace MazeGenerator
         public MazeForm()
         {
             InitializeComponent();
-            //pictureBoxLabirint.Width = Size.Width - 360;
-            //pictureBoxLabirint.Height = Size.Height - 80;
-            //drawingPicturebox = pictureBoxLabirint.CreateGraphics();
-            //view = new View(drawingPicturebox);
             CheckForIllegalCrossThreadCalls = false; //Для дебага из-за многопоточности
             random = new Random();
         }
@@ -50,7 +46,7 @@ namespace MazeGenerator
             bool isMazeValid = CreateMazeObject(false);
             if (isMazeValid)
             {
-                view.DrawMazeInitState(maze.GetMaze.GetLength(0), maze.GetMaze.GetLength(1), pictureBoxLabirint.Width, pictureBoxLabirint.Height);
+                view.DrawMazeInitState(maze.Maze.GetLength(0), maze.Maze.GetLength(1), pictureBoxLabirint.Width, pictureBoxLabirint.Height);
                 if (radioButtonHuntAndKill.Checked)
                     maze.GenerateMazeWithHuntAndKill();
                 else
@@ -131,7 +127,7 @@ namespace MazeGenerator
             isMazeValid = CreateMazeObject(true);
             if (isMazeValid)
             {
-                view.MazeDrawBitmap(maze.GetMaze, size);
+                view.MazeDrawBitmap(maze.Maze, size);
                 maze.GenerateMazeWithRecursiveBacktracker();
                 if (checkBoxWithSolution.Checked)
                     SolverSelection();
@@ -169,7 +165,7 @@ namespace MazeGenerator
                     progressForm.Show();
                     for (int i = 0; i < count; i++)
                     {
-                        view.MazeDrawBitmap(maze.GetMaze, size);
+                        view.MazeDrawBitmap(maze.Maze, size);
                         maze.GenerateMazeWithRecursiveBacktracker();
                         view.MazeBitmap.Save(dialog.SelectedPath + "/maze" + i + ".png", ImageFormat.Png);
                         if (checkBoxWithSolution.Checked)
@@ -296,6 +292,8 @@ namespace MazeGenerator
         {
             pictureBoxLabirint.Width = Size.Width - 360;
             pictureBoxLabirint.Height = Size.Height - 80;
+            if (drawingPicturebox != null)
+                drawingPicturebox.Dispose();
             drawingPicturebox = pictureBoxLabirint.CreateGraphics();
             view = new View(drawingPicturebox);
         }

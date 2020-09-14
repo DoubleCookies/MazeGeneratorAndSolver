@@ -7,41 +7,25 @@ namespace MazeGenerator
 {
     public class MazeMainClass
     {
-        public Generators Generator { get; set; }
-        public Solvers Solver { get; set; }
-
-        static readonly PointsFounders pointsFounders = new PointsFounders();
-
+        private Generators Generator { get; set; }
+        private Solvers Solver { get; set; }
         public bool IsMazeFinished { get; set; }
-
-        View view; // ссылка на класс рисования
-        Point startpoint; // Начальная точка
-        Point finishpoint; // Конечная точка
-
-        readonly double blackProb; //Вероятность появления доп. стен
-        readonly double whiteProb; //Вероятность убрать стену
-
-        Point current; // Текущая точка
-        int sleep; // Время для "сна" потока для задержки отрисовки
-        public int Sleep
-        {
-            set { sleep = value; }
-        }
-
-        bool fromStart; // Генерация лабиринта со старта или с финиша
-
         public bool Result { get; set; }
+        public int[,] Maze { get; }
+        public int Sleep { get; set; }
+        public int FeatureCode { get; set; }
 
-        int[,] mazeArray; //Массив, отображающий лабиринт
-        public int[,] GetMaze
-        {
-            get { return mazeArray; }
-        }
-        int featureCode = 0; //Код для особой отрисовки
-        public int FeatureCode
-        {
-            set { featureCode = value; }
-        }
+        private readonly View view; // ссылка на класс рисования
+        private Point startpoint; // Начальная точка
+        private Point finishpoint; // Конечная точка
+
+        private readonly double blackProb; //Вероятность появления доп. стен
+        private readonly double whiteProb; //Вероятность убрать стену
+
+        private Point current; // Текущая точка
+
+        private readonly bool fromStart; // Генерация лабиринта со старта или с финиша
+
 
         /// <summary>
         /// Конструктор класса
@@ -58,22 +42,21 @@ namespace MazeGenerator
         /// <param name="bitmap">Используется ли отрисовка в файл</param>
         public MazeMainClass(int width, int height, Point start, Point finish, double blackProb, double whiteProb, bool fromStart, bool bitmap, int feature, int sleep, View view, Random random)
         {
-            //pointsFounders = new PointsFounders();
-            mazeArray = new int[width * 2 + 1, height * 2 + 1];
+            Maze = new int[width * 2 + 1, height * 2 + 1];
             startpoint = start;
             finishpoint = finish;
             this.whiteProb = whiteProb;
             this.blackProb = blackProb;
             this.view = view;
-            this.sleep = sleep;
+            Sleep = sleep;
             this.fromStart = fromStart;
-            featureCode = feature;
+            FeatureCode = feature;
             view.SetStartAndFinish(startpoint, finishpoint);
             Result = false;
             IsMazeFinished = false;
-            Generator = new Generators(mazeArray, startpoint, finishpoint, pointsFounders, view, featureCode, sleep, random);
+            Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
             Generator.FillMazeArray(blackProb > 0, blackProb);
-            Solver = new Solvers(mazeArray, startpoint, finishpoint, view, feature, sleep, bitmap);
+            Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
         }
 
         /// <summary>
@@ -133,8 +116,8 @@ namespace MazeGenerator
         /// </summary>
         private void ParamsUpdate()
         {
-            Solver.FeatureCode = featureCode;
-            Solver.Sleep = sleep;
+            Solver.FeatureCode = FeatureCode;
+            Solver.Sleep = Sleep;
         }
         /// <summary>
         /// Инициация игры - поиска решения вручную
@@ -156,7 +139,7 @@ namespace MazeGenerator
         public void Game(int x, int y)
         {
             Point next = new Point(current.X + x, current.Y + y);
-            if (mazeArray[next.X, next.Y] != 0)
+            if (Maze[next.X, next.Y] != 0)
             {
                 if (current != startpoint)
                     view.DrawCircle(current, Color.White);
@@ -174,12 +157,12 @@ namespace MazeGenerator
         /// </summary>
         private void MazeClear()
         {
-            for (int i = 0; i < mazeArray.GetLength(0); i++)
+            for (int i = 0; i < Maze.GetLength(0); i++)
             {
-                for (int j = 0; j < mazeArray.GetLength(1); j++)
+                for (int j = 0; j < Maze.GetLength(1); j++)
                 {
-                    if (mazeArray[i, j] != 0)
-                        mazeArray[i, j] = 1;
+                    if (Maze[i, j] != 0)
+                        Maze[i, j] = 1;
                 }
             }
         }

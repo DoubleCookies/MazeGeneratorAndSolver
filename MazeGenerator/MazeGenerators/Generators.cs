@@ -8,7 +8,7 @@ namespace MazeGenerator.MazeGenerators
 {
     public class Generators
     {
-        PointsFounders founders; // Ссылка на класс, позволяющий искать точки
+        //PointsFounders founders; // Ссылка на класс, позволяющий искать точки
         View view; // Ссылка на класс отрисовки
 
         int[,] mazeArray; // Массив, представляющий лабиринт
@@ -41,13 +41,12 @@ namespace MazeGenerator.MazeGenerators
         /// <param name="view">Ссылка на объект отрисовки</param>
         /// <param name="featurecode">Код особенности отрисовки</param>
         /// <param name="sleep">Время остановки потока при отрисовке</param>
-        public Generators(int[,] mazeArray, Point startpoint, Point finishpoint, PointsFounders founders, View view, int featurecode, int sleep, Random random)
+        public Generators(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random)
         {
             this.mazeArray = mazeArray;
             this.random = random;
             this.startpoint = startpoint;
             this.finishpoint = finishpoint;
-            this.founders = founders;
             points = new List<Point>();
             BlackPoints = new List<Point>();
             this.sleep = sleep;
@@ -107,7 +106,7 @@ namespace MazeGenerator.MazeGenerators
             while (points.Count != 0)
             {
                 Thread.Sleep(sleep);
-                List<Point> possPoints = founders.possiblePoints(mazeArray, current.X, current.Y, 2, 1);
+                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1);
                 int count = possPoints.Count;
                 if (count != 0)
                 {// Если есть куда идти
@@ -153,7 +152,7 @@ namespace MazeGenerator.MazeGenerators
             while (isHereToGo)
             {
                 Thread.Sleep(sleep);
-                List<Point> possPoints = founders.possiblePoints(mazeArray, current.X, current.Y, 2, 1);
+                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1);
                 int count = possPoints.Count;
                 if (count != 0)
                 {// Если есть куда идти
@@ -186,7 +185,7 @@ namespace MazeGenerator.MazeGenerators
                         {
                             if (random.NextDouble() < whiteProb)
                             {
-                                List<Point> poss = founders.possiblePoints(mazeArray, i, j, 1, (int)PointStatus.alreadyVisited);
+                                List<Point> poss = PointsFounders.PossiblePoints(mazeArray, i, j, 1, (int)PointStatus.alreadyVisited);
                                 if (poss.Count > 1)
                                 {// Делаем тоннель так, чтобы можно было связать две точки
                                     mazeArray[i, j] = 1;
@@ -211,7 +210,10 @@ namespace MazeGenerator.MazeGenerators
         {
             Point clr = FoundPointBetweenTwoPoints(current, newPoint);
             mazeArray[clr.X, clr.Y] = (int)PointStatus.alreadyVisited;
-            view.DrawChange(clr, Color.White);
+            if (featureCode == 0 )
+                view.DrawChange(clr, Color.White);
+            else
+                view.DrawChange(clr, featureCode);
             view.DrawChange(current, Color.FromArgb(255, 170, 102));
             points.Add(newPoint);
             current = points.Last();
@@ -224,10 +226,14 @@ namespace MazeGenerator.MazeGenerators
         /// </summary>
         private void PointRollback()
         {
+            //Point clr = FoundPointBetweenTwoPoints(current, points[points.Count - 2]);
             if (featureCode == 0)
+            {
                 view.DrawChange(points.Last(), Color.White);
-            else
+            }
+            else {
                 view.DrawChange(points.Last(), featureCode);
+            }
             points.RemoveAt(points.Count - 1);
             if (points.Count != 0)
             {
@@ -332,7 +338,7 @@ namespace MazeGenerator.MazeGenerators
             while (isHereToGo)
             {
                 Thread.Sleep(sleep);
-                List<Point> possPoints = founders.possiblePoints(mazeArray, current.X, current.Y, 2, 1); //possiblePoints(current.X, current.Y, 2,1); //поиск возможных для движения точек
+                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1); //possiblePoints(current.X, current.Y, 2,1); //поиск возможных для движения точек
                 int count = possPoints.Count;
                 if (count != 0)
                 {// Если есть куда идти
@@ -359,7 +365,7 @@ namespace MazeGenerator.MazeGenerators
                 view.DrawChange(current, featureCode);
             current.X = i;
             current.Y = j;
-            List<Point> possibleToConnect = founders.possiblePoints(mazeArray, current.X, current.Y, 2, 2);
+            List<Point> possibleToConnect = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 2);
             if (possibleToConnect.Count == 0)
                 return false;
             int selected = random.Next(0, possibleToConnect.Count);

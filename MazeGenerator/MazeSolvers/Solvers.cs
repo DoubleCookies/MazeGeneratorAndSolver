@@ -8,11 +8,7 @@ namespace MazeGenerator.MazeSolvers
 {
     public class Solvers
     {
-        int[,] mazeArray; // Массив, представляющий лабиринт
-        public int[,] GetMaze
-        {
-            get { return mazeArray; }
-        }
+        private int[,] GetMaze { get; }
 
         public bool Result { get => result; set => result = value; }
         public int FeatureCode { get => featureCode; set => featureCode = value; }
@@ -26,7 +22,7 @@ namespace MazeGenerator.MazeSolvers
         int steps; // Количество сделанных шагов во время решения
         int featureCode; // Код особой отрисовки
         View view; // Ссылка на класс отрисовки
-        PointsFounders founders; // Ссылка на класс, позволяющий искать точки
+        //PointsFounders founders; // Ссылка на класс, позволяющий искать точки
 
         Point current; // Текущая точка
         Point startpoint; // Стартовая тчока
@@ -47,7 +43,7 @@ namespace MazeGenerator.MazeSolvers
         public Solvers(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featureCode, int sleep, bool isBitmapUsed)
         {
             this.isBitmapUsed = isBitmapUsed;
-            this.mazeArray = mazeArray;
+            this.GetMaze = mazeArray;
             points = new List<Point>();
             allPoints = new List<Point>();
             this.startpoint = startpoint;
@@ -55,7 +51,6 @@ namespace MazeGenerator.MazeSolvers
             this.view = view;
             this.sleep = sleep;
             this.featureCode = featureCode;
-            founders = new PointsFounders();
         }
 
         /// <summary>
@@ -79,7 +74,7 @@ namespace MazeGenerator.MazeSolvers
             allPoints.Clear();
             points.Add(current);
             allPoints.Add(current);
-            mazeArray[current.X, current.Y] = 2; // Если этого не сделать - будет багофича с пересечением старта один раз (WOW?)
+            GetMaze[current.X, current.Y] = 2; // Если этого не сделать - будет багофича с пересечением старта один раз (WOW?)
         }
 
 
@@ -101,14 +96,14 @@ namespace MazeGenerator.MazeSolvers
             while (!finFound)
             {
                 Thread.Sleep(sleep);
-                pointsMove = founders.possiblePoints2(mazeArray, current);
+                pointsMove = PointsFounders.PossiblePointsWithDirections(GetMaze, current);
                 count = pointsMove.Count;
                 if (count != 0)
                 {
                     if (LR)
-                        selected = founders.selectedMoveLeft(ref look);
+                        selected = PointsFounders.SelectedMoveLeft(ref look);
                     else
-                        selected = founders.selectedMoveRight(ref look);
+                        selected = PointsFounders.SelectedMoveRight(ref look);
                     GoToNewPoint(pointsMove[selected]);
                 }
                 else
@@ -145,7 +140,7 @@ namespace MazeGenerator.MazeSolvers
             while (!finFound)
             {
                 Thread.Sleep(sleep);
-                pointsMove = founders.possiblePoints2(mazeArray, current);
+                pointsMove = PointsFounders.PossiblePointsWithDirections(GetMaze, current);
                 count = pointsMove.Count;
                 if (count != 0)
                 {
@@ -179,7 +174,7 @@ namespace MazeGenerator.MazeSolvers
             Point clr = ClearPoint(current, selected);
             if (!isBitmapUsed)
                 allPoints.Add(clr);
-            mazeArray[clr.X, clr.Y] = 2;
+            GetMaze[clr.X, clr.Y] = 2;
             if (featureCode == 0)
             {
                 view.DrawChange(clr, Color.SkyBlue);
@@ -195,7 +190,7 @@ namespace MazeGenerator.MazeSolvers
                 allPoints.Add(selected);
             current = points.Last();
             view.DrawChange(current, Color.Red);
-            mazeArray[selected.X, selected.Y] = 2;
+            GetMaze[selected.X, selected.Y] = 2;
             steps++;
         }
 
@@ -269,12 +264,12 @@ namespace MazeGenerator.MazeSolvers
         /// </summary>
         private void MazeClear()
         {
-            for (int i = 0; i < mazeArray.GetLength(0); i++)
+            for (int i = 0; i < GetMaze.GetLength(0); i++)
             {
-                for (int j = 0; j < mazeArray.GetLength(1); j++)
+                for (int j = 0; j < GetMaze.GetLength(1); j++)
                 {
-                    if (mazeArray[i, j] != 0)
-                        mazeArray[i, j] = 1;
+                    if (GetMaze[i, j] != 0)
+                        GetMaze[i, j] = 1;
                 }
             }
         }
