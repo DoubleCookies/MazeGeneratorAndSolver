@@ -3,106 +3,33 @@ using System.Drawing;
 
 namespace MazeGenerator
 {
-    public class PointsFounders
+    public enum PointStatus
     {
-        List<Point> possPoints; // Список для записи точек, которые можно посетить из определённой точки
-        List<int> directions; // Список для записи направлений, куда будет смотреть "решатель"
-
-        public PointsFounders()
-        {
-            possPoints = new List<Point>();
-            directions = new List<int>();
-        }
+        canVisit = 1,
+        alreadyVisited = 2
+    }
+    public static class PointsFounders
+    {
+        static List<Point> possPoints = new List<Point>();
+        static List<int> directions = new List<int>();
 
         /// <summary>
         /// Поиск возможных точек для посещения
         /// </summary>
         /// <returns>Возвращает список точек, возможных для посещения</returns>
-        public List<Point> possiblePoints(int[,] mazeArray, int x, int y, int cellCount, int eq)
+        public static List<Point> PossiblePoints(int[,] mazeArray, int x, int y, int cellCount, int eq)
         {
+            int mazeWidth = mazeArray.GetLength(0);
+            int mazeHeight = mazeArray.GetLength(1);
             possPoints.Clear();
-            try
-            {
-                if (mazeArray[x - cellCount, y] == eq)
-                    possPoints.Add(new Point(x - cellCount, y));
-            }
-            catch
-            { }
-            try
-            {
-                if (mazeArray[x + cellCount, y] == eq)
-                    possPoints.Add(new Point(x + cellCount, y));
-            }
-            catch
-            { }
-            try
-            {
-                if (mazeArray[x, y - cellCount] == eq)
-                    possPoints.Add(new Point(x, y - cellCount));
-            }
-            catch
-            { }
-            try
-            {
-                if (mazeArray[x, y + cellCount] == eq)
-                    possPoints.Add(new Point(x, y + cellCount));
-            }
-            catch
-            { }
-            return possPoints;
-        }
-
-        /// <summary>
-        /// Метод поиска возможных для посещения точек для алгоритма абсолютного рандома
-        /// </summary>
-        /// <param name="mazeArray">Массив лабиринта</param>
-        /// <param name="x">Кордината Х текущей точки</param>
-        /// <param name="y">Кордината Y текущей точки</param>
-        /// <returns></returns>
-        public List<Point> AllPossiblePoints(int[,] mazeArray, int x, int y)
-        {
-            directions.Clear();
-            possPoints.Clear();
-            try
-            {
-                if (mazeArray[x + 2, y] != 0 && mazeArray[x + 1, y] != 0)
-                {
-                    possPoints.Add(new Point(x + 2, y));
-                    directions.Add(0);
-                }
-            }
-            catch
-            { }
-            try
-            {
-                if (mazeArray[x, y + 2] != 0 && mazeArray[x, y + 1] != 0)
-                {
-                    possPoints.Add(new Point(x, y + 2));
-                    directions.Add(1);
-                }
-            }
-            catch
-            { }
-            try
-            {
-                if (mazeArray[x - 2, y] != 0 && mazeArray[x - 1, y] != 0)
-                {
-                    possPoints.Add(new Point(x - 2, y));
-                    directions.Add(2);
-                }
-            }
-            catch
-            { }
-            try
-            {
-                if (mazeArray[x, y - 2] != 0 && mazeArray[x, y - 1] != 0)
-                {
-                    possPoints.Add(new Point(x, y - 2));
-                    directions.Add(3);
-                }
-            }
-            catch
-            { }
+            if (x - cellCount > 0 && mazeArray[x - cellCount, y] == eq)
+                possPoints.Add(new Point(x - cellCount, y));
+            if (x + cellCount < mazeWidth && mazeArray[x + cellCount, y] == eq)
+                possPoints.Add(new Point(x + cellCount, y));
+            if (y - cellCount > 0 && mazeArray[x, y - cellCount] == eq)
+                possPoints.Add(new Point(x, y - cellCount));
+            if (y + cellCount < mazeHeight && mazeArray[x, y + cellCount] == eq)
+                possPoints.Add(new Point(x, y + cellCount));
             return possPoints;
         }
 
@@ -110,52 +37,34 @@ namespace MazeGenerator
         /// Поиск возможных точек для посещения + поиск возможных направлений движения
         /// </summary>
         /// <returns>Возвращает список точек, возможных для посещения</returns>
-        public List<Point> possiblePoints2(int[,] mazeArray, Point current)
+        public static List<Point> PossiblePointsWithDirections(int[,] mazeArray, Point current)
         {
             directions.Clear();
             possPoints.Clear();
             int x = current.X;
             int y = current.Y;
-            try
+            int mazeWidth = mazeArray.GetLength(0);
+            int mazeHeight = mazeArray.GetLength(1);
+            if (x + 2 < mazeWidth && mazeArray[x + 2, y] == 1 && mazeArray[x + 1, y] == 1)
             {
-                if (mazeArray[x + 2, y] == 1 && mazeArray[x + 1, y] == 1)
-                {
-                    possPoints.Add(new Point(x + 2, y));
-                    directions.Add(0);
-                }
+                possPoints.Add(new Point(x + 2, y));
+                directions.Add(0);
             }
-            catch
-            { }
-            try
+            if (y + 2 < mazeHeight && mazeArray[x, y + 2] == 1 && mazeArray[x, y + 1] == 1)
             {
-                if (mazeArray[x, y + 2] == 1 && mazeArray[x, y + 1] == 1)
-                {
-                    possPoints.Add(new Point(x, y + 2));
-                    directions.Add(1);
-                }
+                possPoints.Add(new Point(x, y + 2));
+                directions.Add(1);
             }
-            catch
-            { }
-            try
+            if (x - 2 > 0 && mazeArray[x - 2, y] == 1 && mazeArray[x - 1, y] == 1)
             {
-                if (mazeArray[x - 2, y] == 1 && mazeArray[x - 1, y] == 1)
-                {
-                    possPoints.Add(new Point(x - 2, y));
-                    directions.Add(2);
-                }
+                possPoints.Add(new Point(x - 2, y));
+                directions.Add(2);
             }
-            catch
-            { }
-            try
+            if (y - 2 > 0 && mazeArray[x, y - 2] == 1 && mazeArray[x, y - 1] == 1)
             {
-                if (mazeArray[x, y - 2] == 1 && mazeArray[x, y - 1] == 1)
-                {
-                    possPoints.Add(new Point(x, y - 2));
-                    directions.Add(3);
-                }
+                possPoints.Add(new Point(x, y - 2));
+                directions.Add(3);
             }
-            catch
-            { }
             return possPoints;
         }
 
@@ -164,10 +73,10 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="look">Текущий "взгляд" точки</param>
         /// <returns>Возвращает индекс точки из списка доступных точек</returns>
-        public int selectedMoveLeft(ref int look)
+        public static int SelectedMoveLeft(ref int look)
         {
             int selected = -1;
-            //взгляд точки - 0 - право, 1 - низ, 2 - лево, 3 - верх относительно
+            //взгляд точки - 0 - право, 1 - низ, 2 - лево, 3 - верх
             switch (look)
             {
                 case 0:
@@ -228,7 +137,7 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="look">Текущий "взгляд" точки</param>
         /// <returns>Возвращает индекс точки из списка доступных точек</returns>
-        public int selectedMoveRight(ref int look)
+        public static int SelectedMoveRight(ref int look)
         {
             int selected = -1;
             // Взгляд точки - 0 - право, 1 - низ, 2 - лево, 3 - верх
@@ -292,7 +201,7 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="selected">Выбранный индекс в списке направлений</param>
         /// <returns></returns>
-        public int FindDirection(int selected)
+        public static int FindDirection(int selected)
         {
             return directions[selected];
         }

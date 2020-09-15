@@ -1,70 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Drawing;
-using System.Threading;
-using MazeGenerator.MazeGenerators;
+﻿using MazeGenerator.MazeGenerators;
 using MazeGenerator.MazeSolvers;
+using System;
+using System.Drawing;
 
 namespace MazeGenerator
 {
     public class MazeMainClass
     {
-        private Generators generator; //Ссылка на генераторы лабиринта
-        public Generators Generator
-        {
-            get { return generator; }
-            set { generator = value; }
-        }
-        private Solvers solver; // Ссылка на решатели лабиринта
-        public Solvers Solver
-        {
-            get { return solver; }
-            set { solver = value; }
-        }
-        PointsFounders founders;
+        private Generators Generator { get; set; }
+        private Solvers Solver { get; set; }
+        public bool IsMazeFinished { get; set; }
+        public bool Result { get; set; }
+        public int[,] Maze { get; set; }
+        public int Sleep { get; set; }
+        public int FeatureCode { get; set; }
 
-        bool gameFinished; //завершён ли поиск пути вручную
-        public bool Finish
-        {
-            get { return gameFinished; }
-            set { gameFinished = value; }
-        }
-        
-        View view; // ссылка на класс рисования
-        Point startpoint; // Начальная точка
-        Point finishpoint; // Конечная точка
-        List<Point> points; // Список точек при построении лабиринта
-        List<Point> allPoints; // Список всех посещённых точек при поиске решения (нужно только для режима "прямого эфира"
+        private readonly View view; // ссылка на класс рисования
+        private Point startpoint; // Начальная точка
+        private Point finishpoint; // Конечная точка
 
-        bool whiteSpaces; //Убирать ли часть стен
-        double whiteProb; //Вероятность убрать стену
+        private readonly double blackProb; //Вероятность появления доп. стен
+        private readonly double whiteProb; //Вероятность убрать стену
 
-        Point current; // Текущая точка
-        int sleep; // Время для "сна" потока для задержки отрисовки
-        public int Sleep
-        {
-            set { sleep = value; }
-        }
+        private Point current; // Текущая точка
 
-        bool fromStart; // Генерация лабиринта со старта или с финиша
-        bool result; // Результат поиска пути из начальной точки в конечную
-        public bool Result
-        {
-            get { return result; }
-            set { result = value; }
-        }
+        private readonly bool fromStart; // Генерация лабиринта со старта или с финиша
 
-        int[,] mazeArray; //Массив, отображающий лабиринт
-        public int[,] GetMaze
-        {
-            get { return mazeArray; }
-        }
-        int featureCode = 0; //Код для особой отрисовки
-        public int FeatureCode
-        {
-            set { featureCode = value; }
-        }
 
         /// <summary>
         /// Конструктор класса
@@ -72,7 +33,6 @@ namespace MazeGenerator
         /// <param name="width">Ширина</param>
         /// <param name="height">Высота</param>
         /// <param name="sleep">Задержка отрисовки</param>
-        /// <param name="blackUse">Использование генерации пустых мест</param>
         /// <param name="blackProb">Вероятность генерации пустых мест</param>
         /// <param name="start">Точка старта</param>
         /// <param name="finish">Точка финиша</param>
@@ -80,42 +40,45 @@ namespace MazeGenerator
         /// <param name="fromStart">Начинать генерацию с начала (если true)</param>
         /// <param name="feature">Параметр для особой отрисовки лабиринта</param>
         /// <param name="bitmap">Используется ли отрисовка в файл</param>
-        public MazeMainClass(int width, int height, Point start, Point finish, bool blackUse, double blackProb, bool white, double whiteProb, bool fromStart, bool bitmap, int feature, int sleep, View view)
+        public MazeMainClass(int width, int height, Point start, Point finish, double blackProb, double whiteProb, bool fromStart, bool bitmap, int feature, int sleep, View view, Random random)
         {
-            founders = new PointsFounders();
-            mazeArray = new int[width * 2 + 1, height * 2 + 1];
-            points = new List<Point>();
-            allPoints = new List<Point>();
+            Maze = new int[width * 2 + 1, height * 2 + 1];
             startpoint = start;
             finishpoint = finish;
-            this.whiteProb = 1 - whiteProb;
+            this.whiteProb = whiteProb;
+            this.blackProb = blackProb;
             this.view = view;
-            this.sleep = sleep;
+            Sleep = sleep;
             this.fromStart = fromStart;
-            whiteSpaces = white;
-            featureCode = feature;
+            FeatureCode = feature;
             view.SetStartAndFinish(startpoint, finishpoint);
-            result = false;
-            gameFinished = false;
-            generator = new Generators(mazeArray, startpoint, finishpoint, founders, view, featureCode, sleep);
-            Generator.mazeFill(blackUse, 1 - blackProb);
-            solver = new Solvers(mazeArray, startpoint, finishpoint, view, feature, sleep, bitmap);
+            Result = false;
+            IsMazeFinished = false;
+            Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
+            Generator.FillMazeArray(blackProb > 0, blackProb);
+            Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
+        }
+
+        public void Clear() {
+            Generator = null;
+            Solver = null;
+            Maze = null;
         }
 
         /// <summary>
         ///  Генерация лабиринта методом рекурсивного бэктрекинга
         /// </summary>
-        public void MazeGenerateRec()
+        public void GenerateMazeWithRecursiveBacktracker()
         {
-            Generator.BackTrackMazeGenerate(fromStart, whiteSpaces, whiteProb);
+            Generator.BackTrackMazeGenerate(fromStart, blackProb, whiteProb);
         }
 
         /// <summary>
         /// Генерация лабиринта методом Hunt-And-Kill
         /// </summary>
-        public void MazeGenerateHuntAndKill()
+        public void GenerateMazeWithHuntAndKill()
         {
-            Generator.HuntAndKillMazeGenerate(fromStart, whiteSpaces, whiteProb);
+            Generator.HuntAndKillMazeGenerate(fromStart, blackProb, whiteProb);
         }
 
         /// <summary>
@@ -125,8 +88,8 @@ namespace MazeGenerator
         public int LeftRotateSolver()
         {
             ParamsUpdate();
-            int stepsCount = solver.LeftRightRotateSolver(true);
-            Result = solver.Result;
+            int stepsCount = Solver.LeftRightRotateSolver(true);
+            Result = Solver.Result;
             return stepsCount;
         }
 
@@ -137,8 +100,8 @@ namespace MazeGenerator
         public int RightRotateSolver()
         {
             ParamsUpdate();
-            int stepsCount = solver.LeftRightRotateSolver(false);
-            Result = solver.Result;
+            int stepsCount = Solver.LeftRightRotateSolver(false);
+            Result = Solver.Result;
             return stepsCount;
         }
 
@@ -149,20 +112,8 @@ namespace MazeGenerator
         public int RandomSolver()
         {
             ParamsUpdate();
-            int stepsCount = solver.RandomSolver();
-            Result = solver.Result;
-            return stepsCount;
-        }
-
-        /// <summary>
-        /// Метод АБСОЛЮТНО случайных поворотов
-        /// </summary>
-        /// <returns>Возвращает количество шагов для прохождения лабиринта</returns>
-        public int AbsoluteRandomSolver()
-        {
-            ParamsUpdate();
-            int stepsCount = solver.AbsoluteRandomSolver();
-            Result = solver.Result;
+            int stepsCount = Solver.RandomSolver();
+            Result = Solver.Result;
             return stepsCount;
         }
 
@@ -171,15 +122,14 @@ namespace MazeGenerator
         /// </summary>
         private void ParamsUpdate()
         {
-            solver.FeatureCode = featureCode;
-            solver.Sleep = sleep;
+            Solver.FeatureCode = FeatureCode;
+            Solver.Sleep = Sleep;
         }
         /// <summary>
         /// Инициация игры - поиска решения вручную
         /// </summary>
         public void GameInit()
         {
-            MazeRouteClear();
             MazeClear();
             current = startpoint;
             view.DrawCircle(startpoint, Color.Violet);
@@ -195,7 +145,7 @@ namespace MazeGenerator
         public void Game(int x, int y)
         {
             Point next = new Point(current.X + x, current.Y + y);
-            if (mazeArray[next.X, next.Y] != 0)
+            if (Maze[next.X, next.Y] != 0)
             {
                 if (current != startpoint)
                     view.DrawCircle(current, Color.White);
@@ -203,7 +153,7 @@ namespace MazeGenerator
                     view.DrawCircle(current, Color.Violet);
                 current = next;
                 if (current == finishpoint)
-                    gameFinished = true;
+                    IsMazeFinished = true;
                 view.DrawCircle(current, Color.Red);
             }
         }
@@ -213,26 +163,13 @@ namespace MazeGenerator
         /// </summary>
         private void MazeClear()
         {
-            for (int i = 0; i < mazeArray.GetLength(0); i++)
+            for (int i = 0; i < Maze.GetLength(0); i++)
             {
-                for (int j = 0; j < mazeArray.GetLength(1); j++)
+                for (int j = 0; j < Maze.GetLength(1); j++)
                 {
-                    if (mazeArray[i, j] != 0)
-                        mazeArray[i, j] = 1;
+                    if (Maze[i, j] != 0)
+                        Maze[i, j] = 1;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Очистка пути после поиска решения
-        /// </summary>
-        private void MazeRouteClear()
-        {
-            for (int i = 0; i < allPoints.Count; i++)
-            {
-                if ((allPoints[i].X != startpoint.X || allPoints[i].Y != startpoint.Y) 
-                    && (allPoints[i].X != finishpoint.X || allPoints[i].Y != finishpoint.Y))
-                    view.DrawChange(allPoints[i], Color.White);
             }
         }
     }
