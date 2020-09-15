@@ -221,7 +221,7 @@ namespace MazeGenerator
                 Point startpoint = checkBoxStart.Checked ?
                     new Point(int.Parse(textBoxStartX.Text) * 2 + 1, int.Parse(textBoxStartY.Text) * 2 + 1) : new Point(1, 1);
                 Point finishpoint = checkBoxFinish.Checked ?
-                    new Point(int.Parse(textBoxStartX.Text) * 2 + 1, int.Parse(textBoxStartY.Text) * 2 + 1) : new Point(width * 2 - 1, height * 2 - 1);
+                    new Point(int.Parse(textBoxEndX.Text) * 2 + 1, int.Parse(textBoxEndY.Text) * 2 + 1) : new Point(width * 2 - 1, height * 2 - 1);
                 isFromStart = checkBoxFromBegin.Checked;
                 if (checkBoxFeatureUse.Checked)
                     featureCode = GetFeatureCode();

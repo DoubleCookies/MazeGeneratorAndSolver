@@ -9,7 +9,6 @@ namespace MazeGenerator.MazeSolvers
     public class Solvers
     {
         private int[,] Maze { get; }
-
         public bool Result { get; set; }
         public int FeatureCode { get; set; }
         public int Sleep { get; set; }
@@ -73,11 +72,10 @@ namespace MazeGenerator.MazeSolvers
         {
             SolversInit();
             int look = 1; // 0 - право, 1 - низ, 2 - лево, 3 - верх
-            bool finFound = false;
+            bool solutionFound = false;
             List<Point> pointsMove;
             int count;
-            // Пока не найден путь
-            while (!finFound)
+            while (!solutionFound)
             {
                 Thread.Sleep(Sleep);
                 pointsMove = PointsFounders.PossiblePointsWithDirections(Maze, current);
@@ -92,16 +90,15 @@ namespace MazeGenerator.MazeSolvers
                     GoToNewPoint(pointsMove[selected]);
                 }
                 else
-                {// Если некуда идти, то возвращаемся назад
+                {
                     if (points.Count > 1)
                         PointRollback(ref look);
-                    else // Если кол-во точек в пути < 1 - мы пришли к старту
-                        finFound = true;
+                    else
+                        solutionFound = true;
                 }
-                if (current.X == finishpoint.X && current.Y == finishpoint.Y) // Если мы в финишной точке, то завершаем цикл
-                    finFound = true;
+                if (current.X == finishpoint.X && current.Y == finishpoint.Y)
+                    solutionFound = true;
             }
-            // Если мы в финишной точке - решение найдено
             if (current.X == finishpoint.X && current.Y == finishpoint.Y)
                 Result = true;
             else
@@ -135,10 +132,10 @@ namespace MazeGenerator.MazeSolvers
                 {
                     if (points.Count > 1)
                         PointRollback(ref placeholder);
-                    else // Если кол-во точек в пути < 1 - мы пришли к старту
+                    else
                         finFound = true;
                 }
-                if (current.X == finishpoint.X && current.Y == finishpoint.Y) //Если мы в финишной точке, то завершаем цикл
+                if (current.X == finishpoint.X && current.Y == finishpoint.Y)
                     finFound = true;
             }
             if (current.X == finishpoint.X && current.Y == finishpoint.Y)
@@ -159,16 +156,8 @@ namespace MazeGenerator.MazeSolvers
             if (!isBitmapUsed)
                 allPoints.Add(clr);
             Maze[clr.X, clr.Y] = 2;
-            if (FeatureCode == 0)
-            {
-                view.DrawChange(clr, Color.SkyBlue);
-                view.DrawChange(current, Color.SkyBlue);
-            }
-            else
-            {
-                view.DrawChange(clr, FeatureCode);
-                view.DrawChange(current, FeatureCode);
-            }
+            view.DrawChange(clr, Color.SkyBlue);
+            view.DrawChange(current, Color.SkyBlue);
             points.Add(selected);
             if (!isBitmapUsed)
                 allPoints.Add(selected);
@@ -184,20 +173,10 @@ namespace MazeGenerator.MazeSolvers
         /// <param name="look">Обновляемое значение взгляда точки-решателя лабиринта</param>
         public void PointRollback(ref int look)
         {
-            if (FeatureCode == 0)
-            {
-                view.DrawChange(points.Last(), Color.Coral);
-                Point clr = ClearPoint(current, points[points.Count - 2]);
-                look = lookUpdate(current, clr);
-                view.DrawChange(clr, Color.Coral);
-            }
-            else
-            {
-                view.DrawChange(points.Last(), FeatureCode);
-                Point clr = ClearPoint(current, points[points.Count - 2]);
-                look = lookUpdate(current, clr);
-                view.DrawChange(clr, FeatureCode);
-            }
+            view.DrawChange(points.Last(), Color.Coral);
+            Point clr = ClearPoint(current, points[points.Count - 2]);
+            look = LookUpdate(current, clr);
+            view.DrawChange(clr, Color.Coral);
             points.RemoveAt(points.Count - 1);
             if (points.Count != 0)
             {
@@ -213,7 +192,7 @@ namespace MazeGenerator.MazeSolvers
         /// <param name="x1">Текущая точка</param>
         /// <param name="x2">Промежуточная точка перед точкой возврата</param>
         /// <returns>Возвращает направление "взгляда" решателя</returns>
-        private int lookUpdate(Point x1, Point x2)
+        private int LookUpdate(Point x1, Point x2)
         {
             // 0 - право, 1 - низ, 2 - лево, 3 - верх
             if (x1.X == x2.X)
@@ -266,8 +245,13 @@ namespace MazeGenerator.MazeSolvers
             for (int i = 0; i < allPoints.Count; i++)
             {
                 if ((allPoints[i].X != startpoint.X || allPoints[i].Y != startpoint.Y)
-                    && (allPoints[i].X != finishpoint.X || allPoints[i].Y != finishpoint.Y))
-                    view.DrawChange(allPoints[i], Color.White);
+                    && (allPoints[i].X != finishpoint.X || allPoints[i].Y != finishpoint.Y)) { 
+                    if (FeatureCode == 0)
+                        view.DrawChange(allPoints[i], Color.White);
+                    else
+                        view.DrawChange(allPoints[i], FeatureCode);
+                }
+                    
             }
         }
     }

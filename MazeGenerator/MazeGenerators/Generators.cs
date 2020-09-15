@@ -9,27 +9,23 @@ namespace MazeGenerator.MazeGenerators
     public class Generators
     {
         //PointsFounders founders; // Ссылка на класс, позволяющий искать точки
-        View view; // Ссылка на класс отрисовки
+        private readonly View view; // Ссылка на класс отрисовки
 
-        int[,] mazeArray; // Массив, представляющий лабиринт
-        List<Point> points; // Список точек при построении лабиринта
-        Random random;
-        Point startpoint; // Начальная точка
-        Point finishpoint; // Конечная точка
-        Point current; // Текущая точка
-        int lastX; // Точка последней посещённой вертикали для повышения эффективности алгоритма Hunt-And-Kill
+        private readonly int[,] mazeArray; // Массив, представляющий лабиринт
+        private readonly List<Point> points; // Список точек при построении лабиринта
+        private readonly Random random;
+        private Point startpoint; // Начальная точка
+        private Point finishpoint; // Конечная точка
+        private Point current; // Текущая точка
+        private int lastX; // Точка последней посещённой вертикали для повышения эффективности алгоритма Hunt-And-Kill
 
         public List<Point> BlackPoints { get; set; }
 
-        int featureCode; // Код особенности отрисовки
-        int sleep; // Время остановки потока при отрисовке
-        public int Sleep
-        {
-            set { sleep = value; }
-        }
+        private readonly int featureCode; // Код особенности отрисовки
+        private readonly int sleep; // Время остановки потока при отрисовке
 
-        bool ignored; // Были ли проигнорированные точки в алгоритме Hunt-And-Kill (если к ним не было прямого доступа)
-        int ignoredCount; // Счётчик циклов игнорирования
+        private bool ignored; // Были ли проигнорированные точки в алгоритме Hunt-And-Kill (если к ним не было прямого доступа)
+        private int ignoredCount; // Счётчик циклов игнорирования
 
         /// <summary>
         /// Конструктор класса
@@ -70,13 +66,10 @@ namespace MazeGenerator.MazeGenerators
                         if (!rand)
                             mazeArray[i, j] = (int)PointStatus.canVisit; // 1 - клетки, по которым можно ходить
                         else
-                        {
-
                             if (random.NextDouble() < prob && !(i == startpoint.X && j == startpoint.Y) && !(i == finishpoint.X && j == finishpoint.Y))
-                                BlackPoints.Add(new Point(i, j));
-                            else
-                                mazeArray[i, j] = (int)PointStatus.canVisit;
-                        }
+                            BlackPoints.Add(new Point(i, j));
+                        else
+                            mazeArray[i, j] = (int)PointStatus.canVisit;
                     }
                 }
             }
@@ -96,27 +89,23 @@ namespace MazeGenerator.MazeGenerators
                 view.DrawBlackPoints(BlackPoints);
                 ClearBlackPointsList();
             }
-            // 2 - уже посещенная вершина
             current = finishpoint;
             if (fromStart)
                 current = startpoint;
             mazeArray[current.X, current.Y] = (int)PointStatus.alreadyVisited;
             points.Add(current);
-            // Цикл идёт, пока кол-во точек, где можно куда-то пойти, не равно 0
             while (points.Count != 0)
             {
                 Thread.Sleep(sleep);
                 List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1);
-                int count = possPoints.Count;
-                if (count != 0)
-                {// Если есть куда идти
-                    int selected = random.Next(0, count);
+                int pointsToVisit = possPoints.Count;
+                if (pointsToVisit != 0)
+                {
+                    int selected = random.Next(0, pointsToVisit);
                     GoToNewPoint(possPoints[selected]);
                 }
                 else
-                {// Иначе, если некуда идти, надо вернуться к предыдущей точке
                     PointRollback();
-                }
             }
             if (whiteProb > 0)
                 WhiteGen(whiteProb);
@@ -137,19 +126,22 @@ namespace MazeGenerator.MazeGenerators
             }
             ignored = false;
             ignoredCount = 0;
-            current = finishpoint;
-            bool fSCopy = fromStart;
-            bool isHereToGo = true;
+            bool hasPointsToVisit = true;
             if (fromStart)
+            {
                 current = startpoint;
-            if (fromStart)
                 lastX = 1;
+            }
             else
+            {
                 lastX = mazeArray.GetLength(0) - 2;
+                current = finishpoint;
+            }
+
             mazeArray[current.X, current.Y] = 2;
             // Цикл идёт, пока кол-во точек, где можно куда-то пойти, не равно 0, а также
             // (если были проигнорированы некоторые точки) количество проигнорированных циклов < 3
-            while (isHereToGo)
+            while (hasPointsToVisit)
             {
                 Thread.Sleep(sleep);
                 List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1);
@@ -161,7 +153,7 @@ namespace MazeGenerator.MazeGenerators
                 }
                 else
                 {// Иначе, если некуда идти, надо найти новую точку для продолжения отрисовки
-                    isHereToGo = FindNewPoint(fSCopy);
+                    hasPointsToVisit = FindNewPoint(fromStart);
                 }
             }
             if (whiteProb > 0)
@@ -185,8 +177,8 @@ namespace MazeGenerator.MazeGenerators
                         {
                             if (random.NextDouble() < whiteProb)
                             {
-                                List<Point> poss = PointsFounders.PossiblePoints(mazeArray, i, j, 1, (int)PointStatus.alreadyVisited);
-                                if (poss.Count > 1)
+                                List<Point> pointToConnect = PointsFounders.PossiblePoints(mazeArray, i, j, 1, (int)PointStatus.alreadyVisited);
+                                if (pointToConnect.Count > 1)
                                 {// Делаем тоннель так, чтобы можно было связать две точки
                                     mazeArray[i, j] = 1;
                                     if (featureCode == 0)
@@ -210,7 +202,7 @@ namespace MazeGenerator.MazeGenerators
         {
             Point clr = FoundPointBetweenTwoPoints(current, newPoint);
             mazeArray[clr.X, clr.Y] = (int)PointStatus.alreadyVisited;
-            if (featureCode == 0 )
+            if (featureCode == 0)
                 view.DrawChange(clr, Color.White);
             else
                 view.DrawChange(clr, featureCode);
@@ -226,14 +218,10 @@ namespace MazeGenerator.MazeGenerators
         /// </summary>
         private void PointRollback()
         {
-            //Point clr = FoundPointBetweenTwoPoints(current, points[points.Count - 2]);
             if (featureCode == 0)
-            {
                 view.DrawChange(points.Last(), Color.White);
-            }
-            else {
+            else
                 view.DrawChange(points.Last(), featureCode);
-            }
             points.RemoveAt(points.Count - 1);
             if (points.Count != 0)
             {
@@ -273,8 +261,7 @@ namespace MazeGenerator.MazeGenerators
         /// <returns>Возвращает true, если новая точка найдена и к ней проложен путь</returns>
         public bool FindNewPoint(bool fromStart)
         {
-            int i;
-            int j;
+            int i, j;
             if (fromStart)
             {
                 for (i = lastX; i < mazeArray.GetLength(0); i += 2)
@@ -290,7 +277,11 @@ namespace MazeGenerator.MazeGenerators
                                 ignored = true;
                         }
                         if (i == mazeArray.GetLength(0) - 2 && j == mazeArray.GetLength(1) - 2 && ignored && ignoredCount < 3)
-                        { lastX = mazeArray.GetLength(0) - 2; j = mazeArray.GetLength(1) - 2; ignored = true; SecondCycle(fromStart); }
+                        {
+                            lastX = mazeArray.GetLength(0) - 2;
+                            j = mazeArray.GetLength(1) - 2;
+                            ignored = true; SecondCycle(fromStart);
+                        }
                     }
                 }
             }
@@ -309,7 +300,11 @@ namespace MazeGenerator.MazeGenerators
                                 ignored = true;
                         }
                         if (i == 1 && j == 1 && ignored && ignoredCount < 3)
-                        { lastX = 1; j = 1; SecondCycle(fromStart); }
+                        {
+                            lastX = 1;
+                            j = 1;
+                            SecondCycle(fromStart);
+                        }
                     }
                 }
             }
@@ -331,23 +326,22 @@ namespace MazeGenerator.MazeGenerators
         /// <param name="fromStart">Производится ли создание лабиринта со старта</param>
         private void SecondCycle(bool fromStart)
         {
-            fromStart = !fromStart;
             ignored = false;
             ignoredCount++;
-            bool isHereToGo = true;
-            while (isHereToGo)
+            bool hasPointToVisit = true;
+            while (hasPointToVisit)
             {
                 Thread.Sleep(sleep);
-                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1); //possiblePoints(current.X, current.Y, 2,1); //поиск возможных для движения точек
-                int count = possPoints.Count;
-                if (count != 0)
+                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1);
+                int possiblePointsCount = possPoints.Count;
+                if (possiblePointsCount != 0)
                 {// Если есть куда идти
-                    int selected = random.Next(0, count);
+                    int selected = random.Next(0, possiblePointsCount);
                     GoToNewPointHunt(possPoints[selected]);
                 }
                 else
                 {// Иначе, если некуда идти, надо найти новую точку для продолжения отрисовки
-                    isHereToGo = FindNewPoint(fromStart);
+                    hasPointToVisit = FindNewPoint(!fromStart);
                 }
             }
         }

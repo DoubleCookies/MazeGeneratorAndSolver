@@ -55,14 +55,14 @@ namespace MazeGenerator
         /// <summary>
         /// Отрисовка изменений при построении лабиринта
         /// </summary>
-        /// <param name="change">Точка изменения</param>
+        /// <param name="point">Точка изменения</param>
         /// <param name="color">Цвет изменения</param>
-        public void DrawChange(Point change, Color color)
+        public void DrawChange(Point point, Color color)
         {
-            if (IsNotStartPoint(change) && IsNotFinishPoint(change))
+            if (IsNotStartPoint(point) && IsNotFinishPoint(point))
             {
                 SolidBrush brush = new SolidBrush(color);
-                GraphicsObject.FillRectangle(brush, change.X * pixelSize, change.Y * pixelSize, pixelSize, pixelSize);
+                GraphicsObject.FillRectangle(brush, point.X * pixelSize, point.Y * pixelSize, pixelSize, pixelSize);
                 brush.Dispose();
             }
         }
