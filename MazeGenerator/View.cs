@@ -6,18 +6,17 @@ namespace MazeGenerator
 {
     public class View
     {
-
         // Набор кистей
         private readonly Brush brushBlack = new SolidBrush(Color.FromArgb(255, 60, 60, 60));
         private readonly Brush brushWhite = new SolidBrush(Color.White);
         private readonly Brush brushLimeGreen = new SolidBrush(Color.LimeGreen);
         private readonly Brush brushViolet = new SolidBrush(Color.Violet);
 
-        Point start; // Стартовая тчока
-        Point finish; // Конечная точка
-        int pixelSize; // Множитель размера одного квадрата отрисовки
-        int mazeWidth; // Ширина лабиринта
-        int mazeHeight; // Высота лабиринта
+        private Point start;
+        private Point finish;
+        private int pixelSize;
+        private int mazeWidth;
+        private int mazeHeight;
         private readonly Random rnd = new Random();
 
         // Объект для отрисовки
@@ -37,7 +36,8 @@ namespace MazeGenerator
         /// <summary>
         /// Метод изначальной отрисовки лабиринта
         /// </summary>
-        /// <param name="Maze">Массив лабиринта</param>
+        /// <param name="mazewidth">Ширина лабиринта</param>
+        /// <param name="mazeheight">Высота лабиринта</param>
         /// <param name="width">Ширина picturebox'a</param>
         /// <param name="height">Высота picturebox'a</param>
         public void DrawMazeInitState(int mazewidth, int mazeheight, int width, int height)
@@ -46,9 +46,9 @@ namespace MazeGenerator
             mazeWidth = mazewidth;
             mazeHeight = mazeheight;
 
-            int b1 = width / mazeWidth;
-            int b2 = height / mazeHeight;
-            pixelSize = Math.Min(b1, b2);
+            int pixelWidth = width / mazeWidth;
+            int pixelHeight = height / mazeHeight;
+            pixelSize = Math.Min(pixelWidth, pixelHeight);
             FillMazePicture();
         }
 
@@ -59,7 +59,7 @@ namespace MazeGenerator
         /// <param name="color">Цвет изменения</param>
         public void DrawChange(Point point, Color color)
         {
-            if (IsNotStartPoint(point) && IsNotFinishPoint(point))
+            if (IsNotStartOrFinishPoint(point))
             {
                 SolidBrush brush = new SolidBrush(color);
                 GraphicsObject.FillRectangle(brush, point.X * pixelSize, point.Y * pixelSize, pixelSize, pixelSize);
@@ -214,20 +214,10 @@ namespace MazeGenerator
         /// Проверка, является ли точка стартом лабиринта
         /// </summary>
         /// <param name="point">Точка</param>
-        /// <returns>true, если точка не является стартом лабиринта</returns>
-        private bool IsNotStartPoint(Point point)
+        /// <returns>true, если точка не является стартом или финишем лабиринта</returns>
+        private bool IsNotStartOrFinishPoint(Point point)
         {
-            return point.X != start.X || point.Y != start.Y;
-        }
-
-        /// <summary>
-        /// Проверка, является ли точка финишем лабиринта
-        /// </summary>
-        /// <param name="point">Точка</param>
-        /// <returns>true, если точка не является финишем лабиринта</returns>
-        private bool IsNotFinishPoint(Point point)
-        {
-            return point.X != finish.X || point.Y != finish.Y;
+            return (point.X != start.X || point.Y != start.Y) && (point.X != finish.X || point.Y != finish.Y);
         }
 
         /// <summary>
