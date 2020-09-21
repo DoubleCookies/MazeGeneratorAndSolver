@@ -72,7 +72,6 @@
             this.radioButtonRR = new System.Windows.Forms.RadioButton();
             this.radioButtonLR = new System.Windows.Forms.RadioButton();
             this.buttonSolverStart = new System.Windows.Forms.Button();
-            this.buttonGame = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.textBoxCount = new System.Windows.Forms.TextBox();
             this.buttonGenerateBatch = new System.Windows.Forms.Button();
@@ -108,7 +107,6 @@
             this.textBoxWidth.Size = new System.Drawing.Size(59, 22);
             this.textBoxWidth.TabIndex = 1;
             this.textBoxWidth.Text = "10";
-            this.textBoxWidth.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxWidth_KeyDown);
             // 
             // textBoxHeight
             // 
@@ -118,7 +116,6 @@
             this.textBoxHeight.Size = new System.Drawing.Size(59, 22);
             this.textBoxHeight.TabIndex = 2;
             this.textBoxHeight.Text = "10";
-            this.textBoxHeight.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxHeight_KeyDown);
             // 
             // label1
             // 
@@ -150,7 +147,6 @@
             this.groupBox1.Controls.Add(this.radioButtonRR);
             this.groupBox1.Controls.Add(this.radioButtonLR);
             this.groupBox1.Controls.Add(this.buttonSolverStart);
-            this.groupBox1.Controls.Add(this.buttonGame);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.textBoxCount);
             this.groupBox1.Controls.Add(this.buttonGenerateBatch);
@@ -236,7 +232,6 @@
             this.textBoxEmptyPlacesProb.Size = new System.Drawing.Size(59, 22);
             this.textBoxEmptyPlacesProb.TabIndex = 36;
             this.textBoxEmptyPlacesProb.Text = "0";
-            this.textBoxEmptyPlacesProb.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxProb_KeyDown);
             // 
             // label10
             // 
@@ -601,18 +596,6 @@
             this.buttonSolverStart.UseVisualStyleBackColor = true;
             this.buttonSolverStart.Click += new System.EventHandler(this.buttonSolverStart_Click);
             // 
-            // buttonGame
-            // 
-            this.buttonGame.Enabled = false;
-            this.buttonGame.Location = new System.Drawing.Point(185, 448);
-            this.buttonGame.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonGame.Name = "buttonGame";
-            this.buttonGame.Size = new System.Drawing.Size(139, 46);
-            this.buttonGame.TabIndex = 33;
-            this.buttonGame.Text = "Пройти лабиринт самому";
-            this.buttonGame.UseVisualStyleBackColor = true;
-            this.buttonGame.Click += new System.EventHandler(this.ButtonGame_Click);
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
@@ -630,7 +613,6 @@
             this.textBoxCount.Size = new System.Drawing.Size(52, 22);
             this.textBoxCount.TabIndex = 30;
             this.textBoxCount.Text = "100";
-            this.textBoxCount.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // buttonGenerateBatch
             // 
@@ -671,7 +653,6 @@
             this.textBoxSize.Size = new System.Drawing.Size(34, 22);
             this.textBoxSize.TabIndex = 24;
             this.textBoxSize.Text = "10";
-            this.textBoxSize.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSize_KeyDown);
             // 
             // buttonGenPictire
             // 
@@ -701,7 +682,6 @@
             this.textBoxSleep.Size = new System.Drawing.Size(63, 22);
             this.textBoxSleep.TabIndex = 6;
             this.textBoxSleep.Text = "0";
-            this.textBoxSleep.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSleep_KeyDown);
             // 
             // MazeForm
             // 
@@ -717,7 +697,6 @@
             this.Text = "MazeGenerator";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.SizeChanged += new System.EventHandler(this.MazeForm_SizeChanged);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MazeForm_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLabirint)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -752,7 +731,6 @@
         private System.Windows.Forms.TextBox textBoxEndX;
         private System.Windows.Forms.CheckBox checkBoxStart;
         private System.Windows.Forms.TextBox textBoxCount;
-        private System.Windows.Forms.Button buttonGame;
         private System.Windows.Forms.CheckBox checkBoxFromBegin;
         private System.Windows.Forms.TextBox textBoxEmptyPlacesProb;
         private System.Windows.Forms.Label label10;

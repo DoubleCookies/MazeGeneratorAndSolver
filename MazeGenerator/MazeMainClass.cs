@@ -9,7 +9,6 @@ namespace MazeGenerator
     {
         private Generators Generator { get; set; }
         private Solvers Solver { get; set; }
-        public bool IsMazeFinished { get; set; }
         public bool Result { get; set; }
         public int[,] Maze { get; set; }
         public int Sleep { get; set; }
@@ -53,7 +52,6 @@ namespace MazeGenerator
             FeatureCode = feature;
             view.SetStartAndFinish(startpoint, finishpoint);
             Result = false;
-            IsMazeFinished = false;
             Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
             Generator.FillMazeArray(blackProb > 0, blackProb);
             Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
@@ -124,53 +122,6 @@ namespace MazeGenerator
         {
             Solver.FeatureCode = FeatureCode;
             Solver.Sleep = Sleep;
-        }
-        /// <summary>
-        /// Инициация игры - поиска решения вручную
-        /// </summary>
-        public void GameInit()
-        {
-            MazeClear();
-            current = startpoint;
-            view.DrawCircle(startpoint, Color.Violet);
-            view.DrawCircle(current, Color.Red);
-            view.DrawCircle(finishpoint, Color.LimeGreen);
-        }
-
-        /// <summary>
-        /// Метод обработки "игры"
-        /// </summary>
-        /// <param name="x">Направление движения по оси Х</param>
-        /// <param name="y">Направление движения по оси Y</param>
-        public void Game(int x, int y)
-        {
-            Point next = new Point(current.X + x, current.Y + y);
-            if (Maze[next.X, next.Y] != 0)
-            {
-                if (current != startpoint)
-                    view.DrawCircle(current, Color.White);
-                else
-                    view.DrawCircle(current, Color.Violet);
-                current = next;
-                if (current == finishpoint)
-                    IsMazeFinished = true;
-                view.DrawCircle(current, Color.Red);
-            }
-        }
-
-        /// <summary>
-        /// Очистка лабиринта
-        /// </summary>
-        private void MazeClear()
-        {
-            for (int i = 0; i < Maze.GetLength(0); i++)
-            {
-                for (int j = 0; j < Maze.GetLength(1); j++)
-                {
-                    if (Maze[i, j] != 0)
-                        Maze[i, j] = 1;
-                }
-            }
         }
     }
 }

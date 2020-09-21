@@ -199,18 +199,6 @@ namespace MazeGenerator
         }
 
         /// <summary>
-        /// Отрисовка круга при самостоятельном прохождении лабиринта
-        /// </summary>
-        /// <param name="change">Точка для отрисовки</param>
-        /// <param name="color">Цвет точки</param>
-        public void DrawCircle(Point change, Color color)
-        {
-            SolidBrush brush = new SolidBrush(color);
-            GraphicsObject.FillEllipse(brush, change.X * pixelSize, change.Y * pixelSize, pixelSize, pixelSize);
-            brush.Dispose();
-        }
-
-        /// <summary>
         /// Проверка, является ли точка стартом лабиринта
         /// </summary>
         /// <param name="point">Точка</param>

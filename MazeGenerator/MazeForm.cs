@@ -18,7 +18,6 @@ namespace MazeGenerator
         int width; // Ширина лабиринта
         int height; // Высота лабиринта
         int sleep; // Тайм-аут отрисовки
-        bool gameInit = false; // Решает ли пользователь лабиринт
 
         public MazeForm()
         {
@@ -29,7 +28,6 @@ namespace MazeGenerator
 
         private void buttonMazeGeneration_Click(object sender, EventArgs e)
         {
-            gameInit = false;
             Thread thread = new Thread(RunMazeGeneration);
             SwitchButtonsStatus(false);
             thread.Start();
@@ -97,18 +95,6 @@ namespace MazeGenerator
         {
             buttonMazeGeneration.Enabled = status;
             buttonSolverStart.Enabled = status;
-            buttonGame.Enabled = status;
-        }
-
-        private void ButtonGame_Click(object sender, EventArgs e)
-        {
-            if (!gameInit)
-            {
-                maze.GameInit();
-                gameInit = true;
-            }
-            textBoxWidth.Focus();
-            buttonGame.Enabled = false;
         }
 
         private void ButtonGenPicture_Click(object sender, EventArgs e)
@@ -298,53 +284,6 @@ namespace MazeGenerator
                 drawingPicturebox.Dispose();
             drawingPicturebox = pictureBoxLabirint.CreateGraphics();
             view = new View(drawingPicturebox);
-        }
-
-        private void MazeForm_KeyDown(object sender, KeyEventArgs e)
-        { keyDown(sender, e); }
-
-        private void textBoxWidth_KeyDown(object sender, KeyEventArgs e)
-        { keyDown(sender, e); }
-
-        private void textBoxHeight_KeyDown(object sender, KeyEventArgs e)
-        { keyDown(sender, e); }
-
-        private void textBoxSleep_KeyDown(object sender, KeyEventArgs e)
-        { keyDown(sender, e); }
-
-        private void textBoxSize_KeyDown(object sender, KeyEventArgs e)
-        { keyDown(sender, e); }
-
-        private void textBox1_KeyDown(object sender, KeyEventArgs e)
-        { keyDown(sender, e); }
-
-        private void textBoxProb_KeyDown(object sender, KeyEventArgs e)
-        { keyDown(sender, e); }
-
-        /// <summary>
-        /// Обработка нажатия на стрелки во время прохождения лабиринта игроком
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void keyDown(object sender, KeyEventArgs e)
-        {
-            if (gameInit)
-            {
-                switch (e.KeyData)
-                {
-                    case Keys.Down: { maze.Game(0, 1); break; }
-                    case Keys.Up: { maze.Game(0, -1); break; }
-                    case Keys.Left: { maze.Game(-1, 0); break; }
-                    case Keys.Right: { maze.Game(1, 0); break; }
-                }
-                if (maze.IsMazeFinished)
-                {
-                    gameInit = false;
-                    buttonGame.Enabled = true;
-                    maze.IsMazeFinished = false;
-                    MessageBox.Show("Лабиринт решён!");
-                }
-            }
         }
 
         private void checkBoxFeatureUse_CheckedChanged(object sender, EventArgs e)
