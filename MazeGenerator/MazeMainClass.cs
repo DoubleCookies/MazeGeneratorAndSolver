@@ -14,14 +14,11 @@ namespace MazeGenerator
         public int Sleep { get; set; }
         public int FeatureCode { get; set; }
 
-        private readonly View view; // ссылка на класс рисования
         private Point startpoint; // Начальная точка
         private Point finishpoint; // Конечная точка
 
         private readonly double blackProb; //Вероятность появления доп. стен
         private readonly double whiteProb; //Вероятность убрать стену
-
-        private Point current; // Текущая точка
 
         private readonly bool fromStart; // Генерация лабиринта со старта или с финиша
 
@@ -46,11 +43,9 @@ namespace MazeGenerator
             finishpoint = finish;
             this.whiteProb = whiteProb;
             this.blackProb = blackProb;
-            this.view = view;
             Sleep = sleep;
             this.fromStart = fromStart;
             FeatureCode = feature;
-            view.SetStartAndFinish(startpoint, finishpoint);
             Result = false;
             Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
             Generator.FillMazeArray(blackProb > 0, blackProb);

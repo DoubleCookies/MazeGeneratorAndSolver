@@ -6,8 +6,11 @@ namespace MazeGenerator
 {
     public class View
     {
+        private static readonly Color defaultBlack = Color.FromArgb(255, 60, 60, 60);
+        private static readonly Color defaultWhite = Color.FromArgb(255, 240, 240, 240);
+
         // Набор кистей
-        private readonly Brush brushBlack = new SolidBrush(Color.FromArgb(255, 60, 60, 60));
+        private readonly Brush brushBlack = new SolidBrush(defaultBlack);
         private readonly Brush brushWhite = new SolidBrush(Color.White);
         private readonly Brush brushLimeGreen = new SolidBrush(Color.LimeGreen);
         private readonly Brush brushViolet = new SolidBrush(Color.Violet);
@@ -33,22 +36,33 @@ namespace MazeGenerator
             GraphicsObject = draw;
         }
 
+
+        /// <summary>
+        /// Конструктор, принимающий объект для рисования, а также начальную и конечную точку лабиринта
+        /// </summary>
+        /// <param name="draw">Объект, на котором производится отрисовка</param>
+        /// <param name="start">Начальная точка лабиринта</param>
+        /// <param name="finish">Конечная точка лабиринта</param>
+        public View(Graphics draw, Point start, Point finish)
+        {
+            GraphicsObject = draw;
+            this.start = start;
+            this.finish = finish;
+        }
+
         /// <summary>
         /// Метод изначальной отрисовки лабиринта
         /// </summary>
         /// <param name="mazewidth">Ширина лабиринта</param>
         /// <param name="mazeheight">Высота лабиринта</param>
-        /// <param name="width">Ширина picturebox'a</param>
-        /// <param name="height">Высота picturebox'a</param>
-        public void DrawMazeInitState(int mazewidth, int mazeheight, int width, int height)
+        /// <param name="pictureboxWidth">Ширина picturebox'a</param>
+        /// <param name="pictureboxHeight">Высота picturebox'a</param>
+        public void DrawMazeInitState(int mazewidth, int mazeheight, int pictureboxWidth, int pictureboxHeight)
         {
-            GraphicsObject.Clear(Color.FromArgb(255, 240, 240, 240));
+            GraphicsObject.Clear(defaultWhite);
             mazeWidth = mazewidth;
             mazeHeight = mazeheight;
-
-            int pixelWidth = width / mazeWidth;
-            int pixelHeight = height / mazeHeight;
-            pixelSize = Math.Min(pixelWidth, pixelHeight);
+            pixelSize = Math.Min(pictureboxWidth / mazeWidth, pictureboxHeight / mazeHeight);
             FillMazePicture();
         }
 
@@ -139,22 +153,11 @@ namespace MazeGenerator
         /// <summary>
         /// Отрисовка чёрных квадратов при генерации пустых областей
         /// </summary>
-        /// <param name="black">Список точек</param>
-        public void DrawBlackPoints(List<Point> black)
+        /// <param name="blackPoints">Список точек</param>
+        public void DrawBlackPoints(List<Point> blackPoints)
         {
-            for (int i = 0; i < black.Count; i++)
-                DrawChange(black[i], Color.FromArgb(255, 60, 60, 60));
-        }
-
-        /// <summary>
-        /// Метод, задающий точки старта и финиша
-        /// </summary>
-        /// <param name="st">Точка старта</param>
-        /// <param name="fin">Точка финиша</param>
-        public void SetStartAndFinish(Point st, Point fin)
-        {
-            start = st;
-            finish = fin;
+            for (int i = 0; i < blackPoints.Count; i++)
+                DrawChange(blackPoints[i], defaultBlack);
         }
 
         /// <summary>
@@ -162,16 +165,16 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="Maze">Лабиринт</param>
         /// <param name="size">Размер для отрисовки квадрата</param>
-        public void InitMazeBitmap(int[,] Maze, int size)
+        public void InitMazeBitmap(int width, int height, int size)
         {
-            mazeWidth = Maze.GetLength(0);
-            mazeHeight = Maze.GetLength(1);
+            mazeWidth = width;
+            mazeHeight = height;
             pixelSize = size;
             int w = mazeWidth * pixelSize;
             int h = mazeHeight * pixelSize;
             MazeBitmap = new Bitmap(w, h);
             GraphicsObject = Graphics.FromImage(MazeBitmap);
-            GraphicsObject.Clear(Color.FromArgb(255, 240, 240, 240));
+            GraphicsObject.Clear(defaultWhite);
             FillMazePicture();
         }
 

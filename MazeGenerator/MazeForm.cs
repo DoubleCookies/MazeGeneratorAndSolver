@@ -113,7 +113,7 @@ namespace MazeGenerator
             isMazeValid = CreateMazeObject(true);
             if (isMazeValid)
             {
-                view.InitMazeBitmap(maze.Maze, size);
+                view.InitMazeBitmap(maze.Maze.GetLength(0), maze.Maze.GetLength(1), size);
                 maze.GenerateMazeWithRecursiveBacktracker();
                 if (checkBoxWithSolution.Checked)
                     SolverSelection();
@@ -151,7 +151,7 @@ namespace MazeGenerator
                     progressForm.Show();
                     for (int i = 0; i < count; i++)
                     {
-                        view.InitMazeBitmap(maze.Maze, size);
+                        view.InitMazeBitmap(maze.Maze.GetLength(0), maze.Maze.GetLength(1), size);
                         maze.GenerateMazeWithRecursiveBacktracker();
                         view.MazeBitmap.Save(dialog.SelectedPath + "/maze" + i + ".png", ImageFormat.Png);
                         if (checkBoxWithSolution.Checked)
@@ -211,7 +211,7 @@ namespace MazeGenerator
                 isFromStart = checkBoxFromBegin.Checked;
                 if (checkBoxFeatureUse.Checked)
                     featureCode = GetFeatureCode();
-                view = new View(pictureBoxLabirint.CreateGraphics());
+                view = new View(pictureBoxLabirint.CreateGraphics(), startpoint, finishpoint);
                 maze = new MazeMainClass(width, height, startpoint, finishpoint, prob, whiteProb, isFromStart, isBitmapUsed, featureCode, isBitmapUsed ? 0 : sleep, view, random);
             }
             catch (OutOfMemoryException)
