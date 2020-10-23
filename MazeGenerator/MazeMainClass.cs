@@ -48,7 +48,7 @@ namespace MazeGenerator
             FeatureCode = feature;
             Result = false;
             Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
-            Generator.FillMazeArray(blackProb > 0, blackProb);
+            Generator.FillMazeArray(blackProb);
             Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
         }
 
@@ -63,7 +63,7 @@ namespace MazeGenerator
         /// </summary>
         public void GenerateMazeWithRecursiveBacktracker()
         {
-            Generator.BackTrackMazeGenerate(fromStart, blackProb, whiteProb);
+            Generator.BackTrackMazeGenerate(fromStart, whiteProb);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace MazeGenerator
         /// </summary>
         public void GenerateMazeWithHuntAndKill()
         {
-            Generator.HuntAndKillMazeGenerate(fromStart, blackProb, whiteProb);
+            Generator.HuntAndKillMazeGenerate(fromStart, whiteProb);
         }
 
         /// <summary>

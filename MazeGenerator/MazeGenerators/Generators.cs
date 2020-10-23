@@ -8,22 +8,17 @@ namespace MazeGenerator.MazeGenerators
 {
     public class Generators
     {
-        //PointsFounders founders; // Ссылка на класс, позволяющий искать точки
-        private readonly View view; // Ссылка на класс отрисовки
-
-        private readonly int[,] mazeArray; // Массив, представляющий лабиринт
-        private readonly List<Point> points; // Список точек при построении лабиринта
+        private readonly View view;
+        private readonly int[,] mazeArray;
+        private readonly List<Point> points;
+        private readonly List<Point> blackPoints;
         private readonly Random random;
-        private Point startpoint; // Начальная точка
-        private Point finishpoint; // Конечная точка
-        private Point current; // Текущая точка
+        private Point startpoint;
+        private Point finishpoint;
+        private Point currentPoint;
         private int lastX; // Точка последней посещённой вертикали для повышения эффективности алгоритма Hunt-And-Kill
-
-        public List<Point> BlackPoints { get; set; }
-
         private readonly int featureCode; // Код особенности отрисовки
         private readonly int sleep; // Время остановки потока при отрисовке
-
         private bool ignored; // Были ли проигнорированные точки в алгоритме Hunt-And-Kill (если к ним не было прямого доступа)
         private int ignoredCount; // Счётчик циклов игнорирования
 
@@ -44,7 +39,7 @@ namespace MazeGenerator.MazeGenerators
             this.startpoint = startpoint;
             this.finishpoint = finishpoint;
             points = new List<Point>();
-            BlackPoints = new List<Point>();
+            blackPoints = new List<Point>();
             this.sleep = sleep;
             this.view = view;
             featureCode = featurecode;
@@ -52,25 +47,19 @@ namespace MazeGenerator.MazeGenerators
 
 
         /// <summary>
-        /// Заполнение лабиринта
+        /// Метод дял заполнения массива исходными данными
         /// </summary>
-        /// <param name="rand">Использовать ли случайные пропуски</param>
-        public void FillMazeArray(bool rand, double prob)
+        /// <param name="noPointProbability">Вероятность того, что точка будет проигнорирована</param>
+        public void FillMazeArray(double noPointProbability)
         {
-            for (int i = 0; i < mazeArray.GetLength(0); i++)
+            for (int i = 1; i < mazeArray.GetLength(0); i+=2)
             {
-                for (int j = 0; j < mazeArray.GetLength(1); j++)
+                for (int j = 1; j < mazeArray.GetLength(1); j+=2)
                 {
-                    if (i % 2 != 0 && j % 2 != 0) // Пропускаем чётные элементы
-                    {
-                        if (!rand)
-                            mazeArray[i, j] = (int)PointStatus.canVisit; // 1 - клетки, по которым можно ходить
-                        else
-                            if (random.NextDouble() < prob && !(i == startpoint.X && j == startpoint.Y) && !(i == finishpoint.X && j == finishpoint.Y))
-                            BlackPoints.Add(new Point(i, j));
-                        else
-                            mazeArray[i, j] = (int)PointStatus.canVisit;
-                    }
+                    if (random.NextDouble() < noPointProbability && !(i == startpoint.X && j == startpoint.Y) && !(i == finishpoint.X && j == finishpoint.Y))
+                        blackPoints.Add(new Point(i, j));
+                    else
+                        mazeArray[i, j] = (int)PointStatus.canVisit;
                 }
             }
         }
@@ -82,28 +71,22 @@ namespace MazeGenerator.MazeGenerators
         /// <param name="fromStart">Начинать ли генерацию со старта</param>
 
         /// <param name="whiteProb">Вероятность убрать стену</param>
-        public void BackTrackMazeGenerate(bool fromStart, double blackProb, double whiteProb)
+        public void BackTrackMazeGenerate(bool fromStart, double whiteProb)
         {
-            if (blackProb > 0)
-            {
-                view.DrawBlackPoints(BlackPoints);
-                ClearBlackPointsList();
-            }
-            current = finishpoint;
-            if (fromStart)
-                current = startpoint;
-            mazeArray[current.X, current.Y] = (int)PointStatus.alreadyVisited;
-            points.Add(current);
+            view.DrawBlackPoints(blackPoints);
+            ClearBlackPointsList();
+
+            currentPoint = fromStart ? startpoint : finishpoint;
+            mazeArray[currentPoint.X, currentPoint.Y] = (int)PointStatus.alreadyVisited;
+            points.Add(currentPoint);
             while (points.Count != 0)
             {
-                Thread.Sleep(sleep);
-                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1);
-                int pointsToVisit = possPoints.Count;
+                if (sleep != 0)
+                    Thread.Sleep(sleep);
+                List<Point> possiblePoints = PointsFounders.PossiblePoints(mazeArray, currentPoint.X, currentPoint.Y, 2, (int)PointStatus.canVisit);
+                int pointsToVisit = possiblePoints.Count;
                 if (pointsToVisit != 0)
-                {
-                    int selected = random.Next(0, pointsToVisit);
-                    GoToNewPoint(possPoints[selected]);
-                }
+                    GoToNewPoint(possiblePoints[random.Next(0, pointsToVisit)]);
                 else
                     PointRollback();
             }
@@ -117,44 +100,29 @@ namespace MazeGenerator.MazeGenerators
         /// <param name="fromStart">Начинать ли генерацию со старта</param>
         /// <param name="whiteSpaces">Убирать ли часть стен</param>
         /// <param name="whiteProb">Вероятность убрать стену</param>
-        public void HuntAndKillMazeGenerate(bool fromStart, double blackProb, double whiteProb)
+        public void HuntAndKillMazeGenerate(bool fromStart, double whiteProb)
         {
-            if (blackProb > 0)
-            {
-                view.DrawBlackPoints(BlackPoints);
-                ClearBlackPointsList();
-            }
+            view.DrawBlackPoints(blackPoints);
+            ClearBlackPointsList();
+
             ignored = false;
             ignoredCount = 0;
             bool hasPointsToVisit = true;
-            if (fromStart)
-            {
-                current = startpoint;
-                lastX = 1;
-            }
-            else
-            {
-                lastX = mazeArray.GetLength(0) - 2;
-                current = finishpoint;
-            }
-
-            mazeArray[current.X, current.Y] = 2;
+            currentPoint = fromStart ? startpoint : finishpoint;
+            lastX = fromStart ? 1 : mazeArray.GetLength(0) - 2;
+            mazeArray[currentPoint.X, currentPoint.Y] = 2;
             // Цикл идёт, пока кол-во точек, где можно куда-то пойти, не равно 0, а также
             // (если были проигнорированы некоторые точки) количество проигнорированных циклов < 3
             while (hasPointsToVisit)
             {
-                Thread.Sleep(sleep);
-                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1);
-                int count = possPoints.Count;
-                if (count != 0)
-                {// Если есть куда идти
-                    int selected = random.Next(0, count);
-                    GoToNewPointHunt(possPoints[selected]);
-                }
+                if (sleep != 0)
+                    Thread.Sleep(sleep);
+                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, currentPoint.X, currentPoint.Y, 2, (int)PointStatus.canVisit);
+                int pointsToVisit = possPoints.Count;
+                if (pointsToVisit != 0)
+                    GoToNewPointHunt(possPoints[random.Next(0, pointsToVisit)]);
                 else
-                {// Иначе, если некуда идти, надо найти новую точку для продолжения отрисовки
                     hasPointsToVisit = FindNewPoint(fromStart);
-                }
             }
             if (whiteProb > 0)
                 WhiteGen(whiteProb);
@@ -200,16 +168,16 @@ namespace MazeGenerator.MazeGenerators
         /// <param name="pointsMove">Список точек</param>
         private void GoToNewPoint(Point newPoint)
         {
-            Point clr = FoundPointBetweenTwoPoints(current, newPoint);
+            Point clr = FoundPointBetweenTwoPoints(currentPoint, newPoint);
             mazeArray[clr.X, clr.Y] = (int)PointStatus.alreadyVisited;
             if (featureCode == 0)
                 view.DrawChange(clr, Color.White);
             else
                 view.DrawChange(clr, featureCode);
-            view.DrawChange(current, Color.FromArgb(255, 170, 102));
+            view.DrawChange(currentPoint, Color.FromArgb(255, 170, 102));
             points.Add(newPoint);
-            current = points.Last();
-            view.DrawChange(current, Color.Red);
+            currentPoint = points.Last();
+            view.DrawChange(currentPoint, Color.Red);
             mazeArray[newPoint.X, newPoint.Y] = (int)PointStatus.alreadyVisited;
         }
 
@@ -225,8 +193,8 @@ namespace MazeGenerator.MazeGenerators
             points.RemoveAt(points.Count - 1);
             if (points.Count != 0)
             {
-                current = points.Last();
-                view.DrawChange(current, Color.Red);
+                currentPoint = points.Last();
+                view.DrawChange(currentPoint, Color.Red);
             }
         }
 
@@ -236,21 +204,21 @@ namespace MazeGenerator.MazeGenerators
         /// <param name="newPoint">Новая точка для перехода</param>
         private void GoToNewPointHunt(Point newPoint)
         {
-            Point clr = FoundPointBetweenTwoPoints(current, newPoint);
+            Point clr = FoundPointBetweenTwoPoints(currentPoint, newPoint);
             mazeArray[clr.X, clr.Y] = 2;
             if (featureCode == 0)
             {
                 view.DrawChange(clr, Color.White);
-                view.DrawChange(current, Color.White);
+                view.DrawChange(currentPoint, Color.White);
             }
             else
             {
                 view.DrawChange(clr, featureCode);
-                view.DrawChange(current, featureCode);
+                view.DrawChange(currentPoint, featureCode);
             }
-            current.X = newPoint.X;
-            current.Y = newPoint.Y;
-            view.DrawChange(current, Color.Red);
+            currentPoint.X = newPoint.X;
+            currentPoint.Y = newPoint.Y;
+            view.DrawChange(currentPoint, Color.Red);
             mazeArray[newPoint.X, newPoint.Y] = 2;
         }
 
@@ -311,9 +279,9 @@ namespace MazeGenerator.MazeGenerators
             if (ignored && ignoredCount < 3)
             { lastX = 1; ignored = true; SecondCycle(fromStart); }
             if (featureCode == 0)
-                view.DrawChange(current, Color.White);
+                view.DrawChange(currentPoint, Color.White);
             else
-                view.DrawChange(current, featureCode);
+                view.DrawChange(currentPoint, featureCode);
             return false;
         }
 
@@ -332,7 +300,7 @@ namespace MazeGenerator.MazeGenerators
             while (hasPointToVisit)
             {
                 Thread.Sleep(sleep);
-                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 1);
+                List<Point> possPoints = PointsFounders.PossiblePoints(mazeArray, currentPoint.X, currentPoint.Y, 2, (int)PointStatus.canVisit);
                 int possiblePointsCount = possPoints.Count;
                 if (possiblePointsCount != 0)
                 {// Если есть куда идти
@@ -354,28 +322,28 @@ namespace MazeGenerator.MazeGenerators
         private bool SelectNewPointOperations(int i, int j)
         {
             if (featureCode == 0)
-                view.DrawChange(current, Color.White);
+                view.DrawChange(currentPoint, Color.White);
             else
-                view.DrawChange(current, featureCode);
-            current.X = i;
-            current.Y = j;
-            List<Point> possibleToConnect = PointsFounders.PossiblePoints(mazeArray, current.X, current.Y, 2, 2);
+                view.DrawChange(currentPoint, featureCode);
+            currentPoint.X = i;
+            currentPoint.Y = j;
+            List<Point> possibleToConnect = PointsFounders.PossiblePoints(mazeArray, currentPoint.X, currentPoint.Y, 2, (int)PointStatus.alreadyVisited);
             if (possibleToConnect.Count == 0)
                 return false;
             int selected = random.Next(0, possibleToConnect.Count);
-            Point clr = FoundPointBetweenTwoPoints(current, possibleToConnect[selected]);
+            Point clr = FoundPointBetweenTwoPoints(currentPoint, possibleToConnect[selected]);
             if (featureCode == 0)
             {
                 view.DrawChange(clr, Color.White);
-                view.DrawChange(current, Color.White);
+                view.DrawChange(currentPoint, Color.White);
             }
             else
             {
                 view.DrawChange(clr, featureCode);
-                view.DrawChange(current, featureCode);
+                view.DrawChange(currentPoint, featureCode);
             }
             mazeArray[clr.X, clr.Y] = 2;
-            mazeArray[current.X, current.Y] = 2;
+            mazeArray[currentPoint.X, currentPoint.Y] = 2;
             return true;
         }
 
@@ -396,7 +364,7 @@ namespace MazeGenerator.MazeGenerators
         /// </summary>
         public void ClearBlackPointsList()
         {
-            BlackPoints.Clear();
+            blackPoints.Clear();
         }
     }
 }

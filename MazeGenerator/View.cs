@@ -6,8 +6,8 @@ namespace MazeGenerator
 {
     public class View
     {
-        private static readonly Color defaultBlack = Color.FromArgb(255, 60, 60, 60);
-        private static readonly Color defaultWhite = Color.FromArgb(255, 240, 240, 240);
+        private static readonly Color defaultBlack = Color.FromArgb(60, 60, 60);
+        private static readonly Color defaultWhite = Color.FromArgb(240, 240, 240);
 
         // Набор кистей
         private readonly Brush brushBlack = new SolidBrush(defaultBlack);
@@ -92,58 +92,58 @@ namespace MazeGenerator
             {
                 case 1:
                     {// Почти полный рандом
-                        newColor = Color.FromArgb(255, rnd.Next(30, 256), rnd.Next(30, 256), rnd.Next(30, 256));
+                        newColor = Color.FromArgb(rnd.Next(30, 256), rnd.Next(30, 256), rnd.Next(30, 256));
                         break;
                     }
                 case 2:
                     {// Красный
-                        newColor = Color.FromArgb(255, rnd.Next(190, 256), rnd.Next(60, 120), rnd.Next(80, 150));
+                        newColor = Color.FromArgb(rnd.Next(190, 256), rnd.Next(60, 120), rnd.Next(80, 150));
                         break;
                     }
                 case 3:
                     {// Зелёный
-                        newColor = Color.FromArgb(255, rnd.Next(80, 120), rnd.Next(200, 250), rnd.Next(80, 150));
+                        newColor = Color.FromArgb(rnd.Next(80, 120), rnd.Next(200, 250), rnd.Next(80, 150));
                         break;
                     }
                 case 4:
                     {// Синий
-                        newColor = Color.FromArgb(255, rnd.Next(50, 130), rnd.Next(60, 130), rnd.Next(190, 256));
+                        newColor = Color.FromArgb(rnd.Next(50, 130), rnd.Next(60, 130), rnd.Next(190, 256));
                         break;
                     }
                 case 50:
                     {// 50 оттенков серого (orly)
                         int a = rnd.Next(150, 200);
-                        newColor = Color.FromArgb(255, a, a, a);
+                        newColor = Color.FromArgb(a, a, a);
                         break;
                     }
                 case 23:
                     {// Желтый
-                        newColor = Color.FromArgb(255, rnd.Next(180, 230), rnd.Next(180, 240), rnd.Next(40, 120));
+                        newColor = Color.FromArgb(rnd.Next(180, 230), rnd.Next(180, 240), rnd.Next(40, 120));
                         break;
                     }
                 case 34:
                     {// Бирюзовый
-                        newColor = Color.FromArgb(255, rnd.Next(40, 120), rnd.Next(175, 250), rnd.Next(180, 230));
+                        newColor = Color.FromArgb(rnd.Next(40, 120), rnd.Next(175, 250), rnd.Next(180, 230));
                         break;
                     }
                 case 42:
                     {// Фиолетовый
-                        newColor = Color.FromArgb(255, rnd.Next(170, 220), rnd.Next(40, 120), rnd.Next(175, 250));
+                        newColor = Color.FromArgb(rnd.Next(170, 220), rnd.Next(40, 120), rnd.Next(175, 250));
                         break;
                     }
                 case 48:
                     {// Тёмная цветовая гамма
-                        newColor = Color.FromArgb(255, rnd.Next(80, 140), rnd.Next(80, 140), rnd.Next(80, 140));
+                        newColor = Color.FromArgb(rnd.Next(80, 140), rnd.Next(80, 140), rnd.Next(80, 140));
                         break;
                     }
                 case 49:
                     {// Светлая цветовая гамма
-                        newColor = Color.FromArgb(255, rnd.Next(190, 256), rnd.Next(190, 256), rnd.Next(190, 256));
+                        newColor = Color.FromArgb(rnd.Next(190, 256), rnd.Next(190, 256), rnd.Next(190, 256));
                         break;
                     }
                 default:
                     {
-                        newColor = Color.FromArgb(255, 255, 170, 102);
+                        newColor = Color.FromArgb(255, 170, 102);
                         break;
                     }
             }
