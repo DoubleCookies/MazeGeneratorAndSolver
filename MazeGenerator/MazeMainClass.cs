@@ -78,36 +78,33 @@ namespace MazeGenerator
         /// Метод левых поворотов
         /// </summary>
         /// <returns>Возвращает количество шагов для прохождения лабиринта</returns>
-        public int LeftRotateSolver()
+        public void LeftRotateSolver()
         {
             ParamsUpdate();
-            int stepsCount = Solver.LeftRightRotateSolver(true);
+            Solver.LeftRightRotateSolver(true);
             Result = Solver.Result;
-            return stepsCount;
         }
 
         /// <summary>
         /// Метод правых поворотов
         /// </summary>
         /// <returns>Возвращает количество шагов для прохождения лабиринта</returns>
-        public int RightRotateSolver()
+        public void RightRotateSolver()
         {
             ParamsUpdate();
-            int stepsCount = Solver.LeftRightRotateSolver(false);
+            Solver.LeftRightRotateSolver(false);
             Result = Solver.Result;
-            return stepsCount;
         }
 
         /// <summary>
         /// Метод случайных поворотов (сочетание левых и правых поворотов)
         /// </summary>
         /// <returns>Возвращает количество шагов для прохождения лабиринта</returns>
-        public int RandomSolver()
+        public void RandomSolver()
         {
             ParamsUpdate();
-            int stepsCount = Solver.RandomSolver();
+            Solver.RandomSolver();
             Result = Solver.Result;
-            return stepsCount;
         }
 
         /// <summary>

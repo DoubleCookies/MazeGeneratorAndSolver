@@ -68,7 +68,7 @@ namespace MazeGenerator.MazeSolvers
         /// </summary>
         /// <param name="leftRotation">True, если левые повороты, иначе - правые повороты</param>
         /// <returns>Возвращает кол-во шагов, затраченное на решение лабиринта</returns>
-        public int LeftRightRotateSolver(bool leftRotation)
+        public void LeftRightRotateSolver(bool leftRotation)
         {
             SolversInit();
             int look = 1; // 0 - право, 1 - низ, 2 - лево, 3 - верх
@@ -103,14 +103,13 @@ namespace MazeGenerator.MazeSolvers
                 Result = true;
             else
                 Result = false;
-            return steps;
         }
 
         /// <summary>
         /// Метод случайных поворотов - поворачивает куда хочет
         /// </summary>
         /// <returns>Возвращает кол-во шагов, затраченное на решение лабиринта</returns>
-        public int RandomSolver()
+        public void RandomSolver()
         {
             int placeholder = 1;
             Random rand = new Random();
@@ -142,7 +141,6 @@ namespace MazeGenerator.MazeSolvers
                 Result = true;
             else
                 Result = false;
-            return steps;
         }
 
         /// <summary>

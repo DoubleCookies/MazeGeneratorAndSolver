@@ -47,7 +47,7 @@ namespace MazeGenerator.MazeGenerators
 
 
         /// <summary>
-        /// Метод дял заполнения массива исходными данными
+        /// Метод для заполнения массива исходными данными
         /// </summary>
         /// <param name="noPointProbability">Вероятность того, что точка будет проигнорирована</param>
         public void FillMazeArray(double noPointProbability)
@@ -56,7 +56,8 @@ namespace MazeGenerator.MazeGenerators
             {
                 for (int j = 1; j < mazeArray.GetLength(1); j+=2)
                 {
-                    if (random.NextDouble() < noPointProbability && !(i == startpoint.X && j == startpoint.Y) && !(i == finishpoint.X && j == finishpoint.Y))
+                    if (random.NextDouble() < noPointProbability 
+                        && !(i == startpoint.X && j == startpoint.Y) && !(i == finishpoint.X && j == finishpoint.Y))
                         blackPoints.Add(new Point(i, j));
                     else
                         mazeArray[i, j] = (int)PointStatus.canVisit;
@@ -139,21 +140,18 @@ namespace MazeGenerator.MazeGenerators
                 for (int j = 0; j < mazeArray.GetLength(1); j++)
                 {
                     if (((i % 2 != 0 && j % 2 == 0) || (i % 2 == 0 && j % 2 != 0))
-                        && (i != 0 && j != 0 && i != mazeArray.GetLength(0) - 1 && j != mazeArray.GetLength(1) - 1))
+                        && i != 0 && j != 0 && i != mazeArray.GetLength(0) - 1 && j != mazeArray.GetLength(1) - 1)
                     {
-                        if (mazeArray[i, j] == 0)
+                        if (mazeArray[i, j] == 0 && random.NextDouble() < whiteProb)
                         {
-                            if (random.NextDouble() < whiteProb)
-                            {
-                                List<Point> pointToConnect = PointsFounders.PossiblePoints(mazeArray, i, j, 1, (int)PointStatus.alreadyVisited);
-                                if (pointToConnect.Count > 1)
-                                {// Делаем тоннель так, чтобы можно было связать две точки
-                                    mazeArray[i, j] = 1;
-                                    if (featureCode == 0)
-                                        view.DrawChange(new Point(i, j), Color.White);
-                                    else
-                                        view.DrawChange(new Point(i, j), featureCode);
-                                }
+                            List<Point> pointToConnect = PointsFounders.PossiblePoints(mazeArray, i, j, 1, (int)PointStatus.alreadyVisited);
+                            if (pointToConnect.Count > 1)
+                            {// Делаем тоннель так, чтобы можно было связать две точки
+                                mazeArray[i, j] = 1;
+                                if (featureCode == 0)
+                                    view.DrawChange(new Point(i, j), Color.White);
+                                else
+                                    view.DrawChange(new Point(i, j), featureCode);
                             }
                         }
                     }

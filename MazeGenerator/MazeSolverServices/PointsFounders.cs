@@ -10,8 +10,8 @@ namespace MazeGenerator
     }
     public static class PointsFounders
     {
-        static List<Point> possPoints = new List<Point>();
-        static List<int> directions = new List<int>();
+        static readonly List<Point> possPoints = new List<Point>();
+        static readonly List<int> directions = new List<int>();
 
         /// <summary>
         /// Поиск возможных точек для посещения
@@ -70,140 +70,44 @@ namespace MazeGenerator
 
         /// <summary>
         /// Поиск направления для перехода к след. точки (метод левых поворотов)
+        /// Сначала проверяет взгляд (по очереди) налево, вперёд, назад, направо
         /// </summary>
-        /// <param name="look">Текущий "взгляд" точки</param>
+        /// <param name="look">Текущий "взгляд" точки (0 - право, 1 - низ, 2 - лево, 3 - верх)</param>
         /// <returns>Возвращает индекс точки из списка доступных точек</returns>
         public static int SelectedMoveLeft(ref int look)
         {
-            int selected = -1;
-            //взгляд точки - 0 - право, 1 - низ, 2 - лево, 3 - верх
-            switch (look)
-            {
-                case 0:
-                    {
-                        if (directions.Contains(3))
-                            selected = directions.BinarySearch(3);
-                        else if (directions.Contains(0))
-                            selected = directions.BinarySearch(0);
-                        else if (directions.Contains(2))
-                            selected = directions.BinarySearch(2);
-                        else
-                            selected = directions.BinarySearch(1);
-                        break;
-                    }
-                case 1:
-                    {
-                        if (directions.Contains(0))
-                            selected = directions.BinarySearch(0);
-                        else if (directions.Contains(1))
-                            selected = directions.BinarySearch(1);
-                        else if (directions.Contains(3))
-                            selected = directions.BinarySearch(3);
-                        else
-                            selected = directions.BinarySearch(2);
-                        break;
-                    }
-                case 2:
-                    {
-                        if (directions.Contains(1))
-                            selected = directions.BinarySearch(1);
-                        else if (directions.Contains(2))
-                            selected = directions.BinarySearch(2);
-                        else if (directions.Contains(0))
-                            selected = directions.BinarySearch(0);
-                        else
-                            selected = directions.BinarySearch(3);
-                        break;
-                    }
-                case 3:
-                    {
-                        if (directions.Contains(2))
-                            selected = directions.BinarySearch(2);
-                        else if (directions.Contains(3))
-                            selected = directions.BinarySearch(3);
-                        else if (directions.Contains(1))
-                            selected = directions.BinarySearch(1);
-                        else
-                            selected = directions.BinarySearch(0);
-                        break;
-                    }
-            }
-            look = FindDirection(selected);
+            int selected;
+            if (directions.Contains((look + 3) % 4))
+                selected = directions.BinarySearch((look + 3) % 4);
+            else if (directions.Contains(look))
+                selected = directions.BinarySearch(look);
+            else if (directions.Contains((look + 2) % 4))
+                selected = directions.BinarySearch((look + 2) % 4);
+            else
+                selected = directions.BinarySearch((look + 1) % 4);
+            look = directions[selected];
             return selected;
         }
 
         /// <summary>
         /// Поиск направления для перехода к след. точки (метод правых поворотов)
+        /// Сначала проверяет взгляд (по очереди) направо, вперёд, назад, налево
         /// </summary>
-        /// <param name="look">Текущий "взгляд" точки</param>
+        /// <param name="look">Текущий "взгляд" точки (0 - право, 1 - низ, 2 - лево, 3 - верх)</param>
         /// <returns>Возвращает индекс точки из списка доступных точек</returns>
         public static int SelectedMoveRight(ref int look)
         {
-            int selected = -1;
-            // Взгляд точки - 0 - право, 1 - низ, 2 - лево, 3 - верх
-            switch (look)
-            {
-                case 0:
-                    {
-                        if (directions.Contains(1))
-                            selected = directions.BinarySearch(1);
-                        else if (directions.Contains(0))
-                            selected = directions.BinarySearch(0);
-                        else if (directions.Contains(2))
-                            selected = directions.BinarySearch(2);
-                        else
-                            selected = directions.BinarySearch(3);
-                        break;
-                    }
-                case 1:
-                    {
-                        if (directions.Contains(2))
-                            selected = directions.BinarySearch(2);
-                        else if (directions.Contains(1))
-                            selected = directions.BinarySearch(1);
-                        else if (directions.Contains(3))
-                            selected = directions.BinarySearch(3);
-                        else
-                            selected = directions.BinarySearch(0);
-                        break;
-                    }
-                case 2:
-                    {
-                        if (directions.Contains(3))
-                            selected = directions.BinarySearch(3);
-                        else if (directions.Contains(2))
-                            selected = directions.BinarySearch(2);
-                        else if (directions.Contains(0))
-                            selected = directions.BinarySearch(0);
-                        else
-                            selected = directions.BinarySearch(1);
-                        break;
-                    }
-                case 3:
-                    {
-                        if (directions.Contains(0))
-                            selected = directions.BinarySearch(0);
-                        else if (directions.Contains(3))
-                            selected = directions.BinarySearch(3);
-                        else if (directions.Contains(1))
-                            selected = directions.BinarySearch(1);
-                        else
-                            selected = directions.BinarySearch(2);
-                        break;
-                    }
-            }
-            look = FindDirection(selected);
+            int selected;
+            if (directions.Contains((look + 1) % 4))
+                selected = directions.BinarySearch((look + 1) % 4);
+            else if (directions.Contains(look))
+                selected = directions.BinarySearch(look);
+            else if (directions.Contains((look + 2) % 4))
+                selected = directions.BinarySearch((look + 2) % 4);
+            else
+                selected = directions.BinarySearch((look + 3) % 4);
+            look = directions[selected];
             return selected;
-        }
-
-        /// <summary>
-        /// Обновление "взгляда" точки-решателя лабиринта
-        /// </summary>
-        /// <param name="selected">Выбранный индекс в списке направлений</param>
-        /// <returns></returns>
-        public static int FindDirection(int selected)
-        {
-            return directions[selected];
         }
     }
 }

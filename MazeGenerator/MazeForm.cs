@@ -8,11 +8,11 @@ namespace MazeGenerator
 {
     public partial class MazeForm : Form
     {
-        private readonly ProgressForm progressForm = new ProgressForm(); // Форма отображения прогресса при массовой генерации лабиринта
-        private View view; // Класс отрисовки
+        private readonly ProgressForm progressForm = new ProgressForm();
+        private View view;
         private Graphics drawingPicturebox; // Объект, на котором может производиться отрисовка
         private MazeMainClass maze; // Основной объект лабиринта
-        private delegate int SolverSelect(); // Делегат для методов-решателей
+        private delegate void SolverSelect(); // Делегат для методов-решателей
         private readonly Random random;
 
         int width; // Ширина лабиринта
@@ -22,7 +22,7 @@ namespace MazeGenerator
         public MazeForm()
         {
             InitializeComponent();
-            CheckForIllegalCrossThreadCalls = false; //Для дебага из-за многопоточности
+            CheckForIllegalCrossThreadCalls = false; // Для дебага из-за многопоточности
             random = new Random();
         }
 
@@ -77,7 +77,7 @@ namespace MazeGenerator
             }
             catch 
             {
-                MessageBox.Show("Введите нормальный размер для отрисовки!");
+                MessageBox.Show("Введите правильное значение паузы!");
                 return;
             }
             maze.Sleep = sleep;
