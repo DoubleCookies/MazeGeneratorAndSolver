@@ -11,13 +11,8 @@ namespace MazeGenerator
         private readonly ProgressForm progressForm = new ProgressForm();
         private View view;
         private Graphics drawingPicturebox; // Объект, на котором может производиться отрисовка
-        private MazeMainClass maze; // Основной объект лабиринта
-        private delegate void SolverSelect(); // Делегат для методов-решателей
+        private MazeMainClass mazeClassObject; // Основной объект лабиринта
         private readonly Random random;
-
-        int width; // Ширина лабиринта
-        int height; // Высота лабиринта
-        int sleep; // Тайм-аут отрисовки
 
         public MazeForm()
         {
@@ -44,31 +39,29 @@ namespace MazeGenerator
             bool isMazeValid = CreateMazeObject(false);
             if (isMazeValid)
             {
-                view.DrawMazeInitState(maze.Maze.GetLength(0), maze.Maze.GetLength(1), pictureBoxLabirint.Width, pictureBoxLabirint.Height);
+                view.DrawMazeInitState(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), pictureBoxLabirint.Width, pictureBoxLabirint.Height);
                 if (radioButtonHuntAndKill.Checked)
-                    maze.GenerateMazeWithHuntAndKill();
+                    mazeClassObject.GenerateMazeWithHuntAndKill();
                 else
-                    maze.GenerateMazeWithRecursiveBacktracker();
+                    mazeClassObject.GenerateMazeWithRecursiveBacktracker();
             }
-            SwitchButtonsStatus(true);
+            if (mazeClassObject != null)
+                SwitchButtonsStatus(true);
+            else
+                buttonMazeGeneration.Enabled = true;
         }
 
         private void buttonSolverStart_Click(object sender, EventArgs e)
         {
-            if (radioButtonLR.Checked)
-                SolveMaze(new SolverSelect(maze.LeftRotateSolver));
-            else if (radioButtonRR.Checked)
-                SolveMaze(new SolverSelect(maze.RightRotateSolver));
-            else
-                SolveMaze(new SolverSelect(maze.RandomSolver));
+            SolveMaze();
         }
 
         /// <summary>
         /// Метод для запуска решателя лабиринтов
         /// </summary>
-        /// <param name="solverDelegate">Делегат, передающий метод</param>
+        /// <param name="launchMazeSolve">Делегат, передающий метод</param>
         /// <param name="method">Название метода</param>
-        private void SolveMaze(SolverSelect solverDelegate)
+        private void SolveMaze()
         {
             int sleep;
             try
@@ -80,10 +73,10 @@ namespace MazeGenerator
                 MessageBox.Show("Введите правильное значение паузы!");
                 return;
             }
-            maze.Sleep = sleep;
-            maze.FeatureCode = checkBoxFeatureUse.Checked ? GetFeatureCode() : 0;
-            solverDelegate(); //запуск решателя
-            if (!maze.Result)
+            mazeClassObject.Sleep = sleep;
+            mazeClassObject.FeatureCode = checkBoxFeatureUse.Checked ? GetFeatureCode() : 0;
+            SolverSelectAndStart();
+            if (!mazeClassObject.IsSolutionFound)
                 MessageBox.Show("У лабиринта отсутствует решение.");
         }
 
@@ -107,16 +100,16 @@ namespace MazeGenerator
             }
             catch
             {
-                MessageBox.Show("Введите нормальный размер для отрисовки!");
+                MessageBox.Show("Неправильно введён размер!");
                 return;
             }
             isMazeValid = CreateMazeObject(true);
             if (isMazeValid)
             {
-                view.InitMazeBitmap(maze.Maze.GetLength(0), maze.Maze.GetLength(1), size);
-                maze.GenerateMazeWithRecursiveBacktracker();
+                view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), size);
+                mazeClassObject.GenerateMazeWithRecursiveBacktracker();
                 if (checkBoxWithSolution.Checked)
-                    SolverSelection();
+                    SolverSelectAndStart();
                 SaveFileDialog dialog = new SaveFileDialog() { Filter = "Png Files|*.png|All Files (*.*)|*.*" };
                 if (dialog.ShowDialog() == DialogResult.OK)
                     view.MazeBitmap.Save(dialog.FileName, ImageFormat.Png);
@@ -137,7 +130,7 @@ namespace MazeGenerator
             }
             catch
             {
-                MessageBox.Show("Введите нормальный размер для отрисовки!");
+                MessageBox.Show("Неправильно введён размер или кол-во изображений!");
                 return;
             }
 
@@ -151,12 +144,12 @@ namespace MazeGenerator
                     progressForm.Show();
                     for (int i = 0; i < count; i++)
                     {
-                        view.InitMazeBitmap(maze.Maze.GetLength(0), maze.Maze.GetLength(1), size);
-                        maze.GenerateMazeWithRecursiveBacktracker();
+                        view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), size);
+                        mazeClassObject.GenerateMazeWithRecursiveBacktracker();
                         view.MazeBitmap.Save(dialog.SelectedPath + "/maze" + i + ".png", ImageFormat.Png);
                         if (checkBoxWithSolution.Checked)
                         {
-                            SolverSelection();
+                            SolverSelectAndStart();
                             view.MazeBitmap.Save(dialog.SelectedPath + "/maze" + i + "solved.png", ImageFormat.Png);
                         }
                         progressForm.ProgressBarUpdate();
@@ -167,6 +160,7 @@ namespace MazeGenerator
                     progressForm.Hide();
                 }
             }
+            progressForm.Dispose();
         }
 
         // TODO: Переписать, чтобы проверял, а не создавал (создание - в отдельный метод)
@@ -177,31 +171,17 @@ namespace MazeGenerator
         /// <returns>Возвращает true, если был создан новый объект и false - если нет (например, если параметры некорректны)</returns>
         private bool CreateMazeObject(bool isBitmapUsed)
         {
-            if (maze != null)
-                maze.Clear();
-            maze = null;
+            if (mazeClassObject != null)
+                mazeClassObject.Clear();
+            CheckMazeParams();
+            mazeClassObject = null;
             bool isFromStart;
             int featureCode = 0;
-            double prob;
-            double whiteProb;
-            try
-            {
-                width = int.Parse(textBoxWidth.Text);
-                height = int.Parse(textBoxHeight.Text);
-                sleep = int.Parse(textBoxSleep.Text);
-                prob = double.Parse(textBoxEmptyPlacesProb.Text);
-                whiteProb = double.Parse(textBoxWhiteSpaceProb.Text);
-            }
-            catch
-            {
-                MessageBox.Show("Неверно введены параметры для генерации лабиринта!");
-                return false;
-            }
-            if (width <= 1 || height <= 1)
-            {
-                MessageBox.Show("Неверно задана размерность!");
-                return false;
-            }
+            int width = int.Parse(textBoxWidth.Text);
+            int height = int.Parse(textBoxHeight.Text);
+            double prob = double.Parse(textBoxEmptyPlacesProb.Text);
+            double whiteProb = double.Parse(textBoxWhiteSpaceProb.Text);
+            int sleep = int.Parse(textBoxSleep.Text); ;
             try
             {
                 Point startpoint = checkBoxStart.Checked ?
@@ -212,7 +192,7 @@ namespace MazeGenerator
                 if (checkBoxFeatureUse.Checked)
                     featureCode = GetFeatureCode();
                 view = new View(pictureBoxLabirint.CreateGraphics(), startpoint, finishpoint);
-                maze = new MazeMainClass(width, height, startpoint, finishpoint, prob, whiteProb, isFromStart, isBitmapUsed, featureCode, isBitmapUsed ? 0 : sleep, view, random);
+                mazeClassObject = new MazeMainClass(width, height, startpoint, finishpoint, prob, whiteProb, isFromStart, isBitmapUsed, featureCode, isBitmapUsed ? 0 : sleep, view, random);
             }
             catch (OutOfMemoryException)
             {
@@ -233,6 +213,39 @@ namespace MazeGenerator
                 }
             }
             return true;
+        }
+
+        private bool CheckMazeParams()
+        {
+
+            double prob;
+            double whiteProb;
+            int width;
+            int height;
+            int sleep;
+            try
+            {
+                width = int.Parse(textBoxWidth.Text);
+                height = int.Parse(textBoxHeight.Text);
+                sleep = int.Parse(textBoxSleep.Text);
+                prob = double.Parse(textBoxEmptyPlacesProb.Text);
+                whiteProb = double.Parse(textBoxWhiteSpaceProb.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Неверно введены параметры для генерации лабиринта!");
+                return false;
+            }
+            if (width <= 1 || height <= 1)
+            {
+                MessageBox.Show("Неверно задана размерность!");
+                return false;
+            }
+            return true;
+        }
+
+        private void createMaze() { 
+
         }
 
         /// <summary>
@@ -266,14 +279,14 @@ namespace MazeGenerator
         /// <summary>
         /// Выбор метода для решения лабиринта в случае отрисовки лабиринта в изображении
         /// </summary>
-        private void SolverSelection()
+        private void SolverSelectAndStart()
         {
             if (radioButtonLR.Checked)
-                maze.LeftRotateSolver();
+                mazeClassObject.LeftRotateSolver();
             if (radioButtonRR.Checked)
-                maze.RightRotateSolver();
+                mazeClassObject.RightRotateSolver();
             if (radioButtonRandR.Checked)
-                maze.RandomSolver();
+                mazeClassObject.RandomSolver();
         }
 
         private void MazeForm_SizeChanged(object sender, EventArgs e)

@@ -9,7 +9,7 @@ namespace MazeGenerator
     {
         private Generators Generator { get; set; }
         private Solvers Solver { get; set; }
-        public bool Result { get; set; }
+        public bool IsSolutionFound { get; set; }
         public int[,] Maze { get; set; }
         public int Sleep { get; set; }
         public int FeatureCode { get; set; }
@@ -46,7 +46,7 @@ namespace MazeGenerator
             Sleep = sleep;
             this.fromStart = fromStart;
             FeatureCode = feature;
-            Result = false;
+            IsSolutionFound = false;
             Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
             Generator.FillMazeArray(blackProb);
             Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
@@ -82,7 +82,7 @@ namespace MazeGenerator
         {
             ParamsUpdate();
             Solver.LeftRightRotateSolver(true);
-            Result = Solver.Result;
+            IsSolutionFound = Solver.Result;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace MazeGenerator
         {
             ParamsUpdate();
             Solver.LeftRightRotateSolver(false);
-            Result = Solver.Result;
+            IsSolutionFound = Solver.Result;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace MazeGenerator
         {
             ParamsUpdate();
             Solver.RandomSolver();
-            Result = Solver.Result;
+            IsSolutionFound = Solver.Result;
         }
 
         /// <summary>
