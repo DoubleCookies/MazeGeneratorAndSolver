@@ -4,6 +4,7 @@ using System.Drawing;
 
 namespace MazeGenerator
 {
+    //TODO: Может сделать статическим?
     public class View
     {
         private static readonly Color defaultBlack = Color.FromArgb(60, 60, 60);
@@ -36,7 +37,6 @@ namespace MazeGenerator
             GraphicsObject = draw;
         }
 
-
         /// <summary>
         /// Конструктор, принимающий объект для рисования, а также начальную и конечную точку лабиринта
         /// </summary>
@@ -55,109 +55,14 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="mazewidth">Ширина лабиринта</param>
         /// <param name="mazeheight">Высота лабиринта</param>
-        /// <param name="pictureboxWidth">Ширина picturebox'a</param>
-        /// <param name="pictureboxHeight">Высота picturebox'a</param>
-        public void DrawMazeInitState(int mazewidth, int mazeheight, int pictureboxWidth, int pictureboxHeight)
+        /// <param name="pixelSize">Размер пикселя</param>
+        public void DrawMazeInitState(int mazeWidth, int mazeHeight, int pixelSize)
         {
             GraphicsObject.Clear(defaultWhite);
-            mazeWidth = mazewidth;
-            mazeHeight = mazeheight;
-            pixelSize = Math.Min(pictureboxWidth / mazeWidth, pictureboxHeight / mazeHeight);
+            this.mazeWidth = mazeWidth;
+            this.mazeHeight = mazeHeight;
+            this.pixelSize = pixelSize;
             FillMazePicture();
-        }
-
-        /// <summary>
-        /// Отрисовка изменений при построении лабиринта
-        /// </summary>
-        /// <param name="point">Точка изменения</param>
-        /// <param name="color">Цвет изменения</param>
-        public void DrawChange(Point point, Color color)
-        {
-            if (IsNotStartOrFinishPoint(point))
-            {
-                SolidBrush brush = new SolidBrush(color);
-                GraphicsObject.FillRectangle(brush, point.X * pixelSize, point.Y * pixelSize, pixelSize, pixelSize);
-                brush.Dispose();
-            }
-        }
-        /// <summary>
-        /// Перегруженный метод для "фич" при отрисовке
-        /// </summary>
-        /// <param name="change">Точка изменения</param>
-        /// <param name="code">Код фичи</param>
-        public void DrawChange(Point change, int code)
-        {
-            Color newColor;
-            switch (code)
-            {
-                case 1:
-                    {// Почти полный рандом
-                        newColor = Color.FromArgb(rnd.Next(30, 256), rnd.Next(30, 256), rnd.Next(30, 256));
-                        break;
-                    }
-                case 2:
-                    {// Красный
-                        newColor = Color.FromArgb(rnd.Next(190, 256), rnd.Next(60, 120), rnd.Next(80, 150));
-                        break;
-                    }
-                case 3:
-                    {// Зелёный
-                        newColor = Color.FromArgb(rnd.Next(80, 120), rnd.Next(200, 250), rnd.Next(80, 150));
-                        break;
-                    }
-                case 4:
-                    {// Синий
-                        newColor = Color.FromArgb(rnd.Next(50, 130), rnd.Next(60, 130), rnd.Next(190, 256));
-                        break;
-                    }
-                case 50:
-                    {// 50 оттенков серого (orly)
-                        int a = rnd.Next(150, 200);
-                        newColor = Color.FromArgb(a, a, a);
-                        break;
-                    }
-                case 23:
-                    {// Желтый
-                        newColor = Color.FromArgb(rnd.Next(180, 230), rnd.Next(180, 240), rnd.Next(40, 120));
-                        break;
-                    }
-                case 34:
-                    {// Бирюзовый
-                        newColor = Color.FromArgb(rnd.Next(40, 120), rnd.Next(175, 250), rnd.Next(180, 230));
-                        break;
-                    }
-                case 42:
-                    {// Фиолетовый
-                        newColor = Color.FromArgb(rnd.Next(170, 220), rnd.Next(40, 120), rnd.Next(175, 250));
-                        break;
-                    }
-                case 48:
-                    {// Тёмная цветовая гамма
-                        newColor = Color.FromArgb(rnd.Next(80, 140), rnd.Next(80, 140), rnd.Next(80, 140));
-                        break;
-                    }
-                case 49:
-                    {// Светлая цветовая гамма
-                        newColor = Color.FromArgb(rnd.Next(190, 256), rnd.Next(190, 256), rnd.Next(190, 256));
-                        break;
-                    }
-                default:
-                    {
-                        newColor = Color.FromArgb(255, 170, 102);
-                        break;
-                    }
-            }
-            DrawChange(change, newColor);
-        }
-
-        /// <summary>
-        /// Отрисовка чёрных квадратов при генерации пустых областей
-        /// </summary>
-        /// <param name="blackPoints">Список точек</param>
-        public void DrawBlackPoints(List<Point> blackPoints)
-        {
-            for (int i = 0; i < blackPoints.Count; i++)
-                DrawChange(blackPoints[i], defaultBlack);
         }
 
         /// <summary>
@@ -165,14 +70,12 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="Maze">Лабиринт</param>
         /// <param name="size">Размер для отрисовки квадрата</param>
-        public void InitMazeBitmap(int width, int height, int size)
+        public void InitMazeBitmap(int mazeWidth, int mazeHeight, int pixelSize)
         {
-            mazeWidth = width;
-            mazeHeight = height;
-            pixelSize = size;
-            int w = mazeWidth * pixelSize;
-            int h = mazeHeight * pixelSize;
-            MazeBitmap = new Bitmap(w, h);
+            this.mazeWidth = mazeWidth;
+            this.mazeHeight = mazeHeight;
+            this.pixelSize = pixelSize;
+            MazeBitmap = new Bitmap(mazeWidth, mazeHeight);
             GraphicsObject = Graphics.FromImage(MazeBitmap);
             GraphicsObject.Clear(defaultWhite);
             FillMazePicture();
@@ -191,13 +94,46 @@ namespace MazeGenerator
             //Отрисовка чёрных полос для создания поля
             for (int i = 0; i < mazeHeight; i++)
             {
-                if (i % 2 == 0)
+                if (i % 2 == 0) {
                     GraphicsObject.FillRectangle(brushBlack, 0, i * pixelSize, mazeWidth * pixelSize, pixelSize);
+                    GraphicsObject.FillRectangle(brushBlack, i * pixelSize, 0, pixelSize, mazeHeight * pixelSize);
+                }
             }
-            for (int j = 0; j < mazeWidth; j++)
+        }
+
+        /// <summary>
+        /// Отрисовка чёрных квадратов при генерации пустых областей
+        /// </summary>
+        /// <param name="blackPoints">Список точек</param>
+        public void DrawBlackPoints(List<Point> blackPoints)
+        {
+            for (int i = 0; i < blackPoints.Count; i++)
+                DrawChange(blackPoints[i], defaultBlack);
+        }
+
+        /// <summary>
+        /// Перегруженный метод для "фич" при отрисовке
+        /// </summary>
+        /// <param name="point">Точка, которую перерисовывают</param>
+        /// <param name="code">Код, позволяющий определить тип цвета</param>
+        public void DrawChange(Point point, int code)
+        {
+            Color newColor = getColorFromCode(code);
+            DrawChange(point, newColor);
+        }
+
+        /// <summary>
+        /// Отрисовка изменений при построении лабиринта
+        /// </summary>
+        /// <param name="point">Точка, которую перерисовывают</param>
+        /// <param name="color">Цвет изменения</param>
+        public void DrawChange(Point point, Color color)
+        {
+            if (IsNotStartOrFinishPoint(point))
             {
-                if (j % 2 == 0)
-                    GraphicsObject.FillRectangle(brushBlack, j * pixelSize, 0, pixelSize, mazeHeight * pixelSize);
+                SolidBrush brush = new SolidBrush(color);
+                GraphicsObject.FillRectangle(brush, point.X * pixelSize, point.Y * pixelSize, pixelSize, pixelSize);
+                brush.Dispose();
             }
         }
 
@@ -209,6 +145,58 @@ namespace MazeGenerator
         private bool IsNotStartOrFinishPoint(Point point)
         {
             return (point.X != start.X || point.Y != start.Y) && (point.X != finish.X || point.Y != finish.Y);
+        }
+
+        private Color getColorFromCode(int code)
+        {
+            switch (code)
+            {
+                case 1:
+                    {// Почти полный рандом
+                        return Color.FromArgb(rnd.Next(30, 256), rnd.Next(30, 256), rnd.Next(30, 256));
+                    }
+                case 2:
+                    {// Красный
+                        return Color.FromArgb(rnd.Next(190, 256), rnd.Next(60, 120), rnd.Next(80, 150));
+                    }
+                case 3:
+                    {// Зелёный
+                        return Color.FromArgb(rnd.Next(80, 120), rnd.Next(200, 250), rnd.Next(80, 150));
+                    }
+                case 4:
+                    {// Синий
+                        return Color.FromArgb(rnd.Next(50, 130), rnd.Next(60, 130), rnd.Next(190, 256));
+                    }
+                case 50:
+                    {// 50 оттенков серого (orly)
+                        int a = rnd.Next(150, 200);
+                        return Color.FromArgb(a, a, a);
+                    }
+                case 23:
+                    {// Желтый
+                        return Color.FromArgb(rnd.Next(180, 230), rnd.Next(180, 240), rnd.Next(40, 120));
+                    }
+                case 34:
+                    {// Бирюзовый
+                        return Color.FromArgb(rnd.Next(40, 120), rnd.Next(175, 250), rnd.Next(180, 230));
+                    }
+                case 42:
+                    {// Фиолетовый
+                        return Color.FromArgb(rnd.Next(170, 220), rnd.Next(40, 120), rnd.Next(175, 250));
+                    }
+                case 48:
+                    {// Тёмная цветовая гамма
+                        return Color.FromArgb(rnd.Next(80, 140), rnd.Next(80, 140), rnd.Next(80, 140));
+                    }
+                case 49:
+                    {// Светлая цветовая гамма
+                        return Color.FromArgb(rnd.Next(190, 256), rnd.Next(190, 256), rnd.Next(190, 256));
+                    }
+                default:
+                    {// персиковый, если код указан неверно
+                        return Color.FromArgb(255, 170, 102);
+                    }
+            }
         }
 
         /// <summary>

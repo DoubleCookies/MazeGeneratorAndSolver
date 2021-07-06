@@ -10,7 +10,7 @@ namespace MazeGenerator
     {
         private readonly ProgressForm progressForm = new ProgressForm();
         private View view;
-        private Graphics drawingPicturebox; // Объект, на котором может производиться отрисовка
+        private Graphics drawingPicturebox; // Объект, на котором может производится отрисовка
         private MazeMainClass mazeClassObject; // Основной объект лабиринта
         private readonly Random random;
 
@@ -39,7 +39,9 @@ namespace MazeGenerator
             bool isMazeValid = CreateMazeObject(false);
             if (isMazeValid)
             {
-                view.DrawMazeInitState(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), pictureBoxLabirint.Width, pictureBoxLabirint.Height);
+                int pixelSize = Math.Min(pictureBoxLabirint.Width / mazeClassObject.Maze.GetLength(0), 
+                    pictureBoxLabirint.Height / mazeClassObject.Maze.GetLength(1));
+                view.DrawMazeInitState(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), pixelSize);
                 if (radioButtonHuntAndKill.Checked)
                     mazeClassObject.GenerateMazeWithHuntAndKill();
                 else
@@ -106,7 +108,7 @@ namespace MazeGenerator
             isMazeValid = CreateMazeObject(true);
             if (isMazeValid)
             {
-                view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), size);
+                view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0) * size, mazeClassObject.Maze.GetLength(1) * size, size);
                 mazeClassObject.GenerateMazeWithRecursiveBacktracker();
                 if (checkBoxWithSolution.Checked)
                     SolverSelectAndStart();
@@ -144,7 +146,7 @@ namespace MazeGenerator
                     progressForm.Show();
                     for (int i = 0; i < count; i++)
                     {
-                        view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), size);
+                        view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0) * size, mazeClassObject.Maze.GetLength(1) * size, size);
                         mazeClassObject.GenerateMazeWithRecursiveBacktracker();
                         view.MazeBitmap.Save(dialog.SelectedPath + "/maze" + i + ".png", ImageFormat.Png);
                         if (checkBoxWithSolution.Checked)
