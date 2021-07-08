@@ -36,8 +36,8 @@ namespace MazeGenerator
         {
             drawingPicturebox = pictureBoxLabirint.CreateGraphics();
             view = new View(drawingPicturebox);
-            bool isMazeValid = CreateMazeObject(false);
-            if (isMazeValid)
+            bool isMazeCreated = CreateMazeObject(false);
+            if (isMazeCreated)
             {
                 int pixelSize = Math.Min(pictureBoxLabirint.Width / mazeClassObject.Maze.GetLength(0), 
                     pictureBoxLabirint.Height / mazeClassObject.Maze.GetLength(1));
@@ -94,7 +94,7 @@ namespace MazeGenerator
 
         private void ButtonGenPicture_Click(object sender, EventArgs e)
         {
-            bool isMazeValid;
+            bool isMazeCreated;
             int size;
             try
             {
@@ -105,8 +105,8 @@ namespace MazeGenerator
                 MessageBox.Show("Неправильно введён размер!");
                 return;
             }
-            isMazeValid = CreateMazeObject(true);
-            if (isMazeValid)
+            isMazeCreated = CreateMazeObject(true);
+            if (isMazeCreated)
             {
                 view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0) * size, mazeClassObject.Maze.GetLength(1) * size, size);
                 mazeClassObject.GenerateMazeWithRecursiveBacktracker();
@@ -122,7 +122,7 @@ namespace MazeGenerator
 
         private void ButtonGenerateBatch_Click(object sender, EventArgs e)
         {
-            bool isMazeValid;
+            bool isMazeCreated;
             int size;
             int count;
             try
@@ -137,8 +137,8 @@ namespace MazeGenerator
             }
 
             progressForm.Init(count);
-            isMazeValid = CreateMazeObject(true);
-            if (isMazeValid)
+            isMazeCreated = CreateMazeObject(true);
+            if (isMazeCreated)
             {
                 FolderBrowserDialog dialog = new FolderBrowserDialog { Description = "Выберите папку для сохранения набора изображений" };
                 if (dialog.ShowDialog() == DialogResult.OK)
@@ -165,7 +165,6 @@ namespace MazeGenerator
             progressForm.Dispose();
         }
 
-        // TODO: Переписать, чтобы проверял, а не создавал (создание - в отдельный метод)
         /// <summary>
         /// Метод для создания нового обхекта лабиринат
         /// </summary>
@@ -175,49 +174,14 @@ namespace MazeGenerator
         {
             if (mazeClassObject != null)
                 mazeClassObject.Clear();
-            CheckMazeParams();
-            mazeClassObject = null;
-            bool isFromStart;
-            int featureCode = 0;
-            int width = int.Parse(textBoxWidth.Text);
-            int height = int.Parse(textBoxHeight.Text);
-            double prob = double.Parse(textBoxEmptyPlacesProb.Text);
-            double whiteProb = double.Parse(textBoxWhiteSpaceProb.Text);
-            int sleep = int.Parse(textBoxSleep.Text); ;
-            try
-            {
-                Point startpoint = checkBoxStart.Checked ?
-                    new Point(int.Parse(textBoxStartX.Text) * 2 + 1, int.Parse(textBoxStartY.Text) * 2 + 1) : new Point(1, 1);
-                Point finishpoint = checkBoxFinish.Checked ?
-                    new Point(int.Parse(textBoxEndX.Text) * 2 + 1, int.Parse(textBoxEndY.Text) * 2 + 1) : new Point(width * 2 - 1, height * 2 - 1);
-                isFromStart = checkBoxFromBegin.Checked;
-                if (checkBoxFeatureUse.Checked)
-                    featureCode = GetFeatureCode();
-                view = new View(pictureBoxLabirint.CreateGraphics(), startpoint, finishpoint);
-                mazeClassObject = new MazeMainClass(width, height, startpoint, finishpoint, prob, whiteProb, isFromStart, isBitmapUsed, featureCode, isBitmapUsed ? 0 : sleep, view, random);
+            bool areMazeParamsValid = CheckMazeParams(isBitmapUsed);
+            if (areMazeParamsValid) { 
+                return CreateMaze(isBitmapUsed);
             }
-            catch (OutOfMemoryException)
-            {
-                MessageBox.Show("Слишком большой размер массива для лабиринта!");
-                return false;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Неверно введены параметры для начальной и конечной точек!");
-                return false;
-            }
-            if (!isBitmapUsed)
-            {
-                if (width * 2 + 1 > pictureBoxLabirint.Width || height * 2 + 1 > pictureBoxLabirint.Height)
-                {
-                    MessageBox.Show("Лабиринт с заданными размерами не помещается на форме - сделайте его меньше!");
-                    return false;
-                }
-            }
-            return true;
+            return false;
         }
 
-        private bool CheckMazeParams()
+        private bool CheckMazeParams(bool isBitmapUsed)
         {
 
             double prob;
@@ -243,11 +207,45 @@ namespace MazeGenerator
                 MessageBox.Show("Неверно задана размерность!");
                 return false;
             }
+            if (!isBitmapUsed)
+            {
+                if (width * 2 + 1 > pictureBoxLabirint.Width || height * 2 + 1 > pictureBoxLabirint.Height)
+                {
+                    MessageBox.Show("Лабиринт с заданными размерами не помещается на форме - сделайте его меньше!");
+                    return false;
+                }
+            }
             return true;
         }
 
-        private void createMaze() { 
+        private bool CreateMaze(bool isBitmapUsed) {
+            mazeClassObject = null;
+            bool isFromStart;
+            int featureCode = 0;
+            int width = int.Parse(textBoxWidth.Text);
+            int height = int.Parse(textBoxHeight.Text);
+            double prob = double.Parse(textBoxEmptyPlacesProb.Text);
+            double whiteProb = double.Parse(textBoxWhiteSpaceProb.Text);
+            int sleep = int.Parse(textBoxSleep.Text);
 
+            Point startpoint = checkBoxStart.Checked ? new Point(int.Parse(textBoxStartX.Text) * 2 + 1, int.Parse(textBoxStartY.Text) * 2 + 1) : new Point(1, 1);
+            Point finishpoint = checkBoxFinish.Checked ?
+                new Point(int.Parse(textBoxEndX.Text) * 2 + 1, int.Parse(textBoxEndY.Text) * 2 + 1) : new Point(width * 2 - 1, height * 2 - 1);
+            isFromStart = checkBoxFromBegin.Checked;
+            if (checkBoxFeatureUse.Checked)
+                featureCode = GetFeatureCode();
+            view = new View(pictureBoxLabirint.CreateGraphics(), startpoint, finishpoint);
+
+            try
+            {
+                mazeClassObject = new MazeMainClass(width, height, startpoint, finishpoint, prob, whiteProb, isFromStart, isBitmapUsed, featureCode, isBitmapUsed ? 0 : sleep, view, random);
+            }
+            catch (OutOfMemoryException)
+            {
+                MessageBox.Show("Слишком большой размер массива для лабиринта!");
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
