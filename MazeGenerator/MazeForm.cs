@@ -92,6 +92,7 @@ namespace MazeGenerator
             buttonSolverStart.Enabled = status;
         }
 
+        //TODO: Перенос в отдельные формы для генерации файлов
         private void ButtonGenPicture_Click(object sender, EventArgs e)
         {
             bool isMazeCreated;
@@ -174,14 +175,13 @@ namespace MazeGenerator
         {
             if (mazeClassObject != null)
                 mazeClassObject.Clear();
-            bool areMazeParamsValid = CheckMazeParams(isBitmapUsed);
-            if (areMazeParamsValid) { 
+            if (AreMazeParamsValid(isBitmapUsed)) { 
                 return CreateMaze(isBitmapUsed);
             }
             return false;
         }
 
-        private bool CheckMazeParams(bool isBitmapUsed)
+        private bool AreMazeParamsValid(bool isBitmapUsed)
         {
 
             double prob;
@@ -218,6 +218,11 @@ namespace MazeGenerator
             return true;
         }
 
+        /// <summary>
+        /// Метод для создания объекта лабиринта
+        /// </summary>
+        /// <param name="isBitmapUsed">Указывает, производится ли отрисовка на форме или в битмапе</param>
+        /// <returns>Возвращает true, если объект создан успешно (иначе - false)</returns>
         private bool CreateMaze(bool isBitmapUsed) {
             mazeClassObject = null;
             bool isFromStart;
@@ -228,7 +233,8 @@ namespace MazeGenerator
             double whiteProb = double.Parse(textBoxWhiteSpaceProb.Text);
             int sleep = int.Parse(textBoxSleep.Text);
 
-            Point startpoint = checkBoxStart.Checked ? new Point(int.Parse(textBoxStartX.Text) * 2 + 1, int.Parse(textBoxStartY.Text) * 2 + 1) : new Point(1, 1);
+            Point startpoint = checkBoxStart.Checked ? 
+                new Point(int.Parse(textBoxStartX.Text) * 2 + 1, int.Parse(textBoxStartY.Text) * 2 + 1) : new Point(1, 1);
             Point finishpoint = checkBoxFinish.Checked ?
                 new Point(int.Parse(textBoxEndX.Text) * 2 + 1, int.Parse(textBoxEndY.Text) * 2 + 1) : new Point(width * 2 - 1, height * 2 - 1);
             isFromStart = checkBoxFromBegin.Checked;

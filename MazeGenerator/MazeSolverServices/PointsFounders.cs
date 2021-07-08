@@ -17,18 +17,18 @@ namespace MazeGenerator
         /// Поиск возможных точек для посещения
         /// </summary>
         /// <returns>Возвращает список точек, возможных для посещения</returns>
-        public static List<Point> PossiblePoints(int[,] mazeArray, int x, int y, int cellCount, int eq)
+        public static List<Point> PossiblePoints(int[,] mazeArray, int x, int y, int cellCount, int pointStatus)
         {
             int mazeWidth = mazeArray.GetLength(0);
             int mazeHeight = mazeArray.GetLength(1);
             possPoints.Clear();
-            if (x - cellCount > 0 && mazeArray[x - cellCount, y] == eq)
+            if (x - cellCount > 0 && mazeArray[x - cellCount, y] == pointStatus)
                 possPoints.Add(new Point(x - cellCount, y));
-            if (x + cellCount < mazeWidth && mazeArray[x + cellCount, y] == eq)
+            if (x + cellCount < mazeWidth && mazeArray[x + cellCount, y] == pointStatus)
                 possPoints.Add(new Point(x + cellCount, y));
-            if (y - cellCount > 0 && mazeArray[x, y - cellCount] == eq)
+            if (y - cellCount > 0 && mazeArray[x, y - cellCount] == pointStatus)
                 possPoints.Add(new Point(x, y - cellCount));
-            if (y + cellCount < mazeHeight && mazeArray[x, y + cellCount] == eq)
+            if (y + cellCount < mazeHeight && mazeArray[x, y + cellCount] == pointStatus)
                 possPoints.Add(new Point(x, y + cellCount));
             return possPoints;
         }
@@ -45,22 +45,24 @@ namespace MazeGenerator
             int y = current.Y;
             int mazeWidth = mazeArray.GetLength(0);
             int mazeHeight = mazeArray.GetLength(1);
-            if (x + 2 < mazeWidth && mazeArray[x + 2, y] == 1 && mazeArray[x + 1, y] == 1)
+            int canVisitValue = (int)PointStatus.canVisit;
+
+            if (x + 2 < mazeWidth && mazeArray[x + 2, y] == canVisitValue && mazeArray[x + 1, y] == canVisitValue)
             {
                 possPoints.Add(new Point(x + 2, y));
                 directions.Add(0);
             }
-            if (y + 2 < mazeHeight && mazeArray[x, y + 2] == 1 && mazeArray[x, y + 1] == 1)
+            if (y + 2 < mazeHeight && mazeArray[x, y + 2] == canVisitValue && mazeArray[x, y + 1] == canVisitValue)
             {
                 possPoints.Add(new Point(x, y + 2));
                 directions.Add(1);
             }
-            if (x - 2 > 0 && mazeArray[x - 2, y] == 1 && mazeArray[x - 1, y] == 1)
+            if (x - 2 > 0 && mazeArray[x - 2, y] == canVisitValue && mazeArray[x - 1, y] == canVisitValue)
             {
                 possPoints.Add(new Point(x - 2, y));
                 directions.Add(2);
             }
-            if (y - 2 > 0 && mazeArray[x, y - 2] == 1 && mazeArray[x, y - 1] == 1)
+            if (y - 2 > 0 && mazeArray[x, y - 2] == canVisitValue && mazeArray[x, y - 1] == canVisitValue)
             {
                 possPoints.Add(new Point(x, y - 2));
                 directions.Add(3);

@@ -18,7 +18,6 @@ namespace MazeGenerator.MazeSolvers
 
         private readonly bool isBitmapUsed; // Используется ли запись в файл
 
-        private int steps; // Количество сделанных шагов во время решения
         private readonly View view; // Ссылка на класс отрисовки
 
         private Point current; // Текущая точка
@@ -52,7 +51,6 @@ namespace MazeGenerator.MazeSolvers
         /// </summary>
         public void SolversInit()
         {
-            steps = 1;
             MazeRouteClear();
             MazeClear();
             current = startpoint;
@@ -63,6 +61,8 @@ namespace MazeGenerator.MazeSolvers
             Maze[current.X, current.Y] = 2; // Если этого не сделать - будет багофича с пересечением старта один раз (WOW?)
         }
 
+
+        //TODO: абстрактный класс
         /// <summary>
         /// Решение лабиринта методами левых и правых поворотов
         /// </summary>
@@ -73,13 +73,13 @@ namespace MazeGenerator.MazeSolvers
             SolversInit();
             int look = 1; // 0 - право, 1 - низ, 2 - лево, 3 - верх
             bool solutionFound = false;
-            List<Point> pointsMove;
+            List<Point> pointsToMove;
             int count;
             while (!solutionFound)
             {
                 Thread.Sleep(Sleep);
-                pointsMove = PointsFounders.PossiblePointsWithDirections(Maze, current);
-                count = pointsMove.Count;
+                pointsToMove = PointsFounders.PossiblePointsWithDirections(Maze, current);
+                count = pointsToMove.Count;
                 if (count != 0)
                 {
                     int selected;
@@ -87,7 +87,7 @@ namespace MazeGenerator.MazeSolvers
                         selected = PointsFounders.SelectedMoveLeft(ref look);
                     else
                         selected = PointsFounders.SelectedMoveRight(ref look);
-                    GoToNewPoint(pointsMove[selected]);
+                    GoToNewPoint(pointsToMove[selected]);
                 }
                 else
                 {
@@ -111,7 +111,7 @@ namespace MazeGenerator.MazeSolvers
         /// <returns>Возвращает кол-во шагов, затраченное на решение лабиринта</returns>
         public void RandomSolver()
         {
-            int placeholder = 1;
+            int look = 1;
             Random rand = new Random();
             SolversInit();
             bool finFound = false;
@@ -130,7 +130,7 @@ namespace MazeGenerator.MazeSolvers
                 else
                 {
                     if (points.Count > 1)
-                        PointRollback(ref placeholder);
+                        PointRollback(ref look);
                     else
                         finFound = true;
                 }
@@ -162,7 +162,6 @@ namespace MazeGenerator.MazeSolvers
             current = points.Last();
             view.DrawChange(current, Color.Red);
             Maze[selected.X, selected.Y] = 2;
-            steps++;
         }
 
         /// <summary>
@@ -181,7 +180,6 @@ namespace MazeGenerator.MazeSolvers
                 current = points.Last();
                 view.DrawChange(current, Color.Red);
             }
-            steps++;
         }
 
         /// <summary>
@@ -230,7 +228,7 @@ namespace MazeGenerator.MazeSolvers
                 for (int j = 0; j < Maze.GetLength(1); j++)
                 {
                     if (Maze[i, j] != 0)
-                        Maze[i, j] = 1;
+                        Maze[i, j] = (int)PointStatus.canVisit;
                 }
             }
         }
@@ -243,13 +241,8 @@ namespace MazeGenerator.MazeSolvers
             for (int i = 0; i < allPoints.Count; i++)
             {
                 if ((allPoints[i].X != startpoint.X || allPoints[i].Y != startpoint.Y)
-                    && (allPoints[i].X != finishpoint.X || allPoints[i].Y != finishpoint.Y)) { 
-                    if (FeatureCode == 0)
-                        view.DrawChange(allPoints[i], Color.White);
-                    else
+                    && (allPoints[i].X != finishpoint.X || allPoints[i].Y != finishpoint.Y)) 
                         view.DrawChange(allPoints[i], FeatureCode);
-                }
-                    
             }
         }
     }

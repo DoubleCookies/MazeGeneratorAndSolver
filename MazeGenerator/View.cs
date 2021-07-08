@@ -154,6 +154,10 @@ namespace MazeGenerator
         {
             switch (code)
             {
+                case 0: 
+                    {//Белый
+                        return Color.White;
+                    }
                 case 1:
                     {// Почти полный рандом
                         return Color.FromArgb(rnd.Next(30, 256), rnd.Next(30, 256), rnd.Next(30, 256));
