@@ -35,20 +35,16 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonAdditionalParams = new System.Windows.Forms.Button();
             this.buttonFilesGenerate = new System.Windows.Forms.Button();
             this.buttonMazeGeneration = new System.Windows.Forms.Button();
-            this.panelMazeGenerationMethod = new System.Windows.Forms.Panel();
-            this.radioButtonHuntAndKill = new System.Windows.Forms.RadioButton();
-            this.radioButtonBackTracking = new System.Windows.Forms.RadioButton();
-            this.radioButtonRandR = new System.Windows.Forms.RadioButton();
-            this.radioButtonRR = new System.Windows.Forms.RadioButton();
-            this.radioButtonLR = new System.Windows.Forms.RadioButton();
             this.buttonSolverStart = new System.Windows.Forms.Button();
-            this.buttonAdditionalParams = new System.Windows.Forms.Button();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.comboBoxGenerationMethods = new System.Windows.Forms.ComboBox();
+            this.labelGenerationMethod = new System.Windows.Forms.Label();
+            this.labelSolveMethod = new System.Windows.Forms.Label();
+            this.comboBoxSolveMethods = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLabirint)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.panelMazeGenerationMethod.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBoxLabirint
@@ -100,13 +96,13 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.comboBoxSolveMethods);
+            this.groupBox1.Controls.Add(this.labelSolveMethod);
+            this.groupBox1.Controls.Add(this.labelGenerationMethod);
+            this.groupBox1.Controls.Add(this.comboBoxGenerationMethods);
             this.groupBox1.Controls.Add(this.buttonAdditionalParams);
             this.groupBox1.Controls.Add(this.buttonFilesGenerate);
             this.groupBox1.Controls.Add(this.buttonMazeGeneration);
-            this.groupBox1.Controls.Add(this.panelMazeGenerationMethod);
-            this.groupBox1.Controls.Add(this.radioButtonRandR);
-            this.groupBox1.Controls.Add(this.radioButtonRR);
-            this.groupBox1.Controls.Add(this.radioButtonLR);
             this.groupBox1.Controls.Add(this.buttonSolverStart);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
@@ -123,9 +119,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Параметры";
             // 
+            // buttonAdditionalParams
+            // 
+            this.buttonAdditionalParams.Location = new System.Drawing.Point(171, 131);
+            this.buttonAdditionalParams.Name = "buttonAdditionalParams";
+            this.buttonAdditionalParams.Size = new System.Drawing.Size(147, 53);
+            this.buttonAdditionalParams.TabIndex = 59;
+            this.buttonAdditionalParams.Text = "Дополнительные параметры";
+            this.buttonAdditionalParams.UseVisualStyleBackColor = true;
+            this.buttonAdditionalParams.Click += new System.EventHandler(this.ButtonAdditionalParams_Click);
+            // 
             // buttonFilesGenerate
             // 
-            this.buttonFilesGenerate.Location = new System.Drawing.Point(4, 307);
+            this.buttonFilesGenerate.Location = new System.Drawing.Point(19, 481);
             this.buttonFilesGenerate.Name = "buttonFilesGenerate";
             this.buttonFilesGenerate.Size = new System.Drawing.Size(299, 48);
             this.buttonFilesGenerate.TabIndex = 58;
@@ -135,7 +141,7 @@
             // 
             // buttonMazeGeneration
             // 
-            this.buttonMazeGeneration.Location = new System.Drawing.Point(152, 55);
+            this.buttonMazeGeneration.Location = new System.Drawing.Point(171, 55);
             this.buttonMazeGeneration.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonMazeGeneration.Name = "buttonMazeGeneration";
             this.buttonMazeGeneration.Size = new System.Drawing.Size(147, 58);
@@ -144,97 +150,60 @@
             this.buttonMazeGeneration.UseVisualStyleBackColor = true;
             this.buttonMazeGeneration.Click += new System.EventHandler(this.buttonMazeGeneration_Click);
             // 
-            // panelMazeGenerationMethod
-            // 
-            this.panelMazeGenerationMethod.Controls.Add(this.radioButtonHuntAndKill);
-            this.panelMazeGenerationMethod.Controls.Add(this.radioButtonBackTracking);
-            this.panelMazeGenerationMethod.Location = new System.Drawing.Point(8, 55);
-            this.panelMazeGenerationMethod.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.panelMazeGenerationMethod.Name = "panelMazeGenerationMethod";
-            this.panelMazeGenerationMethod.Size = new System.Drawing.Size(123, 58);
-            this.panelMazeGenerationMethod.TabIndex = 54;
-            // 
-            // radioButtonHuntAndKill
-            // 
-            this.radioButtonHuntAndKill.AutoSize = true;
-            this.radioButtonHuntAndKill.Location = new System.Drawing.Point(3, 30);
-            this.radioButtonHuntAndKill.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.radioButtonHuntAndKill.Name = "radioButtonHuntAndKill";
-            this.radioButtonHuntAndKill.Size = new System.Drawing.Size(109, 21);
-            this.radioButtonHuntAndKill.TabIndex = 1;
-            this.radioButtonHuntAndKill.Text = "Hunt and Kill";
-            this.radioButtonHuntAndKill.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonBackTracking
-            // 
-            this.radioButtonBackTracking.AutoSize = true;
-            this.radioButtonBackTracking.Checked = true;
-            this.radioButtonBackTracking.Location = new System.Drawing.Point(3, 2);
-            this.radioButtonBackTracking.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.radioButtonBackTracking.Name = "radioButtonBackTracking";
-            this.radioButtonBackTracking.Size = new System.Drawing.Size(110, 21);
-            this.radioButtonBackTracking.TabIndex = 0;
-            this.radioButtonBackTracking.TabStop = true;
-            this.radioButtonBackTracking.Text = "Backtracking";
-            this.radioButtonBackTracking.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonRandR
-            // 
-            this.radioButtonRandR.AutoSize = true;
-            this.radioButtonRandR.Location = new System.Drawing.Point(4, 262);
-            this.radioButtonRandR.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButtonRandR.Name = "radioButtonRandR";
-            this.radioButtonRandR.Size = new System.Drawing.Size(171, 21);
-            this.radioButtonRandR.TabIndex = 42;
-            this.radioButtonRandR.Text = "Случайные повороты";
-            this.radioButtonRandR.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonRR
-            // 
-            this.radioButtonRR.AutoSize = true;
-            this.radioButtonRR.Location = new System.Drawing.Point(4, 234);
-            this.radioButtonRR.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButtonRR.Name = "radioButtonRR";
-            this.radioButtonRR.Size = new System.Drawing.Size(148, 21);
-            this.radioButtonRR.TabIndex = 41;
-            this.radioButtonRR.Text = "Правые повороты";
-            this.radioButtonRR.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonLR
-            // 
-            this.radioButtonLR.AutoSize = true;
-            this.radioButtonLR.Checked = true;
-            this.radioButtonLR.Cursor = System.Windows.Forms.Cursors.Default;
-            this.radioButtonLR.Location = new System.Drawing.Point(4, 207);
-            this.radioButtonLR.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButtonLR.Name = "radioButtonLR";
-            this.radioButtonLR.Size = new System.Drawing.Size(140, 21);
-            this.radioButtonLR.TabIndex = 40;
-            this.radioButtonLR.TabStop = true;
-            this.radioButtonLR.Text = "Левые повороты";
-            this.radioButtonLR.UseVisualStyleBackColor = true;
-            // 
             // buttonSolverStart
             // 
             this.buttonSolverStart.Enabled = false;
-            this.buttonSolverStart.Location = new System.Drawing.Point(152, 207);
+            this.buttonSolverStart.Location = new System.Drawing.Point(171, 273);
             this.buttonSolverStart.Margin = new System.Windows.Forms.Padding(4);
             this.buttonSolverStart.Name = "buttonSolverStart";
-            this.buttonSolverStart.Size = new System.Drawing.Size(151, 47);
+            this.buttonSolverStart.Size = new System.Drawing.Size(147, 47);
             this.buttonSolverStart.TabIndex = 39;
             this.buttonSolverStart.Text = "Решить лабиринт";
             this.buttonSolverStart.UseVisualStyleBackColor = true;
             this.buttonSolverStart.Click += new System.EventHandler(this.buttonSolverStart_Click);
             // 
-            // buttonAdditionalParams
+            // comboBoxGenerationMethods
             // 
-            this.buttonAdditionalParams.Location = new System.Drawing.Point(152, 128);
-            this.buttonAdditionalParams.Name = "buttonAdditionalParams";
-            this.buttonAdditionalParams.Size = new System.Drawing.Size(147, 53);
-            this.buttonAdditionalParams.TabIndex = 59;
-            this.buttonAdditionalParams.Text = "Дополнительные параметры";
-            this.buttonAdditionalParams.UseVisualStyleBackColor = true;
-            this.buttonAdditionalParams.Click += new System.EventHandler(this.ButtonAdditionalParams_Click);
+            this.comboBoxGenerationMethods.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxGenerationMethods.FormattingEnabled = true;
+            this.comboBoxGenerationMethods.Items.AddRange(new object[] {
+            "Backtracking",
+            "Hunt and Kill"});
+            this.comboBoxGenerationMethods.Location = new System.Drawing.Point(8, 89);
+            this.comboBoxGenerationMethods.Name = "comboBoxGenerationMethods";
+            this.comboBoxGenerationMethods.Size = new System.Drawing.Size(144, 24);
+            this.comboBoxGenerationMethods.TabIndex = 60;
+            // 
+            // labelGenerationMethod
+            // 
+            this.labelGenerationMethod.AutoSize = true;
+            this.labelGenerationMethod.Location = new System.Drawing.Point(7, 65);
+            this.labelGenerationMethod.Name = "labelGenerationMethod";
+            this.labelGenerationMethod.Size = new System.Drawing.Size(123, 17);
+            this.labelGenerationMethod.TabIndex = 61;
+            this.labelGenerationMethod.Text = "Метод генерации";
+            // 
+            // labelSolveMethod
+            // 
+            this.labelSolveMethod.AutoSize = true;
+            this.labelSolveMethod.Location = new System.Drawing.Point(10, 273);
+            this.labelSolveMethod.Name = "labelSolveMethod";
+            this.labelSolveMethod.Size = new System.Drawing.Size(113, 17);
+            this.labelSolveMethod.TabIndex = 62;
+            this.labelSolveMethod.Text = "Метод решения";
+            // 
+            // comboBoxSolveMethods
+            // 
+            this.comboBoxSolveMethods.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSolveMethods.FormattingEnabled = true;
+            this.comboBoxSolveMethods.Items.AddRange(new object[] {
+            "Левые повороты",
+            "Правые повороты",
+            "Случайные повороты"});
+            this.comboBoxSolveMethods.Location = new System.Drawing.Point(8, 296);
+            this.comboBoxSolveMethods.Name = "comboBoxSolveMethods";
+            this.comboBoxSolveMethods.Size = new System.Drawing.Size(151, 24);
+            this.comboBoxSolveMethods.TabIndex = 63;
             // 
             // MazeForm
             // 
@@ -253,8 +222,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLabirint)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.panelMazeGenerationMethod.ResumeLayout(false);
-            this.panelMazeGenerationMethod.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -267,17 +234,14 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radioButtonRandR;
-        private System.Windows.Forms.RadioButton radioButtonRR;
-        private System.Windows.Forms.RadioButton radioButtonLR;
         private System.Windows.Forms.Button buttonSolverStart;
-        private System.Windows.Forms.RadioButton radioButtonHuntAndKill;
-        private System.Windows.Forms.RadioButton radioButtonBackTracking;
-        private System.Windows.Forms.Panel panelMazeGenerationMethod;
         private System.Windows.Forms.Button buttonMazeGeneration;
         private System.Windows.Forms.Button buttonFilesGenerate;
         private System.Windows.Forms.Button buttonAdditionalParams;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.ComboBox comboBoxGenerationMethods;
+        private System.Windows.Forms.ComboBox comboBoxSolveMethods;
+        private System.Windows.Forms.Label labelSolveMethod;
+        private System.Windows.Forms.Label labelGenerationMethod;
     }
 }
 

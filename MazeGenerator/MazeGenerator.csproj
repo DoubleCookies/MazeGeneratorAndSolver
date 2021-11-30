@@ -78,13 +78,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilesGenerationForm.cs">
+    <Compile Include="MazeParameters\FilesGenerationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FilesGenerationForm.Designer.cs">
+    <Compile Include="MazeParameters\FilesGenerationForm.Designer.cs">
       <DependentUpon>FilesGenerationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileGenerationData.cs" />
+    <Compile Include="MazeParameters\FileGenerationData.cs" />
     <Compile Include="MazeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,11 +93,11 @@
     </Compile>
     <Compile Include="MazeMainClass.cs" />
     <Compile Include="MazeGenerators\Generators.cs" />
-    <Compile Include="MazeParamsData.cs" />
-    <Compile Include="MazeParamsForm.cs">
+    <Compile Include="MazeParameters\MazeParamsData.cs" />
+    <Compile Include="MazeParameters\MazeParamsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MazeParamsForm.Designer.cs">
+    <Compile Include="MazeParameters\MazeParamsForm.Designer.cs">
       <DependentUpon>MazeParamsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MazeSolverServices\PointsFounders.cs" />
@@ -111,13 +111,13 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View.cs" />
-    <EmbeddedResource Include="FilesGenerationForm.resx">
+    <EmbeddedResource Include="MazeParameters\FilesGenerationForm.resx">
       <DependentUpon>FilesGenerationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MazeForm.resx">
       <DependentUpon>MazeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MazeParamsForm.resx">
+    <EmbeddedResource Include="MazeParameters\MazeParamsForm.resx">
       <DependentUpon>MazeParamsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressForm.resx">

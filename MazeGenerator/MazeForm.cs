@@ -69,10 +69,15 @@ namespace MazeGenerator
                 int pixelSize = Math.Min(pictureBoxLabirint.Width / mazeClassObject.Maze.GetLength(0), 
                     pictureBoxLabirint.Height / mazeClassObject.Maze.GetLength(1));
                 view.DrawMazeInitState(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), pixelSize);
-                if (radioButtonHuntAndKill.Checked)
-                    mazeClassObject.GenerateMazeWithHuntAndKill();
-                else
+                if (comboBoxGenerationMethods.SelectedItem == null) {
+                    MessageBox.Show("Не выбран метод генерации!");
+                    ChangeGenerationAndSolveButtonsStatus(true); //TODO: элементы по умолчанию
+                    return;
+                }
+                if (comboBoxGenerationMethods.Text == "Backtracking")
                     mazeClassObject.GenerateMazeWithRecursiveBacktracker();
+                else
+                    mazeClassObject.GenerateMazeWithHuntAndKill();
             }
             if (mazeClassObject != null)
                 ChangeGenerationAndSolveButtonsStatus(true);
@@ -95,7 +100,7 @@ namespace MazeGenerator
             mazeParamsForm.getUpdatedSleep(ref mazeParamsData);
             mazeClassObject.Sleep = mazeParamsData.Sleep;
             mazeClassObject.FeatureCode = mazeParamsData.FeatureCode;
-            SolverSelectAndStart();
+            SolverSelectAndStart(); //TODO: надо проверять, что он и не решался
             if (!mazeClassObject.IsSolutionFound)
                 MessageBox.Show("У лабиринта отсутствует решение.");
         }
@@ -175,11 +180,15 @@ namespace MazeGenerator
         /// </summary>
         private void SolverSelectAndStart()
         {
-            if (radioButtonLR.Checked)
+            if (comboBoxSolveMethods.SelectedItem == null) {
+                MessageBox.Show("Не выбран метод решения!");
+                return;
+            }
+            if (comboBoxSolveMethods.Text == "Левые повороты")
                 mazeClassObject.LeftRotateSolver();
-            if (radioButtonRR.Checked)
+            if (comboBoxSolveMethods.Text == "Правые повороты")
                 mazeClassObject.RightRotateSolver();
-            if (radioButtonRandR.Checked)
+            if (comboBoxSolveMethods.Text == "Случайные повороты")
                 mazeClassObject.RandomSolver();
         }
 
