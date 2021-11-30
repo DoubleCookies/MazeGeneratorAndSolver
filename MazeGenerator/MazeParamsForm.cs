@@ -49,6 +49,17 @@ namespace MazeGenerator
             return true;
         }
 
+        public void getUpdatedSleep(ref MazeParamsData mazeParams) {
+            try
+            {
+                mazeParams.Sleep = int.Parse(textBoxSleep.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Неверно введено значение задержки!");
+            }
+        }
+
         /// <summary>
         /// Метод получения кода особенности отрисовки
         /// </summary>

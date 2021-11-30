@@ -31,7 +31,7 @@ namespace MazeGenerator
         private void buttonMazeGeneration_Click(object sender, EventArgs e)
         {
             Thread thread = new Thread(RunMazeGeneration);
-            EnableGenerationAndSolveButtons(false);
+            ChangeGenerationAndSolveButtonsStatus(false);
             thread.Start();
         }
 
@@ -75,7 +75,7 @@ namespace MazeGenerator
                     mazeClassObject.GenerateMazeWithRecursiveBacktracker();
             }
             if (mazeClassObject != null)
-                EnableGenerationAndSolveButtons(true);
+                ChangeGenerationAndSolveButtonsStatus(true);
             else
                 buttonMazeGeneration.Enabled = true;
         }
@@ -92,6 +92,7 @@ namespace MazeGenerator
         /// <param name="method">Название метода</param>
         private void SolveMaze()
         {
+            mazeParamsForm.getUpdatedSleep(ref mazeParamsData);
             mazeClassObject.Sleep = mazeParamsData.Sleep;
             mazeClassObject.FeatureCode = mazeParamsData.FeatureCode;
             SolverSelectAndStart();
@@ -103,7 +104,7 @@ namespace MazeGenerator
         /// Включает/выключает кнопки генерации и решения лабиринта
         /// </summary>
         /// <param name="status">Статус кнопок: true - активна, false - выключена</param>
-        private void EnableGenerationAndSolveButtons(bool status)
+        private void ChangeGenerationAndSolveButtonsStatus(bool status)
         {
             buttonMazeGeneration.Enabled = status;
             buttonAdditionalParams.Enabled = status;
