@@ -78,6 +78,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FilesGenerationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FilesGenerationForm.Designer.cs">
+      <DependentUpon>FilesGenerationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GenerationData.cs" />
     <Compile Include="MazeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +104,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View.cs" />
+    <EmbeddedResource Include="FilesGenerationForm.resx">
+      <DependentUpon>FilesGenerationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MazeForm.resx">
       <DependentUpon>MazeForm.cs</DependentUpon>
     </EmbeddedResource>

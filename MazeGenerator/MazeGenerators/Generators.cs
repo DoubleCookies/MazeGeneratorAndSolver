@@ -6,6 +6,7 @@ using System.Threading;
 
 namespace MazeGenerator.MazeGenerators
 {
+    //TODO: абстрактный класс
     public class Generators
     {
         private readonly View view;

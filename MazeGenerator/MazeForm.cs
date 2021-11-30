@@ -9,6 +9,7 @@ namespace MazeGenerator
     public partial class MazeForm : Form
     {
         private readonly ProgressForm progressForm = new ProgressForm();
+        private FilesGenerationForm filesGenerationForm;
         private View view;
         private Graphics drawingPicturebox; // Объект, на котором может производится отрисовка
         private MazeMainClass mazeClassObject; // Основной объект лабиринта
@@ -19,12 +20,14 @@ namespace MazeGenerator
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false; // Для дебага из-за многопоточности
             random = new Random();
+            filesGenerationForm = new FilesGenerationForm(this);
         }
 
+        //TODO: Перенос доп. параметров в форму
         private void buttonMazeGeneration_Click(object sender, EventArgs e)
         {
             Thread thread = new Thread(RunMazeGeneration);
-            SwitchButtonsStatus(false);
+            EnableGenerationAndSolveButtons(false);
             thread.Start();
         }
 
@@ -48,7 +51,7 @@ namespace MazeGenerator
                     mazeClassObject.GenerateMazeWithRecursiveBacktracker();
             }
             if (mazeClassObject != null)
-                SwitchButtonsStatus(true);
+                EnableGenerationAndSolveButtons(true);
             else
                 buttonMazeGeneration.Enabled = true;
         }
@@ -83,10 +86,10 @@ namespace MazeGenerator
         }
 
         /// <summary>
-        /// Метод меняет состояние некоторых кнопок на форме (вкл/выкл)
+        /// Включает/выключает кнопки генерации и решения лабиринта
         /// </summary>
         /// <param name="status">Статус кнопок: true - активна, false - выключена</param>
-        private void SwitchButtonsStatus(bool status)
+        private void EnableGenerationAndSolveButtons(bool status)
         {
             buttonMazeGeneration.Enabled = status;
             buttonSolverStart.Enabled = status;
@@ -95,79 +98,16 @@ namespace MazeGenerator
         //TODO: Перенос в отдельные формы для генерации файлов
         private void ButtonGenPicture_Click(object sender, EventArgs e)
         {
-            bool isMazeCreated;
-            int size;
-            try
-            {
-                size = int.Parse(textBoxSize.Text);
-            }
-            catch
-            {
-                MessageBox.Show("Неправильно введён размер!");
-                return;
-            }
-            isMazeCreated = CreateMazeObject(true);
-            if (isMazeCreated)
-            {
-                view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0) * size, mazeClassObject.Maze.GetLength(1) * size, size);
-                mazeClassObject.GenerateMazeWithRecursiveBacktracker();
-                if (checkBoxWithSolution.Checked)
-                    SolverSelectAndStart();
-                SaveFileDialog dialog = new SaveFileDialog() { Filter = "Png Files|*.png|All Files (*.*)|*.*" };
-                if (dialog.ShowDialog() == DialogResult.OK)
-                    view.MazeBitmap.Save(dialog.FileName, ImageFormat.Png);
-                view.Dispose();
-                drawingPicturebox.Dispose();
-            }
+            
         }
 
         private void ButtonGenerateBatch_Click(object sender, EventArgs e)
         {
-            bool isMazeCreated;
-            int size;
-            int count;
-            try
-            {
-                size = int.Parse(textBoxSize.Text);
-                count = int.Parse(textBoxCount.Text);
-            }
-            catch
-            {
-                MessageBox.Show("Неправильно введён размер или кол-во изображений!");
-                return;
-            }
-
-            progressForm.Init(count);
-            isMazeCreated = CreateMazeObject(true);
-            if (isMazeCreated)
-            {
-                FolderBrowserDialog dialog = new FolderBrowserDialog { Description = "Выберите папку для сохранения набора изображений" };
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    progressForm.Show();
-                    for (int i = 0; i < count; i++)
-                    {
-                        view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0) * size, mazeClassObject.Maze.GetLength(1) * size, size);
-                        mazeClassObject.GenerateMazeWithRecursiveBacktracker();
-                        view.MazeBitmap.Save(dialog.SelectedPath + "/maze" + i + ".png", ImageFormat.Png);
-                        if (checkBoxWithSolution.Checked)
-                        {
-                            SolverSelectAndStart();
-                            view.MazeBitmap.Save(dialog.SelectedPath + "/maze" + i + "solved.png", ImageFormat.Png);
-                        }
-                        progressForm.ProgressBarUpdate();
-                        view.Dispose();
-                        drawingPicturebox.Dispose();
-                        CreateMazeObject(true);
-                    }
-                    progressForm.Hide();
-                }
-            }
-            progressForm.Dispose();
+            filesGenerationForm.Show();
         }
 
         /// <summary>
-        /// Метод для создания нового обхекта лабиринат
+        /// Метод для создания нового объекта лабиринта
         /// </summary>
         /// <param name="isBitmapUsed">Указывает, производится ли отрисовка на форме или в битмапе</param>
         /// <returns>Возвращает true, если был создан новый объект и false - если нет (например, если параметры некорректны)</returns>
@@ -329,6 +269,43 @@ namespace MazeGenerator
         private void checkBoxAdditionalGeneration_CheckedChanged(object sender, EventArgs e)
         {
             groupBoxGenerationAdditionalParams.Visible = checkBoxAdditionalGeneration.Checked;
+        }
+
+        private void ButtonFilesGenerate_Click(object sender, EventArgs e)
+        {
+            filesGenerationForm.Show();
+        }
+
+        public void ProcessFiles(GenerationData generationData)
+        {
+            int size = generationData.Size;
+            int count = generationData.Count;
+            bool isWithSolution = generationData.IsWithSolution;
+            string selectedPath = generationData.SelectedPath;
+
+            progressForm.Init(count);
+            bool isMazeCreated = CreateMazeObject(true);
+            if (isMazeCreated)
+            {
+                progressForm.Show();
+                for (int i = 0; i < count; i++)
+                {
+                    view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0) * size, mazeClassObject.Maze.GetLength(1) * size, size);
+                    mazeClassObject.GenerateMazeWithRecursiveBacktracker();
+                    view.MazeBitmap.Save(selectedPath + "/maze" + i + ".png", ImageFormat.Png);
+                    if (isWithSolution)
+                    {
+                        SolverSelectAndStart();
+                        view.MazeBitmap.Save(selectedPath + "/maze" + i + "solved.png", ImageFormat.Png);
+                    }
+                    progressForm.ProgressBarUpdate();
+                    view.Dispose();
+                    drawingPicturebox.Dispose();
+                    CreateMazeObject(true);
+                }
+                progressForm.Hide();
+            }
+            progressForm.Dispose();
         }
     }
 }
