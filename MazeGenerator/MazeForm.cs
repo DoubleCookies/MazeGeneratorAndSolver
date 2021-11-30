@@ -9,7 +9,11 @@ namespace MazeGenerator
     public partial class MazeForm : Form
     {
         private readonly ProgressForm progressForm = new ProgressForm();
-        private FilesGenerationForm filesGenerationForm;
+        private readonly FilesGenerationForm filesGenerationForm;
+
+        private MazeParamsForm mazeParamsForm = new MazeParamsForm();
+        private MazeParamsData mazeParamsData;
+
         private View view;
         private Graphics drawingPicturebox; // Объект, на котором может производится отрисовка
         private MazeMainClass mazeClassObject; // Основной объект лабиринта
@@ -21,9 +25,9 @@ namespace MazeGenerator
             CheckForIllegalCrossThreadCalls = false; // Для дебага из-за многопоточности
             random = new Random();
             filesGenerationForm = new FilesGenerationForm(this);
+            mazeParamsData = new MazeParamsData();
         }
 
-        //TODO: Перенос доп. параметров в форму
         private void buttonMazeGeneration_Click(object sender, EventArgs e)
         {
             Thread thread = new Thread(RunMazeGeneration);
@@ -37,6 +41,26 @@ namespace MazeGenerator
         /// <param name="isHuntMethod">Используется ли метод Hunt-And-Kill</param>
         private void RunMazeGeneration()
         {
+            try
+            {
+                mazeParamsData.Width = int.Parse(textBoxWidth.Text);
+                mazeParamsData.Height = int.Parse(textBoxHeight.Text);
+            }
+            catch 
+            {
+                MessageBox.Show("Неверно введена ширина/высота!");
+                return;
+            }
+            if (mazeParamsData.Width <= 1 || mazeParamsData.Height <= 1)
+            {
+                MessageBox.Show("Ширина/высота должны быть больше 1!");
+                return;
+            }
+
+            bool areParamsCorrect = mazeParamsForm.FillAndCheckMazeParamsData(ref mazeParamsData);
+            if (!areParamsCorrect)
+                return;
+
             drawingPicturebox = pictureBoxLabirint.CreateGraphics();
             view = new View(drawingPicturebox);
             bool isMazeCreated = CreateMazeObject(false);
@@ -68,18 +92,8 @@ namespace MazeGenerator
         /// <param name="method">Название метода</param>
         private void SolveMaze()
         {
-            int sleep;
-            try
-            {
-                sleep = int.Parse(textBoxSleep.Text);
-            }
-            catch 
-            {
-                MessageBox.Show("Введите правильное значение паузы!");
-                return;
-            }
-            mazeClassObject.Sleep = sleep;
-            mazeClassObject.FeatureCode = checkBoxFeatureUse.Checked ? GetFeatureCode() : 0;
+            mazeClassObject.Sleep = mazeParamsData.Sleep;
+            mazeClassObject.FeatureCode = mazeParamsData.FeatureCode;
             SolverSelectAndStart();
             if (!mazeClassObject.IsSolutionFound)
                 MessageBox.Show("У лабиринта отсутствует решение.");
@@ -92,18 +106,8 @@ namespace MazeGenerator
         private void EnableGenerationAndSolveButtons(bool status)
         {
             buttonMazeGeneration.Enabled = status;
+            buttonAdditionalParams.Enabled = status;
             buttonSolverStart.Enabled = status;
-        }
-
-        //TODO: Перенос в отдельные формы для генерации файлов
-        private void ButtonGenPicture_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void ButtonGenerateBatch_Click(object sender, EventArgs e)
-        {
-            filesGenerationForm.Show();
         }
 
         /// <summary>
@@ -115,38 +119,14 @@ namespace MazeGenerator
         {
             if (mazeClassObject != null)
                 mazeClassObject.Clear();
-            if (AreMazeParamsValid(isBitmapUsed)) { 
+            if (AreMazeParamsValid(isBitmapUsed, mazeParamsData.Width, mazeParamsData.Height)) { 
                 return CreateMaze(isBitmapUsed);
             }
             return false;
         }
 
-        private bool AreMazeParamsValid(bool isBitmapUsed)
+        private bool AreMazeParamsValid(bool isBitmapUsed, int width, int height)
         {
-
-            double prob;
-            double whiteProb;
-            int width;
-            int height;
-            int sleep;
-            try
-            {
-                width = int.Parse(textBoxWidth.Text);
-                height = int.Parse(textBoxHeight.Text);
-                sleep = int.Parse(textBoxSleep.Text);
-                prob = double.Parse(textBoxEmptyPlacesProb.Text);
-                whiteProb = double.Parse(textBoxWhiteSpaceProb.Text);
-            }
-            catch
-            {
-                MessageBox.Show("Неверно введены параметры для генерации лабиринта!");
-                return false;
-            }
-            if (width <= 1 || height <= 1)
-            {
-                MessageBox.Show("Неверно задана размерность!");
-                return false;
-            }
             if (!isBitmapUsed)
             {
                 if (width * 2 + 1 > pictureBoxLabirint.Width || height * 2 + 1 > pictureBoxLabirint.Height)
@@ -165,21 +145,16 @@ namespace MazeGenerator
         /// <returns>Возвращает true, если объект создан успешно (иначе - false)</returns>
         private bool CreateMaze(bool isBitmapUsed) {
             mazeClassObject = null;
-            bool isFromStart;
-            int featureCode = 0;
-            int width = int.Parse(textBoxWidth.Text);
-            int height = int.Parse(textBoxHeight.Text);
-            double prob = double.Parse(textBoxEmptyPlacesProb.Text);
-            double whiteProb = double.Parse(textBoxWhiteSpaceProb.Text);
-            int sleep = int.Parse(textBoxSleep.Text);
+            bool isFromStart = mazeParamsData.IsGeneratedFromStart;
+            int featureCode = mazeParamsData.FeatureCode;
+            int width = mazeParamsData.Width;
+            int height = mazeParamsData.Height;
+            double prob = mazeParamsData.Prob;
+            double whiteProb = mazeParamsData.WhiteProb;
+            int sleep = mazeParamsData.Sleep;
+            Point startpoint = mazeParamsData.StartPoint;
+            Point finishpoint = mazeParamsData.FinishPoint;
 
-            Point startpoint = checkBoxStart.Checked ? 
-                new Point(int.Parse(textBoxStartX.Text) * 2 + 1, int.Parse(textBoxStartY.Text) * 2 + 1) : new Point(1, 1);
-            Point finishpoint = checkBoxFinish.Checked ?
-                new Point(int.Parse(textBoxEndX.Text) * 2 + 1, int.Parse(textBoxEndY.Text) * 2 + 1) : new Point(width * 2 - 1, height * 2 - 1);
-            isFromStart = checkBoxFromBegin.Checked;
-            if (checkBoxFeatureUse.Checked)
-                featureCode = GetFeatureCode();
             view = new View(pictureBoxLabirint.CreateGraphics(), startpoint, finishpoint);
 
             try
@@ -192,34 +167,6 @@ namespace MazeGenerator
                 return false;
             }
             return true;
-        }
-
-        /// <summary>
-        /// Метод получения кода особенности отрисовки
-        /// </summary>
-        /// <returns>Возвращает числовое представление кода</returns>
-        private int GetFeatureCode()
-        {
-            if (radioButtonFeatureChaos.Checked)
-                return 1;
-            if (radioButtonFeatureRed.Checked)
-                return 2;
-            if (radioButtonFeatureGreen.Checked)
-                return 3;
-            if (radioButtonFeatureBlue.Checked)
-                return 4;
-            if (radioButtonFeatureYellow.Checked)
-                return 23;
-            if (radioButtonFeatureTurquoise.Checked)
-                return 34;
-            if (radioButtonFeatureViolet.Checked)
-                return 42;
-            if (radioButtonFeatureDarkStyle.Checked)
-                return 48;
-            if (radioButtonFeatureLightStyle.Checked)
-                return 49;
-            else
-                return 50;
         }
 
         /// <summary>
@@ -245,38 +192,12 @@ namespace MazeGenerator
             view = new View(drawingPicturebox);
         }
 
-        private void checkBoxFeatureUse_CheckedChanged(object sender, EventArgs e)
-        {
-            groupBoxDrawFeatures.Visible = checkBoxFeatureUse.Checked;
-        }
-
-        private void checkBoxStart_CheckedChanged(object sender, EventArgs e)
-        {
-            label6.Visible = checkBoxStart.Checked;
-            label7.Visible = checkBoxStart.Checked;
-            textBoxStartX.Visible = checkBoxStart.Checked;
-            textBoxStartY.Visible = checkBoxStart.Checked;
-        }
-
-        private void checkBoxFinish_CheckedChanged(object sender, EventArgs e)
-        {
-            label5.Visible = checkBoxFinish.Checked;
-            label4.Visible = checkBoxFinish.Checked;
-            textBoxEndX.Visible = checkBoxFinish.Checked;
-            textBoxEndY.Visible = checkBoxFinish.Checked;
-        }
-
-        private void checkBoxAdditionalGeneration_CheckedChanged(object sender, EventArgs e)
-        {
-            groupBoxGenerationAdditionalParams.Visible = checkBoxAdditionalGeneration.Checked;
-        }
-
         private void ButtonFilesGenerate_Click(object sender, EventArgs e)
         {
             filesGenerationForm.Show();
         }
 
-        public void ProcessFiles(GenerationData generationData)
+        public void ProcessFiles(FileGenerationData generationData)
         {
             int size = generationData.Size;
             int count = generationData.Count;
@@ -306,6 +227,11 @@ namespace MazeGenerator
                 progressForm.Hide();
             }
             progressForm.Dispose();
+        }
+
+        private void ButtonAdditionalParams_Click(object sender, EventArgs e)
+        {
+            mazeParamsForm.Show();
         }
     }
 }

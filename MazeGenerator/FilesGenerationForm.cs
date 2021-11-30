@@ -23,7 +23,7 @@ namespace MazeGenerator
 
         private void ButtonCreate_Click(object sender, EventArgs e)
         {
-            GenerationData generationData = new GenerationData();
+            FileGenerationData generationData = new FileGenerationData();
             generationData.IsWithSolution = checkBoxWithSolution.Checked;
             try
             {

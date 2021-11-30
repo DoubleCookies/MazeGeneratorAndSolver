@@ -84,7 +84,7 @@
     <Compile Include="FilesGenerationForm.Designer.cs">
       <DependentUpon>FilesGenerationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GenerationData.cs" />
+    <Compile Include="FileGenerationData.cs" />
     <Compile Include="MazeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +93,13 @@
     </Compile>
     <Compile Include="MazeMainClass.cs" />
     <Compile Include="MazeGenerators\Generators.cs" />
+    <Compile Include="MazeParamsData.cs" />
+    <Compile Include="MazeParamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MazeParamsForm.Designer.cs">
+      <DependentUpon>MazeParamsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MazeSolverServices\PointsFounders.cs" />
     <Compile Include="MazeSolvers\Solvers.cs" />
     <Compile Include="Program.cs" />
@@ -109,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MazeForm.resx">
       <DependentUpon>MazeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MazeParamsForm.resx">
+      <DependentUpon>MazeParamsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
