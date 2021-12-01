@@ -91,7 +91,7 @@
     <Compile Include="MazeForm.Designer.cs">
       <DependentUpon>MazeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MazeMainClass.cs" />
+    <Compile Include="MazeObject.cs" />
     <Compile Include="MazeGenerators\Generators.cs" />
     <Compile Include="MazeParameters\MazeParamsData.cs" />
     <Compile Include="MazeParameters\MazeParamsForm.cs">

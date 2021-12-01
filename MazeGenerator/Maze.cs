@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace MazeGenerator
 {
-    public class MazeMainClass
+    public class Maze
     {
         private Generators Generator { get; set; }
         private Solvers Solver { get; set; }

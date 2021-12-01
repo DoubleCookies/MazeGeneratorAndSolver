@@ -16,8 +16,18 @@ namespace MazeGenerator
 
         private View view;
         private Graphics drawingPicturebox; // Объект, на котором может производится отрисовка
-        private MazeMainClass mazeClassObject; // Основной объект лабиринта
+        private MazeObject mazeClassObject; // Основной объект лабиринта
         private readonly Random random;
+
+        enum DrawingMethod { 
+            Picturebox,
+            Bitmap
+        }
+
+        enum ButtonsStatus { 
+            Enabled,
+            Disabled
+        }
 
         public MazeForm()
         {
@@ -34,7 +44,7 @@ namespace MazeGenerator
         private void buttonMazeGeneration_Click(object sender, EventArgs e)
         {
             Thread thread = new Thread(RunMazeGeneration);
-            ChangeGenerationAndSolveButtonsStatus(false);
+            ChangeGenerationAndSolveButtonsStatus(ButtonsStatus.Disabled);
             thread.Start();
         }
 
@@ -44,19 +54,7 @@ namespace MazeGenerator
         /// <param name="isHuntMethod">Используется ли метод Hunt-And-Kill</param>
         private void RunMazeGeneration()
         {
-            try
-            {
-                mazeParamsData.Width = int.Parse(textBoxWidth.Text);
-                mazeParamsData.Height = int.Parse(textBoxHeight.Text);
-            }
-            catch 
-            {
-                MessageBox.Show("Неверно введена ширина/высота!");
-                return;
-            }
-            if (mazeParamsData.Width <= 1 || mazeParamsData.Height <= 1)
-            {
-                MessageBox.Show("Ширина/высота должны быть больше 1!");
+            if (!AreWidthAndHeightCorrect()) {
                 return;
             }
 
@@ -66,7 +64,7 @@ namespace MazeGenerator
 
             drawingPicturebox = pictureBoxLabirint.CreateGraphics();
             view = new View(drawingPicturebox);
-            bool isMazeCreated = CreateMazeObject(false);
+            bool isMazeCreated = CheckAndCreateMazeObject(DrawingMethod.Picturebox);
             if (isMazeCreated)
             {
                 int pixelSize = Math.Min(pictureBoxLabirint.Width / mazeClassObject.Maze.GetLength(0), 
@@ -78,9 +76,28 @@ namespace MazeGenerator
                     mazeClassObject.GenerateMazeWithHuntAndKill();
             }
             if (mazeClassObject != null)
-                ChangeGenerationAndSolveButtonsStatus(true);
+                ChangeGenerationAndSolveButtonsStatus(ButtonsStatus.Enabled);
             else
                 buttonMazeGeneration.Enabled = true;
+        }
+
+        private bool AreWidthAndHeightCorrect() {
+            try
+            {
+                mazeParamsData.Width = int.Parse(textBoxWidth.Text);
+                mazeParamsData.Height = int.Parse(textBoxHeight.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Неверно введена ширина/высота!");
+                return false;
+            }
+            if (mazeParamsData.Width <= 1 || mazeParamsData.Height <= 1)
+            {
+                MessageBox.Show("Ширина/высота должны быть больше 1!");
+                return false;
+            }
+            return true;
         }
 
         private void buttonSolverStart_Click(object sender, EventArgs e)
@@ -107,8 +124,10 @@ namespace MazeGenerator
         /// Включает/выключает кнопки генерации и решения лабиринта
         /// </summary>
         /// <param name="status">Статус кнопок: true - активна, false - выключена</param>
-        private void ChangeGenerationAndSolveButtonsStatus(bool status)
+        private void ChangeGenerationAndSolveButtonsStatus(ButtonsStatus buttonsStatus)
         {
+            bool status = buttonsStatus == ButtonsStatus.Enabled;
+
             buttonMazeGeneration.Enabled = status;
             buttonAdditionalParams.Enabled = status;
             buttonSolverStart.Enabled = status;
@@ -119,8 +138,10 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="isBitmapUsed">Указывает, производится ли отрисовка на форме или в битмапе</param>
         /// <returns>Возвращает true, если был создан новый объект и false - если нет (например, если параметры некорректны)</returns>
-        private bool CreateMazeObject(bool isBitmapUsed)
+        private bool CheckAndCreateMazeObject(DrawingMethod drawingMethod)
         {
+            bool isBitmapUsed = drawingMethod == DrawingMethod.Bitmap;
+
             if (mazeClassObject != null)
                 mazeClassObject.Clear();
             if (AreMazeParamsValid(isBitmapUsed, mazeParamsData.Width, mazeParamsData.Height)) { 
@@ -163,7 +184,7 @@ namespace MazeGenerator
 
             try
             {
-                mazeClassObject = new MazeMainClass(width, height, startpoint, finishpoint, prob, whiteProb, isFromStart, isBitmapUsed, featureCode, isBitmapUsed ? 0 : sleep, view, random);
+                mazeClassObject = new MazeObject(width, height, startpoint, finishpoint, prob, whiteProb, isFromStart, isBitmapUsed, featureCode, isBitmapUsed ? 0 : sleep, view, random);
             }
             catch (OutOfMemoryException)
             {
@@ -209,7 +230,7 @@ namespace MazeGenerator
             string selectedPath = generationData.SelectedPath;
 
             progressForm.Init(count);
-            bool isMazeCreated = CreateMazeObject(true);
+            bool isMazeCreated = CheckAndCreateMazeObject(DrawingMethod.Bitmap);
             if (isMazeCreated)
             {
                 progressForm.Show();
@@ -226,7 +247,7 @@ namespace MazeGenerator
                     progressForm.ProgressBarUpdate();
                     view.Dispose();
                     drawingPicturebox.Dispose();
-                    CreateMazeObject(true);
+                    CheckAndCreateMazeObject(DrawingMethod.Bitmap);
                 }
                 progressForm.Hide();
             }
