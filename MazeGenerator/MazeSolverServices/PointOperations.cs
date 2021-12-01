@@ -8,7 +8,8 @@ namespace MazeGenerator
         canVisit = 1,
         alreadyVisited = 2
     }
-    public static class PointsFounders
+
+    public static class PointOperations
     {
         static readonly List<Point> possPoints = new List<Point>();
         static readonly List<int> directions = new List<int>();
@@ -45,24 +46,24 @@ namespace MazeGenerator
             int y = current.Y;
             int mazeWidth = mazeArray.GetLength(0);
             int mazeHeight = mazeArray.GetLength(1);
-            int canVisitValue = (int)PointStatus.canVisit;
+            int pointStatus = (int)PointStatus.canVisit;
 
-            if (x + 2 < mazeWidth && mazeArray[x + 2, y] == canVisitValue && mazeArray[x + 1, y] == canVisitValue)
+            if (x + 2 < mazeWidth && mazeArray[x + 2, y] == pointStatus && mazeArray[x + 1, y] == pointStatus)
             {
                 possPoints.Add(new Point(x + 2, y));
                 directions.Add(0);
             }
-            if (y + 2 < mazeHeight && mazeArray[x, y + 2] == canVisitValue && mazeArray[x, y + 1] == canVisitValue)
+            if (y + 2 < mazeHeight && mazeArray[x, y + 2] == pointStatus && mazeArray[x, y + 1] == pointStatus)
             {
                 possPoints.Add(new Point(x, y + 2));
                 directions.Add(1);
             }
-            if (x - 2 > 0 && mazeArray[x - 2, y] == canVisitValue && mazeArray[x - 1, y] == canVisitValue)
+            if (x - 2 > 0 && mazeArray[x - 2, y] == pointStatus && mazeArray[x - 1, y] == pointStatus)
             {
                 possPoints.Add(new Point(x - 2, y));
                 directions.Add(2);
             }
-            if (y - 2 > 0 && mazeArray[x, y - 2] == canVisitValue && mazeArray[x, y - 1] == canVisitValue)
+            if (y - 2 > 0 && mazeArray[x, y - 2] == pointStatus && mazeArray[x, y - 1] == pointStatus)
             {
                 possPoints.Add(new Point(x, y - 2));
                 directions.Add(3);

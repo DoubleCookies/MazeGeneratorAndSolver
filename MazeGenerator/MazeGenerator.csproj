@@ -100,7 +100,7 @@
     <Compile Include="MazeParameters\MazeParamsForm.Designer.cs">
       <DependentUpon>MazeParamsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MazeSolverServices\PointsFounders.cs" />
+    <Compile Include="MazeSolverServices\PointOperations.cs" />
     <Compile Include="MazeSolvers\Solvers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgressForm.cs">

@@ -78,15 +78,15 @@ namespace MazeGenerator.MazeSolvers
             while (!solutionFound)
             {
                 Thread.Sleep(Sleep);
-                pointsToMove = PointsFounders.PossiblePointsWithDirections(Maze, current);
+                pointsToMove = PointOperations.PossiblePointsWithDirections(Maze, current);
                 count = pointsToMove.Count;
                 if (count != 0)
                 {
                     int selected;
                     if (leftRotation)
-                        selected = PointsFounders.SelectedMoveLeft(ref look);
+                        selected = PointOperations.SelectedMoveLeft(ref look);
                     else
-                        selected = PointsFounders.SelectedMoveRight(ref look);
+                        selected = PointOperations.SelectedMoveRight(ref look);
                     GoToNewPoint(pointsToMove[selected]);
                 }
                 else
@@ -120,7 +120,7 @@ namespace MazeGenerator.MazeSolvers
             while (!finFound)
             {
                 Thread.Sleep(Sleep);
-                pointsMove = PointsFounders.PossiblePointsWithDirections(Maze, current);
+                pointsMove = PointOperations.PossiblePointsWithDirections(Maze, current);
                 count = pointsMove.Count;
                 if (count != 0)
                 {
