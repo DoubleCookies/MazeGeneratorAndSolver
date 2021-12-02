@@ -8,9 +8,8 @@ namespace MazeGenerator.MazeGenerators
 {
     public class BacktrackingGenerator : AbstractGenerator
     {
-        public BacktrackingGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random) : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random) {
-
-        }
+        public BacktrackingGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random) 
+            : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random) {}
 
         public override void Generate(bool fromStart, double whiteProb)
         {
@@ -23,7 +22,7 @@ namespace MazeGenerator.MazeGenerators
         /// <param name="fromStart">Начинать ли генерацию со старта</param>
 
         /// <param name="whiteProb">Вероятность убрать стену</param>
-        public void BackTrackMazeGenerate(bool fromStart, double whiteProb)
+        private void BackTrackMazeGenerate(bool fromStart, double whiteProb)
         {
             view.DrawBlackPoints(blackPoints);
             ClearBlackPointsList();
@@ -37,7 +36,7 @@ namespace MazeGenerator.MazeGenerators
                     Thread.Sleep(sleep);
                 List<Point> possiblePoints = PointOperations.PossiblePoints(mazeArray, currentPoint.X, currentPoint.Y, 2, (int)PointStatus.canVisit);
                 int pointsToVisit = possiblePoints.Count;
-                if (pointsToVisit != 0)
+                if (possiblePoints.Count != 0)
                     GoToNewPoint(possiblePoints[random.Next(0, pointsToVisit)]);
                 else
                     PointRollback();

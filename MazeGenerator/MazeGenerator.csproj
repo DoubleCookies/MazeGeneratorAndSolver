@@ -79,8 +79,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MazeGenerators\AbstractGenerator.cs" />
-    <Compile Include="MazeGenerators\BacktrackingGenerator.cs" />
-    <Compile Include="MazeGenerators\HuntAndKillGenerator.cs" />
+    <Compile Include="MazeGenerators\Generators\BacktrackingGenerator.cs" />
+    <Compile Include="MazeGenerators\Generators\HuntAndKillGenerator.cs" />
     <Compile Include="MazeParameters\FilesGenerationForm.cs">
       <SubType>Form</SubType>
     </Compile>
