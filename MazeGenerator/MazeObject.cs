@@ -7,7 +7,7 @@ namespace MazeGenerator
 {
     public class MazeObject
     {
-        private Generators Generator { get; set; }
+        // private Generators Generator { get; set; }
         private Solvers Solver { get; set; }
         public bool IsSolutionFound { get; set; }
         public int[,] Maze { get; set; }
@@ -16,6 +16,9 @@ namespace MazeGenerator
 
         private Point startpoint; // Начальная точка
         private Point finishpoint; // Конечная точка
+
+        private View view;
+        private Random random;
 
         private readonly double blackProb; //Вероятность появления доп. стен
         private readonly double whiteProb; //Вероятность убрать стену
@@ -47,13 +50,16 @@ namespace MazeGenerator
             this.fromStart = fromStart;
             FeatureCode = feature;
             IsSolutionFound = false;
-            Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
-            Generator.FillMazeArray(blackProb);
+
+            this.random = random;
+            this.view = view;
+
+            //Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
+            //Generator.FillMazeArray(blackProb);
             Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
         }
 
         public void Clear() {
-            Generator = null;
             Solver = null;
             Maze = null;
         }
@@ -63,7 +69,9 @@ namespace MazeGenerator
         /// </summary>
         public void GenerateMazeWithRecursiveBacktracker()
         {
-            Generator.BackTrackMazeGenerate(fromStart, whiteProb);
+            BacktrackingGenerator generator = new BacktrackingGenerator(Maze, startpoint, finishpoint, view, FeatureCode, Sleep, random);
+            generator.FillMazeArray(blackProb);
+            generator.Generate(fromStart, whiteProb);
         }
 
         /// <summary>
@@ -71,7 +79,9 @@ namespace MazeGenerator
         /// </summary>
         public void GenerateMazeWithHuntAndKill()
         {
-            Generator.HuntAndKillMazeGenerate(fromStart, whiteProb);
+            HuntAndKillGenerator generator = new HuntAndKillGenerator(Maze, startpoint, finishpoint, view, FeatureCode, Sleep, random);
+            generator.FillMazeArray(blackProb);
+            generator.Generate(fromStart, whiteProb);
         }
 
         /// <summary>

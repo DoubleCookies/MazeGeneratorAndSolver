@@ -78,6 +78,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MazeGenerators\AbstractGenerator.cs" />
+    <Compile Include="MazeGenerators\BacktrackingGenerator.cs" />
+    <Compile Include="MazeGenerators\HuntAndKillGenerator.cs" />
     <Compile Include="MazeParameters\FilesGenerationForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,7 +95,6 @@
       <DependentUpon>MazeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MazeObject.cs" />
-    <Compile Include="MazeGenerators\Generators.cs" />
     <Compile Include="MazeParameters\MazeParamsData.cs" />
     <Compile Include="MazeParameters\MazeParamsForm.cs">
       <SubType>Form</SubType>
