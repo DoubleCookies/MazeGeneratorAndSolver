@@ -103,7 +103,10 @@
       <DependentUpon>MazeParamsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MazeSolverServices\PointOperations.cs" />
-    <Compile Include="MazeSolvers\Solvers.cs" />
+    <Compile Include="MazeSolvers\AbstractSolver.cs" />
+    <Compile Include="MazeSolvers\Solvers\RandomRotateSolver.cs" />
+    <Compile Include="MazeSolvers\Solvers\RightRotateSolver.cs" />
+    <Compile Include="MazeSolvers\Solvers\LeftRotateSolver.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgressForm.cs">
       <SubType>Form</SubType>
@@ -165,6 +168,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,0 +1,47 @@
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Threading;
+
+namespace MazeGenerator.MazeSolvers.Solvers
+{
+    public class LeftRotateSolver : AbstractSolver
+    {
+        public LeftRotateSolver(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featureCode, int sleep, bool isBitmapUsed)
+            : base(mazeArray, startpoint, finishpoint, view, featureCode, sleep, isBitmapUsed) { }
+
+        public override void Solve()
+        {
+            SolversInit();
+            int look = 1; // 0 - право, 1 - низ, 2 - лево, 3 - верх
+            bool solutionFound = false;
+            List<Point> pointsToMove;
+            int count;
+            while (!solutionFound)
+            {
+                Thread.Sleep(Sleep);
+                pointsToMove = PointOperations.PossiblePointsWithDirections(Maze, current);
+                count = pointsToMove.Count;
+                if (count != 0)
+                {
+                    int selected;
+                    selected = PointOperations.SelectedMoveLeft(ref look);
+                    GoToNewPoint(pointsToMove[selected]);
+                }
+                else
+                {
+                    if (points.Count > 1)
+                        PointRollback(ref look);
+                    else
+                        solutionFound = true;
+                }
+                if (current.X == finishpoint.X && current.Y == finishpoint.Y)
+                    solutionFound = true;
+            }
+            //оптимизация
+            if (current.X == finishpoint.X && current.Y == finishpoint.Y)
+                Result = true;
+            else
+                Result = false;
+        }
+    }
+}

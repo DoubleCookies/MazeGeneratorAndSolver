@@ -1,5 +1,6 @@
 ﻿using MazeGenerator.MazeGenerators;
 using MazeGenerator.MazeSolvers;
+using MazeGenerator.MazeSolvers.Solvers;
 using System;
 using System.Drawing;
 
@@ -8,7 +9,7 @@ namespace MazeGenerator
     public class MazeObject
     {
         // private Generators Generator { get; set; }
-        private Solvers Solver { get; set; }
+        //private Solvers Solver { get; set; }
         public bool IsSolutionFound { get; set; }
         public int[,] Maze { get; set; }
         public int Sleep { get; set; }
@@ -17,13 +18,16 @@ namespace MazeGenerator
         private Point startpoint; // Начальная точка
         private Point finishpoint; // Конечная точка
 
-        private View view;
-        private Random random;
+        private readonly View view;
+        private readonly Random random;
 
         private readonly double blackProb; //Вероятность появления доп. стен
         private readonly double whiteProb; //Вероятность убрать стену
 
         private readonly bool fromStart; // Генерация лабиринта со старта или с финиша
+        private readonly bool bitmap;
+
+        private AbstractSolver solver;
 
 
         /// <summary>
@@ -54,13 +58,15 @@ namespace MazeGenerator
             this.random = random;
             this.view = view;
 
+            this.bitmap = bitmap;
+
             //Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
             //Generator.FillMazeArray(blackProb);
-            Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
+            //Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
         }
 
         public void Clear() {
-            Solver = null;
+            //Solver = null;
             Maze = null;
         }
 
@@ -90,9 +96,12 @@ namespace MazeGenerator
         /// <returns>Возвращает количество шагов для прохождения лабиринта</returns>
         public void LeftRotateSolver()
         {
-            ParamsUpdate();
-            Solver.LeftRightRotateSolver(true);
-            IsSolutionFound = Solver.Result;
+            //ParamsUpdate();
+            if (solver != null)
+                solver.Clear();
+            solver = new LeftRotateSolver(Maze, startpoint, finishpoint, view, FeatureCode, Sleep, bitmap);
+            solver.Solve();
+            IsSolutionFound = solver.Result;
         }
 
         /// <summary>
@@ -101,9 +110,12 @@ namespace MazeGenerator
         /// <returns>Возвращает количество шагов для прохождения лабиринта</returns>
         public void RightRotateSolver()
         {
-            ParamsUpdate();
-            Solver.LeftRightRotateSolver(false);
-            IsSolutionFound = Solver.Result;
+            //ParamsUpdate();
+            if (solver != null)
+                solver.Clear();
+            solver = new RightRotateSolver(Maze, startpoint, finishpoint, view, FeatureCode, Sleep, bitmap);
+            solver.Solve();
+            IsSolutionFound = solver.Result;
         }
 
         /// <summary>
@@ -112,18 +124,11 @@ namespace MazeGenerator
         /// <returns>Возвращает количество шагов для прохождения лабиринта</returns>
         public void RandomSolver()
         {
-            ParamsUpdate();
-            Solver.RandomSolver();
-            IsSolutionFound = Solver.Result;
-        }
-
-        /// <summary>
-        /// Обновление параметров для изменения отрисовки решения лабиринта
-        /// </summary>
-        private void ParamsUpdate()
-        {
-            Solver.FeatureCode = FeatureCode;
-            Solver.Sleep = Sleep;
+            if (solver != null)
+                solver.Clear();
+            solver = new RandomRotateSolver(Maze, startpoint, finishpoint, view, FeatureCode, Sleep, bitmap);
+            solver.Solve();
+            IsSolutionFound = solver.Result;
         }
     }
 }

@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MazeGenerator.MazeGenerators
 {
     public class HuntAndKillGenerator : AbstractGenerator
     {
-        public HuntAndKillGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random) : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random)
-        {
-
-        }
+        public HuntAndKillGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random) 
+            : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random) {}
 
         public override void Generate(bool fromStart, double whiteProb)
         {
