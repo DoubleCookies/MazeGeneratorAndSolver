@@ -23,14 +23,22 @@ namespace MazeGenerator
     {
         static readonly List<Point> possPoints = new List<Point>();
         static readonly Random rand = new Random();
-
         static readonly List<FoundPointsData> foundPoints = new List<FoundPointsData>();
 
 
-        public static List<Point> GetConnectedVisitedPoints(int[,] mazeArray, int x, int y, int cellCount) {
+        /// <summary>
+        /// Поиск уже посещённых точек
+        /// </summary>
+        /// <returns>Возвращает список уже посещённых точек</returns>
+        public static List<Point> GetConnectedVisitedPoints(int[,] mazeArray, int x, int y, int cellCount) 
+        {
             return PossiblePoints(mazeArray, x, y, cellCount, (int)PointStatus.alreadyVisited);
         }
 
+        /// <summary>
+        /// Поиск ещё не посещённых точек на определенной дистанции от текущей точки
+        /// </summary>
+        /// <returns>Возвращает список ещё не посещённых точек</returns>
         public static List<Point> GetConnectedNotVisitedPoints(int[,] mazeArray, int x, int y, int cellCount)
         {
             return PossiblePoints(mazeArray, x, y, cellCount, (int)PointStatus.canVisit);
@@ -38,7 +46,7 @@ namespace MazeGenerator
 
 
         /// <summary>
-        /// Поиск возможных точек для посещения
+        /// Поиск возможных точек для посещения на определенной дистанции от текущей точки
         /// </summary>
         /// <returns>Возвращает список точек, возможных для посещения</returns>
         private static List<Point> PossiblePoints(int[,] mazeArray, int x, int y, int cellCount, int pointStatus)
@@ -59,12 +67,11 @@ namespace MazeGenerator
         }
 
         /// <summary>
-        /// Поиск возможных точек для посещения + поиск возможных направлений движения
+        /// Поиск возможных точек для посещения с учтом направлений движения
         /// </summary>
         /// <returns>Возвращает список точек, возможных для посещения</returns>
         public static int PossiblePointsWithDirections(int[,] mazeArray, Point current)
         {
-            possPoints.Clear();
             foundPoints.Clear();
 
             int x = current.X;
@@ -83,22 +90,28 @@ namespace MazeGenerator
             return foundPoints.Count;
         }
 
+        /// <summary>
+        /// Проверяет, можно ли посетить данную точку
+        /// </summary>
+        /// <param name="pointValue">Значение точки</param>
+        /// <returns>true, если эту точку можно посетить</returns>
         private static bool CanVisitPoint(int pointValue) {
             int pointStatus = (int)PointStatus.canVisit;
             return pointValue == pointStatus;
         }
 
         /// <summary>
-        /// Поиск направления для перехода к след. точки (метод левых поворотов)
-        /// Сначала проверяет взгляд (по очереди) налево, вперёд, назад, направо
+        /// Поиск след. точки (метод левых поворотов)
+        /// Проверяет доступные направления для посещения: налево, вперёд, назад, направо
         /// </summary>
-        /// <param name="look">Текущий "взгляд" точки (0 - право, 1 - низ, 2 - лево, 3 - верх)</param>
-        /// <returns>Возвращает индекс точки из списка доступных точек</returns>
+        /// <param name="look">Обновляемый "взгляд" точки</param>
+        /// <returns>Возвращает новую точку для перехода</returns>
         public static Point SelectedMoveLeft(ref int look)
         {
             Point returnPoint;
             FoundPointsData data;
-            do {
+            do 
+            {
                 data = FindPointForDirection(PointDirections.left);
                 if (data != null) break;
                 data = FindPointForDirection(PointDirections.up);
@@ -106,7 +119,6 @@ namespace MazeGenerator
                 data = FindPointForDirection(PointDirections.down);
                 if (data != null) break;
                 data = FindPointForDirection(PointDirections.right);
-
             } while (data == null);
             look = (int)data.Direction;
             returnPoint = data.Point;
@@ -115,11 +127,11 @@ namespace MazeGenerator
 
 
         /// <summary>
-        /// Поиск направления для перехода к след. точки (метод правых поворотов)
-        /// Сначала проверяет взгляд (по очереди) направо, вперёд, назад, налево
+        /// Поиск след. точки (метод правых поворотов)
+        /// Проверяет доступные направления для посещения: направо, вперёд, назад, налево
         /// </summary>
-        /// <param name="look">Текущий "взгляд" точки (0 - право, 1 - низ, 2 - лево, 3 - верх)</param>
-        /// <returns>Возвращает индекс точки из списка доступных точек</returns>
+        /// <param name="look">Обновляемый "взгляд" точки</param>
+        /// <returns>Возвращает новую точку для перехода</returns>
         public static Point SelectedMoveRight(ref int look)
         {
             Point returnPoint;
@@ -133,7 +145,6 @@ namespace MazeGenerator
                 data = FindPointForDirection(PointDirections.down);
                 if (data != null) break;
                 data = FindPointForDirection(PointDirections.left);
-
             } while (data == null);
             look = (int)data.Direction;
             returnPoint = data.Point;
@@ -141,10 +152,19 @@ namespace MazeGenerator
             return returnPoint;
         }
 
+        /// <summary>
+        /// Поиск след. точки (метод случайных поворотов)
+        /// </summary>
+        /// <returns>Возвращает случайную точку из доступных для посещения</returns>
         public static Point SelectedMoveRandom() {
             return foundPoints[rand.Next(0, foundPoints.Count)].Point;
         }
 
+        /// <summary>
+        /// Поиск точки с нужным направлением среди доступных
+        /// </summary>
+        /// <param name="direction">Направление точки</param>
+        /// <returns>Возвращает точку, если она найдена</returns>
         private static FoundPointsData FindPointForDirection(PointDirections direction)
         {
             foreach (FoundPointsData data in foundPoints)
