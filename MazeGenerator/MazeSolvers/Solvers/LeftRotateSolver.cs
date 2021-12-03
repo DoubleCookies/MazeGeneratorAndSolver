@@ -23,25 +23,20 @@ namespace MazeGenerator.MazeSolvers.Solvers
                 count = pointsToMove.Count;
                 if (count != 0)
                 {
-                    int selected;
-                    selected = PointOperations.SelectedMoveLeft(ref look);
-                    GoToNewPoint(pointsToMove[selected]);
+                    Point newPoint = PointOperations.SelectedMoveLeft(ref look);
+                    GoToNewPoint(newPoint);
                 }
                 else
                 {
                     if (points.Count > 1)
                         PointRollback(ref look);
                     else
-                        solutionFound = true;
+                        break;
                 }
                 if (current.X == finishpoint.X && current.Y == finishpoint.Y)
                     solutionFound = true;
             }
-            //оптимизация
-            if (current.X == finishpoint.X && current.Y == finishpoint.Y)
-                Result = true;
-            else
-                Result = false;
+            Result = solutionFound;
         }
     }
 }

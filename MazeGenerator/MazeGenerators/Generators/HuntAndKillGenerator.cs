@@ -27,7 +27,7 @@ namespace MazeGenerator.MazeGenerators
             {
                 if (sleep != 0)
                     Thread.Sleep(sleep);
-                List<Point> possPoints = PointOperations.PossiblePoints(mazeArray, currentPoint.X, currentPoint.Y, 2, (int)PointStatus.canVisit);
+                List<Point> possPoints = PointOperations.GetConnectedNotVisitedPoints(mazeArray, currentPoint.X, currentPoint.Y, 2);
                 int pointsToVisit = possPoints.Count;
                 if (pointsToVisit != 0)
                     GoToNewPointHunt(possPoints[random.Next(0, pointsToVisit)]);
@@ -140,7 +140,7 @@ namespace MazeGenerator.MazeGenerators
             while (hasPointToVisit)
             {
                 Thread.Sleep(sleep);
-                List<Point> possPoints = PointOperations.PossiblePoints(mazeArray, currentPoint.X, currentPoint.Y, 2, (int)PointStatus.canVisit);
+                List<Point> possPoints = PointOperations.GetConnectedNotVisitedPoints(mazeArray, currentPoint.X, currentPoint.Y, 2);
                 int possiblePointsCount = possPoints.Count;
                 if (possiblePointsCount != 0)
                 {// Если есть куда идти
@@ -167,7 +167,7 @@ namespace MazeGenerator.MazeGenerators
                 view.DrawChange(currentPoint, featureCode);
             currentPoint.X = i;
             currentPoint.Y = j;
-            List<Point> possibleToConnect = PointOperations.PossiblePoints(mazeArray, currentPoint.X, currentPoint.Y, 2, (int)PointStatus.alreadyVisited);
+            List<Point> possibleToConnect = PointOperations.GetConnectedVisitedPoints(mazeArray, currentPoint.X, currentPoint.Y, 2);
             if (possibleToConnect.Count == 0)
                 return false;
             int selected = random.Next(0, possibleToConnect.Count);

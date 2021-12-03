@@ -18,10 +18,10 @@ namespace MazeGenerator.MazeSolvers.Solvers
             int look = 1;
             Random rand = new Random();
             SolversInit();
-            bool finFound = false;
+            bool solutionFound = false;
             List<Point> pointsMove;
             int count;
-            while (!finFound)
+            while (!solutionFound)
             {
                 Thread.Sleep(Sleep);
                 pointsMove = PointOperations.PossiblePointsWithDirections(Maze, current);
@@ -36,15 +36,12 @@ namespace MazeGenerator.MazeSolvers.Solvers
                     if (points.Count > 1)
                         PointRollback(ref look);
                     else
-                        finFound = true;
+                        break;
                 }
                 if (current.X == finishpoint.X && current.Y == finishpoint.Y)
-                    finFound = true;
+                    solutionFound = true;
             }
-            if (current.X == finishpoint.X && current.Y == finishpoint.Y)
-                Result = true;
-            else
-                Result = false;
+            Result = solutionFound;
         }
     }
 }

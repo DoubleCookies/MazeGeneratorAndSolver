@@ -34,7 +34,7 @@ namespace MazeGenerator.MazeGenerators
             {
                 if (sleep != 0)
                     Thread.Sleep(sleep);
-                List<Point> possiblePoints = PointOperations.PossiblePoints(mazeArray, currentPoint.X, currentPoint.Y, 2, (int)PointStatus.canVisit);
+                List<Point> possiblePoints = PointOperations.GetConnectedNotVisitedPoints(mazeArray, currentPoint.X, currentPoint.Y, 2);
                 int pointsToVisit = possiblePoints.Count;
                 if (possiblePoints.Count != 0)
                     GoToNewPoint(possiblePoints[random.Next(0, pointsToVisit)]);

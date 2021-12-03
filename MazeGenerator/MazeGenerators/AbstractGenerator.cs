@@ -78,7 +78,7 @@ namespace MazeGenerator.MazeGenerators
                     {
                         if (mazeArray[i, j] == 0 && random.NextDouble() < whiteProb)
                         {
-                            List<Point> pointToConnect = PointOperations.PossiblePoints(mazeArray, i, j, 1, (int)PointStatus.alreadyVisited);
+                            List<Point> pointToConnect = PointOperations.GetConnectedVisitedPoints(mazeArray, i, j, 1);
                             if (pointToConnect.Count > 1)
                             {// Делаем тоннель так, чтобы можно было связать две точки
                                 mazeArray[i, j] = 1;

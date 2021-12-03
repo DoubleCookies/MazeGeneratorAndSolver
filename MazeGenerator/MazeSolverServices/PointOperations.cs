@@ -9,16 +9,35 @@ namespace MazeGenerator
         alreadyVisited = 2
     }
 
+    public enum PointDirections
+    { 
+        right = 0,
+        down = 1,
+        left = 2,
+        up = 3
+    }
+
     public static class PointOperations
     {
         static readonly List<Point> possPoints = new List<Point>();
         static readonly List<int> directions = new List<int>();
 
+
+        public static List<Point> GetConnectedVisitedPoints(int[,] mazeArray, int x, int y, int cellCount) {
+            return PossiblePoints(mazeArray, x, y, cellCount, (int)PointStatus.alreadyVisited);
+        }
+
+        public static List<Point> GetConnectedNotVisitedPoints(int[,] mazeArray, int x, int y, int cellCount)
+        {
+            return PossiblePoints(mazeArray, x, y, cellCount, (int)PointStatus.canVisit);
+        }
+
+
         /// <summary>
         /// Поиск возможных точек для посещения
         /// </summary>
         /// <returns>Возвращает список точек, возможных для посещения</returns>
-        public static List<Point> PossiblePoints(int[,] mazeArray, int x, int y, int cellCount, int pointStatus)
+        private static List<Point> PossiblePoints(int[,] mazeArray, int x, int y, int cellCount, int pointStatus)
         {
             int mazeWidth = mazeArray.GetLength(0);
             int mazeHeight = mazeArray.GetLength(1);
@@ -46,29 +65,39 @@ namespace MazeGenerator
             int y = current.Y;
             int mazeWidth = mazeArray.GetLength(0);
             int mazeHeight = mazeArray.GetLength(1);
-            int pointStatus = (int)PointStatus.canVisit;
 
-            if (x + 2 < mazeWidth && mazeArray[x + 2, y] == pointStatus && mazeArray[x + 1, y] == pointStatus)
+            if (x + 2 < mazeWidth && CanVisitPoint(mazeArray[x + 2, y]) && CanVisitPoint(mazeArray[x + 1, y]))
             {
                 possPoints.Add(new Point(x + 2, y));
                 directions.Add(0);
             }
-            if (y + 2 < mazeHeight && mazeArray[x, y + 2] == pointStatus && mazeArray[x, y + 1] == pointStatus)
+            if (y + 2 < mazeHeight && CanVisitPoint(mazeArray[x, y + 2]) && CanVisitPoint(mazeArray[x, y + 1]))
             {
                 possPoints.Add(new Point(x, y + 2));
                 directions.Add(1);
             }
-            if (x - 2 > 0 && mazeArray[x - 2, y] == pointStatus && mazeArray[x - 1, y] == pointStatus)
+            if (x - 2 > 0 && CanVisitPoint(mazeArray[x - 2, y]) && CanVisitPoint(mazeArray[x - 1, y]))
             {
                 possPoints.Add(new Point(x - 2, y));
                 directions.Add(2);
             }
-            if (y - 2 > 0 && mazeArray[x, y - 2] == pointStatus && mazeArray[x, y - 1] == pointStatus)
+            if (y - 2 > 0 && CanVisitPoint(mazeArray[x, y - 2]) && CanVisitPoint(mazeArray[x, y - 1]))
             {
                 possPoints.Add(new Point(x, y - 2));
                 directions.Add(3);
             }
             return possPoints;
+        }
+
+        private static bool IsPointVisited(int pointValue)
+        {
+            int pointStatus = (int)PointStatus.alreadyVisited;
+            return pointValue == pointStatus;
+        }
+
+        private static bool CanVisitPoint(int pointValue) {
+            int pointStatus = (int)PointStatus.canVisit;
+            return pointValue == pointStatus;
         }
 
         /// <summary>
@@ -77,7 +106,7 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="look">Текущий "взгляд" точки (0 - право, 1 - низ, 2 - лево, 3 - верх)</param>
         /// <returns>Возвращает индекс точки из списка доступных точек</returns>
-        public static int SelectedMoveLeft(ref int look)
+        public static Point SelectedMoveLeft(ref int look)
         {
             int selected;
             if (directions.Contains((look + 3) % 4))
@@ -89,7 +118,7 @@ namespace MazeGenerator
             else
                 selected = directions.BinarySearch((look + 1) % 4);
             look = directions[selected];
-            return selected;
+            return possPoints[selected];
         }
 
         /// <summary>
@@ -98,7 +127,7 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="look">Текущий "взгляд" точки (0 - право, 1 - низ, 2 - лево, 3 - верх)</param>
         /// <returns>Возвращает индекс точки из списка доступных точек</returns>
-        public static int SelectedMoveRight(ref int look)
+        public static Point SelectedMoveRight(ref int look)
         {
             int selected;
             if (directions.Contains((look + 1) % 4))
@@ -110,7 +139,7 @@ namespace MazeGenerator
             else
                 selected = directions.BinarySearch((look + 3) % 4);
             look = directions[selected];
-            return selected;
+            return possPoints[selected];
         }
     }
 }

@@ -59,8 +59,11 @@ namespace MazeGenerator
             }
 
             bool areParamsCorrect = mazeParamsForm.FillAndCheckMazeParamsData(ref mazeParamsData);
-            if (!areParamsCorrect)
+            if (!areParamsCorrect) {
+                ChangeGenerationAndSolveButtonsStatus(ButtonsStatus.Enabled);
                 return;
+            }
+                
 
             drawingPicturebox = pictureBoxLabirint.CreateGraphics();
             view = new View(drawingPicturebox);
