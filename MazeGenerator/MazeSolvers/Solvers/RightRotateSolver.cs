@@ -18,13 +18,12 @@ namespace MazeGenerator.MazeSolvers.Solvers
             SolversInit();
             int look = 1; // 0 - право, 1 - низ, 2 - лево, 3 - верх
             bool solutionFound = false;
-            List<Point> pointsToMove;
+            // List<Point> pointsToMove;
             int count;
             while (!solutionFound)
             {
                 Thread.Sleep(Sleep);
-                pointsToMove = PointOperations.PossiblePointsWithDirections(Maze, current);
-                count = pointsToMove.Count;
+                count = PointOperations.PossiblePointsWithDirections(Maze, current);
                 if (count != 0)
                 {
                     Point newPoint = PointOperations.SelectedMoveRight(ref look);

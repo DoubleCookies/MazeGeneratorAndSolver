@@ -19,17 +19,16 @@ namespace MazeGenerator.MazeSolvers.Solvers
             Random rand = new Random();
             SolversInit();
             bool solutionFound = false;
-            List<Point> pointsMove;
+            // List<Point> pointsMove;
             int count;
             while (!solutionFound)
             {
                 Thread.Sleep(Sleep);
-                pointsMove = PointOperations.PossiblePointsWithDirections(Maze, current);
-                count = pointsMove.Count;
+                count = PointOperations.PossiblePointsWithDirections(Maze, current);
                 if (count != 0)
                 {
-                    int selected = rand.Next(0, count);
-                    GoToNewPoint(pointsMove[selected]);
+                    Point newPoint = PointOperations.SelectedMoveRandom();
+                    GoToNewPoint(newPoint);
                 }
                 else
                 {
