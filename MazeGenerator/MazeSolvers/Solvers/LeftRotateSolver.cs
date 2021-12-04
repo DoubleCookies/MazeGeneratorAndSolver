@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Threading;
 
 namespace MazeGenerator.MazeSolvers.Solvers
@@ -12,7 +11,7 @@ namespace MazeGenerator.MazeSolvers.Solvers
         public override void Solve()
         {
             SolversInit();
-            int look = 1; // 0 - право, 1 - низ, 2 - лево, 3 - верх
+            int look = (int)PointDirections.down;
             bool solutionFound = false;
             int count;
             while (!solutionFound)
