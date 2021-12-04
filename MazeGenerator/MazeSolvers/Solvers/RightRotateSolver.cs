@@ -17,7 +17,7 @@ namespace MazeGenerator.MazeSolvers.Solvers
             while (!solutionFound)
             {
                 Thread.Sleep(Sleep);
-                count = PointOperations.PossiblePointsWithDirections(Maze, current);
+                count = PointOperations.PossiblePointsWithDirections(Maze, CurrentPoint);
                 if (count != 0)
                 {
                     Point newPoint = PointOperations.SelectedMoveRight(ref look);
@@ -25,12 +25,12 @@ namespace MazeGenerator.MazeSolvers.Solvers
                 }
                 else
                 {
-                    if (points.Count > 1)
+                    if (Points.Count > 1)
                         PointRollback(ref look);
                     else
                         break;
                 }
-                if (current.X == finishpoint.X && current.Y == finishpoint.Y)
+                if (CurrentPoint.X == Finishpoint.X && CurrentPoint.Y == Finishpoint.Y)
                     solutionFound = true;
             }
             Result = solutionFound;
