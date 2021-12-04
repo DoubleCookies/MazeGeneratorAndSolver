@@ -45,7 +45,7 @@ namespace MazeGenerator.MazeSolvers
             allPoints.Clear();
             points.Add(current);
             allPoints.Add(current);
-            Maze[current.X, current.Y] = 2; // Если этого не сделать - будет багофича с пересечением старта один раз (WOW?)
+            Maze[current.X, current.Y] = (int)PointStatus.alreadyVisited;
         }
 
         public void Clear() {
@@ -84,7 +84,7 @@ namespace MazeGenerator.MazeSolvers
         public void PointRollback(ref int look)
         {
             view.DrawChange(points.Last(), Color.Coral);
-            Point clr = ClearPoint(current, points[points.Count - 2]);
+            Point clr = GetClearPoint(current, points[points.Count - 2]);
             look = LookUpdate(current, clr);
             view.DrawChange(clr, Color.Coral);
             points.RemoveAt(points.Count - 1);
@@ -103,20 +103,19 @@ namespace MazeGenerator.MazeSolvers
         /// <returns>Возвращает направление "взгляда" решателя</returns>
         private int LookUpdate(Point x1, Point x2)
         {
-            // 0 - право, 1 - низ, 2 - лево, 3 - верх
             if (x1.X == x2.X)
             {
                 if (x1.Y > x2.Y)
-                    return 3;
+                    return (int)PointDirections.up;
                 else
-                    return 1;
+                    return (int)PointDirections.down;
             }
             else
             {
                 if (x1.X > x2.X)
-                    return 2;
+                    return (int)PointDirections.left;
                 else
-                    return 0;
+                    return (int)PointDirections.right;
             }
         }
 
@@ -126,7 +125,7 @@ namespace MazeGenerator.MazeSolvers
         /// <param name="x1">Первая точка</param>
         /// <param name="x2">Вторая точка</param>
         /// <returns>Возвращает точку, которая находится между двумя точками</returns>
-        private Point ClearPoint(Point x1, Point x2)
+        private Point GetClearPoint(Point x1, Point x2)
         {
             return new Point((x1.X + x2.X) / 2, (x1.Y + x2.Y) / 2);
         }
@@ -138,10 +137,10 @@ namespace MazeGenerator.MazeSolvers
         /// <param name="pointsMove">Список возможных для посещения точек</param>
         public void GoToNewPoint(Point selected)
         {
-            Point clr = ClearPoint(current, selected);
+            Point clr = GetClearPoint(current, selected);
             if (!isBitmapUsed)
                 allPoints.Add(clr);
-            Maze[clr.X, clr.Y] = 2;
+            Maze[clr.X, clr.Y] = (int)PointStatus.alreadyVisited;
             view.DrawChange(clr, Color.SkyBlue);
             view.DrawChange(current, Color.SkyBlue);
             points.Add(selected);
@@ -149,7 +148,7 @@ namespace MazeGenerator.MazeSolvers
                 allPoints.Add(selected);
             current = points.Last();
             view.DrawChange(current, Color.Red);
-            Maze[selected.X, selected.Y] = 2;
+            Maze[selected.X, selected.Y] = (int)PointStatus.alreadyVisited;
         }
 
         public abstract void Solve();

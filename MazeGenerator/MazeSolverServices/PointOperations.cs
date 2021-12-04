@@ -112,19 +112,18 @@ namespace MazeGenerator
             FoundPointsData data;
             do 
             {
-                data = FindPointForDirection(PointDirections.left);
+                data = FindPointForDirection((PointDirections)((look + 3) % 4));
                 if (data != null) break;
-                data = FindPointForDirection(PointDirections.up);
+                data = FindPointForDirection((PointDirections)look);
                 if (data != null) break;
-                data = FindPointForDirection(PointDirections.down);
+                data = FindPointForDirection((PointDirections)((look + 2) % 4));
                 if (data != null) break;
-                data = FindPointForDirection(PointDirections.right);
+                data = FindPointForDirection((PointDirections)((look + 1) % 4));
             } while (data == null);
             look = (int)data.Direction;
             returnPoint = data.Point;
             return returnPoint;
         }
-
 
         /// <summary>
         /// Поиск след. точки (метод правых поворотов)
@@ -138,13 +137,13 @@ namespace MazeGenerator
             FoundPointsData data;
             do
             {
-                data = FindPointForDirection(PointDirections.right);
+                data = FindPointForDirection((PointDirections)((look + 1) % 4));
                 if (data != null) break;
-                data = FindPointForDirection(PointDirections.up);
+                data = FindPointForDirection((PointDirections)look);
                 if (data != null) break;
-                data = FindPointForDirection(PointDirections.down);
+                data = FindPointForDirection((PointDirections)((look + 2) % 4));
                 if (data != null) break;
-                data = FindPointForDirection(PointDirections.left);
+                data = FindPointForDirection((PointDirections)((look + 3) % 4));
             } while (data == null);
             look = (int)data.Direction;
             returnPoint = data.Point;
