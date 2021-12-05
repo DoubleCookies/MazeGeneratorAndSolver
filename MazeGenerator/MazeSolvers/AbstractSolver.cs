@@ -10,19 +10,19 @@ namespace MazeGenerator.MazeSolvers
         public bool Result { get; set; }
         public int FeatureCode { get; set; }
         public int Sleep { get; set; }
-        public List<Point> Points { get; set; } // Список посещённых точек в текущем "решении"
-        public List<Point> AllPoints { get; set; } // Список всех посещённых точек во время решения
+        public List<Point> VisitedPoints { get; set; }
+        public List<Point> AllPoints { get; set; }
         public bool IsBitmapUsed { get; set; }
         public Point CurrentPoint { get; set; }
         public Point Startpoint { get; set; }
         public Point Finishpoint { get; set; }
 
-        private readonly View view; // Ссылка на класс отрисовки
+        private readonly View view;
 
         public AbstractSolver(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featureCode, int sleep, bool isBitmapUsed) {
             IsBitmapUsed = isBitmapUsed;
             Maze = mazeArray;
-            Points = new List<Point>();
+            VisitedPoints = new List<Point>();
             AllPoints = new List<Point>();
             Startpoint = startpoint;
             Finishpoint = finishpoint;
@@ -38,9 +38,9 @@ namespace MazeGenerator.MazeSolvers
         {
             MazeClear();
             CurrentPoint = Startpoint;
-            Points.Clear();
+            VisitedPoints.Clear();
             AllPoints.Clear();
-            Points.Add(CurrentPoint);
+            VisitedPoints.Add(CurrentPoint);
             AllPoints.Add(CurrentPoint);
             Maze[CurrentPoint.X, CurrentPoint.Y] = (int)PointStatus.alreadyVisited;
         }
@@ -55,7 +55,7 @@ namespace MazeGenerator.MazeSolvers
             {
                 for (int j = 0; j < Maze.GetLength(1); j++)
                 {
-                    if (Maze[i, j] != 0)
+                    if (Maze[i, j] != (int)PointStatus.wall)
                         Maze[i, j] = (int)PointStatus.canVisit;
                 }
             }
@@ -80,14 +80,14 @@ namespace MazeGenerator.MazeSolvers
         /// <param name="look">Обновляемое значение взгляда точки-решателя лабиринта</param>
         public void PointRollback(ref int look)
         {
-            view.DrawChange(Points.Last(), Color.Coral);
-            Point clr = GetClearPoint(CurrentPoint, Points[Points.Count - 2]);
+            view.DrawChange(VisitedPoints.Last(), Color.Coral);
+            Point clr = GetClearPoint(CurrentPoint, VisitedPoints[VisitedPoints.Count - 2]);
             look = LookUpdate(CurrentPoint, clr);
             view.DrawChange(clr, Color.Coral);
-            Points.RemoveAt(Points.Count - 1);
-            if (Points.Count != 0)
+            VisitedPoints.RemoveAt(VisitedPoints.Count - 1);
+            if (VisitedPoints.Count != 0)
             {
-                CurrentPoint = Points.Last();
+                CurrentPoint = VisitedPoints.Last();
                 view.DrawChange(CurrentPoint, Color.Red);
             }
         }
@@ -140,10 +140,10 @@ namespace MazeGenerator.MazeSolvers
             Maze[clr.X, clr.Y] = (int)PointStatus.alreadyVisited;
             view.DrawChange(clr, Color.SkyBlue);
             view.DrawChange(CurrentPoint, Color.SkyBlue);
-            Points.Add(selected);
+            VisitedPoints.Add(selected);
             if (!IsBitmapUsed)
                 AllPoints.Add(selected);
-            CurrentPoint = Points.Last();
+            CurrentPoint = VisitedPoints.Last();
             view.DrawChange(CurrentPoint, Color.Red);
             Maze[selected.X, selected.Y] = (int)PointStatus.alreadyVisited;
         }

@@ -7,6 +7,7 @@ namespace MazeGenerator
 {
     public enum PointStatus
     {
+        wall = 0,
         canVisit = 1,
         alreadyVisited = 2
     }

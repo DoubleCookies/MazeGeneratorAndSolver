@@ -25,7 +25,7 @@ namespace MazeGenerator.MazeSolvers.Solvers
                 }
                 else
                 {
-                    if (Points.Count > 1)
+                    if (VisitedPoints.Count > 1)
                         PointRollback(ref look);
                     else
                         break;
