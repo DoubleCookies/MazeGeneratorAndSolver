@@ -5,14 +5,11 @@ namespace MazeGenerator.MazeSolverServices
     public class FoundPointsData
     {
         public FoundPointsData(Point point, PointDirections direction) {
-            this.direction = direction;
-            this.point = point;
+            Direction = direction;
+            Point = point;
         }
 
-        private PointDirections direction;
-        private Point point;
-
-        public PointDirections Direction { get => direction; set => direction = value; }
-        public Point Point { get => point; set => point = value; }
+        public PointDirections Direction { get; set; }
+        public Point Point { get; set; }
     }
 }

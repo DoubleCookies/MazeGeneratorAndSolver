@@ -22,9 +22,9 @@ namespace MazeGenerator
 
     public static class PointOperations
     {
-        static readonly List<Point> possPoints = new List<Point>();
-        static readonly Random rand = new Random();
+        static readonly List<Point> possibleToVisitPoints = new List<Point>();
         static readonly List<FoundPointsData> foundPoints = new List<FoundPointsData>();
+        static readonly Random rand = new Random();
 
 
         /// <summary>
@@ -54,17 +54,17 @@ namespace MazeGenerator
         {
             int mazeWidth = mazeArray.GetLength(0);
             int mazeHeight = mazeArray.GetLength(1);
-            possPoints.Clear();
+            possibleToVisitPoints.Clear();
 
             if (x - cellCount > 0 && mazeArray[x - cellCount, y] == pointStatus)
-                possPoints.Add(new Point(x - cellCount, y));
+                possibleToVisitPoints.Add(new Point(x - cellCount, y));
             if (x + cellCount < mazeWidth && mazeArray[x + cellCount, y] == pointStatus)
-                possPoints.Add(new Point(x + cellCount, y));
+                possibleToVisitPoints.Add(new Point(x + cellCount, y));
             if (y - cellCount > 0 && mazeArray[x, y - cellCount] == pointStatus)
-                possPoints.Add(new Point(x, y - cellCount));
+                possibleToVisitPoints.Add(new Point(x, y - cellCount));
             if (y + cellCount < mazeHeight && mazeArray[x, y + cellCount] == pointStatus)
-                possPoints.Add(new Point(x, y + cellCount));
-            return possPoints;
+                possibleToVisitPoints.Add(new Point(x, y + cellCount));
+            return possibleToVisitPoints;
         }
 
         /// <summary>
@@ -102,6 +102,15 @@ namespace MazeGenerator
         }
 
         /// <summary>
+        /// Поиск след. точки (метод случайных поворотов)
+        /// </summary>
+        /// <returns>Возвращает случайную точку из доступных для посещения</returns>
+        public static Point SelectedMoveRandom()
+        {
+            return foundPoints[rand.Next(0, foundPoints.Count)].Point;
+        }
+
+        /// <summary>
         /// Поиск след. точки (метод левых поворотов)
         /// Проверяет доступные направления для посещения: налево, вперёд, назад, направо
         /// </summary>
@@ -113,13 +122,13 @@ namespace MazeGenerator
             FoundPointsData data;
             do 
             {
-                data = FindPointForDirection((PointDirections)((look + 3) % 4));
+                data = FindPointForDirection(GetPointDirectionForLeft(look));
                 if (data != null) break;
-                data = FindPointForDirection((PointDirections)look);
+                data = FindPointForDirection(GetPointDirectionForUp(look));
                 if (data != null) break;
-                data = FindPointForDirection((PointDirections)((look + 2) % 4));
+                data = FindPointForDirection(GetPointDirectionForDown(look));
                 if (data != null) break;
-                data = FindPointForDirection((PointDirections)((look + 1) % 4));
+                data = FindPointForDirection(GetPointDirectionForRight(look));
             } while (data == null);
             look = (int)data.Direction;
             returnPoint = data.Point;
@@ -138,26 +147,18 @@ namespace MazeGenerator
             FoundPointsData data;
             do
             {
-                data = FindPointForDirection((PointDirections)((look + 1) % 4));
+                data = FindPointForDirection(GetPointDirectionForRight(look));
                 if (data != null) break;
-                data = FindPointForDirection((PointDirections)look);
+                data = FindPointForDirection(GetPointDirectionForUp(look));
                 if (data != null) break;
-                data = FindPointForDirection((PointDirections)((look + 2) % 4));
+                data = FindPointForDirection(GetPointDirectionForDown(look));
                 if (data != null) break;
-                data = FindPointForDirection((PointDirections)((look + 3) % 4));
+                data = FindPointForDirection(GetPointDirectionForLeft(look));
             } while (data == null);
             look = (int)data.Direction;
             returnPoint = data.Point;
 
             return returnPoint;
-        }
-
-        /// <summary>
-        /// Поиск след. точки (метод случайных поворотов)
-        /// </summary>
-        /// <returns>Возвращает случайную точку из доступных для посещения</returns>
-        public static Point SelectedMoveRandom() {
-            return foundPoints[rand.Next(0, foundPoints.Count)].Point;
         }
 
         /// <summary>
@@ -173,6 +174,25 @@ namespace MazeGenerator
                     return data;
             }
             return null;
+        }
+
+        private static PointDirections GetPointDirectionForLeft(int look) {
+            return (PointDirections)((look + 3) % 4);
+        }
+
+        private static PointDirections GetPointDirectionForUp(int look)
+        {
+            return (PointDirections)(look);
+        }
+
+        private static PointDirections GetPointDirectionForDown(int look)
+        {
+            return (PointDirections)((look + 2) % 4);
+        }
+
+        private static PointDirections GetPointDirectionForRight(int look)
+        {
+            return (PointDirections)((look + 1) % 4);
         }
     }
 }

@@ -8,15 +8,13 @@ namespace MazeGenerator
 {
     public class MazeObject
     {
-        // private Generators Generator { get; set; }
-        //private Solvers Solver { get; set; }
         public bool IsSolutionFound { get; set; }
         public int[,] Maze { get; set; }
         public int Sleep { get; set; }
         public int FeatureCode { get; set; }
 
-        private Point startpoint; // Начальная точка
-        private Point finishpoint; // Конечная точка
+        private Point startpoint;
+        private Point finishpoint;
 
         private readonly View view;
         private readonly Random random;
@@ -59,10 +57,6 @@ namespace MazeGenerator
             this.view = view;
 
             this.bitmap = bitmap;
-
-            //Generator = new Generators(Maze, startpoint, finishpoint, view, FeatureCode, sleep, random);
-            //Generator.FillMazeArray(blackProb);
-            //Solver = new Solvers(Maze, startpoint, finishpoint, view, feature, sleep, bitmap);
         }
 
         public void Clear() {
