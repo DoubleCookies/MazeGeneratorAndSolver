@@ -68,10 +68,10 @@ namespace MazeGenerator
             // checkBoxAdditionalGeneration
             // 
             this.checkBoxAdditionalGeneration.AutoSize = true;
-            this.checkBoxAdditionalGeneration.Location = new System.Drawing.Point(24, 40);
+            this.checkBoxAdditionalGeneration.Location = new System.Drawing.Point(24, 45);
             this.checkBoxAdditionalGeneration.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxAdditionalGeneration.Name = "checkBoxAdditionalGeneration";
-            this.checkBoxAdditionalGeneration.Size = new System.Drawing.Size(296, 21);
+            this.checkBoxAdditionalGeneration.Size = new System.Drawing.Size(290, 20);
             this.checkBoxAdditionalGeneration.TabIndex = 61;
             this.checkBoxAdditionalGeneration.Text = "Дополнительные параметры генерации";
             this.checkBoxAdditionalGeneration.UseVisualStyleBackColor = true;
@@ -94,7 +94,7 @@ namespace MazeGenerator
             this.groupBoxGenerationAdditionalParams.Controls.Add(this.textBoxStartX);
             this.groupBoxGenerationAdditionalParams.Controls.Add(this.checkBoxFinish);
             this.groupBoxGenerationAdditionalParams.Controls.Add(this.checkBoxStart);
-            this.groupBoxGenerationAdditionalParams.Location = new System.Drawing.Point(21, 60);
+            this.groupBoxGenerationAdditionalParams.Location = new System.Drawing.Point(21, 65);
             this.groupBoxGenerationAdditionalParams.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBoxGenerationAdditionalParams.Name = "groupBoxGenerationAdditionalParams";
             this.groupBoxGenerationAdditionalParams.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -117,7 +117,7 @@ namespace MazeGenerator
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(3, 71);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(138, 17);
+            this.label11.Size = new System.Drawing.Size(134, 16);
             this.label11.TabIndex = 48;
             this.label11.Text = "Вероятность дырок";
             // 
@@ -135,7 +135,7 @@ namespace MazeGenerator
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(3, 46);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(165, 17);
+            this.label10.Size = new System.Drawing.Size(164, 16);
             this.label10.TabIndex = 35;
             this.label10.Text = "Вероятность пропусков";
             // 
@@ -144,7 +144,7 @@ namespace MazeGenerator
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(205, 123);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(17, 17);
+            this.label4.Size = new System.Drawing.Size(16, 16);
             this.label4.TabIndex = 20;
             this.label4.Text = "Y";
             this.label4.Visible = false;
@@ -154,7 +154,7 @@ namespace MazeGenerator
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(115, 123);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(17, 17);
+            this.label5.Size = new System.Drawing.Size(15, 16);
             this.label5.TabIndex = 19;
             this.label5.Text = "X";
             this.label5.Visible = false;
@@ -184,7 +184,7 @@ namespace MazeGenerator
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(205, 98);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(17, 17);
+            this.label6.Size = new System.Drawing.Size(16, 16);
             this.label6.TabIndex = 15;
             this.label6.Text = "Y";
             this.label6.Visible = false;
@@ -195,7 +195,7 @@ namespace MazeGenerator
             this.checkBoxFromBegin.Location = new System.Drawing.Point(3, 20);
             this.checkBoxFromBegin.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxFromBegin.Name = "checkBoxFromBegin";
-            this.checkBoxFromBegin.Size = new System.Drawing.Size(170, 21);
+            this.checkBoxFromBegin.Size = new System.Drawing.Size(165, 20);
             this.checkBoxFromBegin.TabIndex = 34;
             this.checkBoxFromBegin.Text = "Генерация со старта";
             this.checkBoxFromBegin.UseVisualStyleBackColor = true;
@@ -205,7 +205,7 @@ namespace MazeGenerator
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(115, 98);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(17, 17);
+            this.label7.Size = new System.Drawing.Size(15, 16);
             this.label7.TabIndex = 14;
             this.label7.Text = "X";
             this.label7.Visible = false;
@@ -236,7 +236,7 @@ namespace MazeGenerator
             this.checkBoxFinish.Location = new System.Drawing.Point(3, 121);
             this.checkBoxFinish.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxFinish.Name = "checkBoxFinish";
-            this.checkBoxFinish.Size = new System.Drawing.Size(112, 21);
+            this.checkBoxFinish.Size = new System.Drawing.Size(109, 20);
             this.checkBoxFinish.TabIndex = 21;
             this.checkBoxFinish.Text = "Свой финиш";
             this.checkBoxFinish.UseVisualStyleBackColor = true;
@@ -248,7 +248,7 @@ namespace MazeGenerator
             this.checkBoxStart.Location = new System.Drawing.Point(3, 96);
             this.checkBoxStart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxStart.Name = "checkBoxStart";
-            this.checkBoxStart.Size = new System.Drawing.Size(103, 21);
+            this.checkBoxStart.Size = new System.Drawing.Size(102, 20);
             this.checkBoxStart.TabIndex = 16;
             this.checkBoxStart.Text = "Свой старт";
             this.checkBoxStart.UseVisualStyleBackColor = true;
@@ -257,15 +257,15 @@ namespace MazeGenerator
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(235, 9);
+            this.label3.Location = new System.Drawing.Point(235, 14);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(145, 17);
+            this.label3.Size = new System.Drawing.Size(144, 16);
             this.label3.TabIndex = 59;
             this.label3.Text = "Задержка отрисовки";
             // 
             // textBoxSleep
             // 
-            this.textBoxSleep.Location = new System.Drawing.Point(394, 7);
+            this.textBoxSleep.Location = new System.Drawing.Point(394, 12);
             this.textBoxSleep.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBoxSleep.Name = "textBoxSleep";
             this.textBoxSleep.Size = new System.Drawing.Size(63, 22);
@@ -284,7 +284,7 @@ namespace MazeGenerator
             this.groupBoxDrawFeatures.Controls.Add(this.radioButtonFeatureRed);
             this.groupBoxDrawFeatures.Controls.Add(this.radioButtonFeatureFiftyShades);
             this.groupBoxDrawFeatures.Controls.Add(this.radioButtonFeatureChaos);
-            this.groupBoxDrawFeatures.Location = new System.Drawing.Point(370, 60);
+            this.groupBoxDrawFeatures.Location = new System.Drawing.Point(370, 65);
             this.groupBoxDrawFeatures.Margin = new System.Windows.Forms.Padding(4);
             this.groupBoxDrawFeatures.Name = "groupBoxDrawFeatures";
             this.groupBoxDrawFeatures.Padding = new System.Windows.Forms.Padding(4);
@@ -299,7 +299,7 @@ namespace MazeGenerator
             this.radioButtonFeatureDarkStyle.Location = new System.Drawing.Point(183, 37);
             this.radioButtonFeatureDarkStyle.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureDarkStyle.Name = "radioButtonFeatureDarkStyle";
-            this.radioButtonFeatureDarkStyle.Size = new System.Drawing.Size(122, 21);
+            this.radioButtonFeatureDarkStyle.Size = new System.Drawing.Size(120, 20);
             this.radioButtonFeatureDarkStyle.TabIndex = 53;
             this.radioButtonFeatureDarkStyle.TabStop = true;
             this.radioButtonFeatureDarkStyle.Text = "Тёмная гамма";
@@ -311,7 +311,7 @@ namespace MazeGenerator
             this.radioButtonFeatureLightStyle.Location = new System.Drawing.Point(183, 9);
             this.radioButtonFeatureLightStyle.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureLightStyle.Name = "radioButtonFeatureLightStyle";
-            this.radioButtonFeatureLightStyle.Size = new System.Drawing.Size(127, 21);
+            this.radioButtonFeatureLightStyle.Size = new System.Drawing.Size(126, 20);
             this.radioButtonFeatureLightStyle.TabIndex = 52;
             this.radioButtonFeatureLightStyle.TabStop = true;
             this.radioButtonFeatureLightStyle.Text = "Светлая гамма";
@@ -323,7 +323,7 @@ namespace MazeGenerator
             this.radioButtonFeatureYellow.Location = new System.Drawing.Point(183, 65);
             this.radioButtonFeatureYellow.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureYellow.Name = "radioButtonFeatureYellow";
-            this.radioButtonFeatureYellow.Size = new System.Drawing.Size(83, 21);
+            this.radioButtonFeatureYellow.Size = new System.Drawing.Size(81, 20);
             this.radioButtonFeatureYellow.TabIndex = 51;
             this.radioButtonFeatureYellow.TabStop = true;
             this.radioButtonFeatureYellow.Text = "Желтый";
@@ -335,7 +335,7 @@ namespace MazeGenerator
             this.radioButtonFeatureTurquoise.Location = new System.Drawing.Point(183, 94);
             this.radioButtonFeatureTurquoise.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureTurquoise.Name = "radioButtonFeatureTurquoise";
-            this.radioButtonFeatureTurquoise.Size = new System.Drawing.Size(104, 21);
+            this.radioButtonFeatureTurquoise.Size = new System.Drawing.Size(104, 20);
             this.radioButtonFeatureTurquoise.TabIndex = 50;
             this.radioButtonFeatureTurquoise.TabStop = true;
             this.radioButtonFeatureTurquoise.Text = "Бирюзовый";
@@ -347,7 +347,7 @@ namespace MazeGenerator
             this.radioButtonFeatureViolet.Location = new System.Drawing.Point(183, 122);
             this.radioButtonFeatureViolet.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureViolet.Name = "radioButtonFeatureViolet";
-            this.radioButtonFeatureViolet.Size = new System.Drawing.Size(114, 21);
+            this.radioButtonFeatureViolet.Size = new System.Drawing.Size(111, 20);
             this.radioButtonFeatureViolet.TabIndex = 49;
             this.radioButtonFeatureViolet.TabStop = true;
             this.radioButtonFeatureViolet.Text = "Фиолетовый";
@@ -359,7 +359,7 @@ namespace MazeGenerator
             this.radioButtonFeatureBlue.Location = new System.Drawing.Point(7, 122);
             this.radioButtonFeatureBlue.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureBlue.Name = "radioButtonFeatureBlue";
-            this.radioButtonFeatureBlue.Size = new System.Drawing.Size(120, 21);
+            this.radioButtonFeatureBlue.Size = new System.Drawing.Size(117, 20);
             this.radioButtonFeatureBlue.TabIndex = 48;
             this.radioButtonFeatureBlue.Text = "В синих тонах";
             this.radioButtonFeatureBlue.UseVisualStyleBackColor = true;
@@ -370,7 +370,7 @@ namespace MazeGenerator
             this.radioButtonFeatureGreen.Location = new System.Drawing.Point(7, 94);
             this.radioButtonFeatureGreen.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureGreen.Name = "radioButtonFeatureGreen";
-            this.radioButtonFeatureGreen.Size = new System.Drawing.Size(138, 21);
+            this.radioButtonFeatureGreen.Size = new System.Drawing.Size(135, 20);
             this.radioButtonFeatureGreen.TabIndex = 47;
             this.radioButtonFeatureGreen.Text = "В зелёных тонах";
             this.radioButtonFeatureGreen.UseVisualStyleBackColor = true;
@@ -381,7 +381,7 @@ namespace MazeGenerator
             this.radioButtonFeatureRed.Location = new System.Drawing.Point(8, 65);
             this.radioButtonFeatureRed.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureRed.Name = "radioButtonFeatureRed";
-            this.radioButtonFeatureRed.Size = new System.Drawing.Size(137, 21);
+            this.radioButtonFeatureRed.Size = new System.Drawing.Size(133, 20);
             this.radioButtonFeatureRed.TabIndex = 46;
             this.radioButtonFeatureRed.Text = "В красных тонах";
             this.radioButtonFeatureRed.UseVisualStyleBackColor = true;
@@ -392,7 +392,7 @@ namespace MazeGenerator
             this.radioButtonFeatureFiftyShades.Location = new System.Drawing.Point(8, 37);
             this.radioButtonFeatureFiftyShades.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureFiftyShades.Name = "radioButtonFeatureFiftyShades";
-            this.radioButtonFeatureFiftyShades.Size = new System.Drawing.Size(157, 21);
+            this.radioButtonFeatureFiftyShades.Size = new System.Drawing.Size(154, 20);
             this.radioButtonFeatureFiftyShades.TabIndex = 45;
             this.radioButtonFeatureFiftyShades.Text = "50 оттенков серого";
             this.radioButtonFeatureFiftyShades.UseVisualStyleBackColor = true;
@@ -404,7 +404,7 @@ namespace MazeGenerator
             this.radioButtonFeatureChaos.Location = new System.Drawing.Point(8, 9);
             this.radioButtonFeatureChaos.Margin = new System.Windows.Forms.Padding(4);
             this.radioButtonFeatureChaos.Name = "radioButtonFeatureChaos";
-            this.radioButtonFeatureChaos.Size = new System.Drawing.Size(99, 21);
+            this.radioButtonFeatureChaos.Size = new System.Drawing.Size(97, 20);
             this.radioButtonFeatureChaos.TabIndex = 44;
             this.radioButtonFeatureChaos.TabStop = true;
             this.radioButtonFeatureChaos.Text = "Цветохаос";
@@ -413,10 +413,10 @@ namespace MazeGenerator
             // checkBoxFeatureUse
             // 
             this.checkBoxFeatureUse.AutoSize = true;
-            this.checkBoxFeatureUse.Location = new System.Drawing.Point(377, 40);
+            this.checkBoxFeatureUse.Location = new System.Drawing.Point(377, 45);
             this.checkBoxFeatureUse.Margin = new System.Windows.Forms.Padding(4);
             this.checkBoxFeatureUse.Name = "checkBoxFeatureUse";
-            this.checkBoxFeatureUse.Size = new System.Drawing.Size(220, 21);
+            this.checkBoxFeatureUse.Size = new System.Drawing.Size(221, 20);
             this.checkBoxFeatureUse.TabIndex = 62;
             this.checkBoxFeatureUse.Text = "Использовать другой покрас";
             this.checkBoxFeatureUse.UseVisualStyleBackColor = true;
@@ -424,7 +424,7 @@ namespace MazeGenerator
             // 
             // buttonSaveParams
             // 
-            this.buttonSaveParams.Location = new System.Drawing.Point(249, 233);
+            this.buttonSaveParams.Location = new System.Drawing.Point(249, 242);
             this.buttonSaveParams.Name = "buttonSaveParams";
             this.buttonSaveParams.Size = new System.Drawing.Size(208, 42);
             this.buttonSaveParams.TabIndex = 64;
@@ -436,7 +436,7 @@ namespace MazeGenerator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(710, 287);
+            this.ClientSize = new System.Drawing.Size(710, 296);
             this.Controls.Add(this.buttonSaveParams);
             this.Controls.Add(this.groupBoxDrawFeatures);
             this.Controls.Add(this.checkBoxFeatureUse);

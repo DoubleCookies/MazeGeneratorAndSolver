@@ -4,30 +4,16 @@ namespace MazeGenerator
 {
     public class MazeParamsData
     {
-        int width;
-        int height;
-        int sleep;
-
-        bool areAdditionalParamsEnabled;
-        bool isGeneratedFromStart;
-        double prob;
-        double whiteProb;
-        Point startPoint;
-        Point finishPoint;
-
-        bool isDrawMethodEnabled;
-        int featureCode;
-
-        public int Width { get => width; set => width = value; }
-        public int Height { get => height; set => height = value; }
-        public int Sleep { get => sleep; set => sleep = value; }
-        public bool AreAdditionalParamsEnabled { get => areAdditionalParamsEnabled; set => areAdditionalParamsEnabled = value; }
-        public bool IsGeneratedFromStart { get => isGeneratedFromStart; set => isGeneratedFromStart = value; }
-        public double Prob { get => prob; set => prob = value; }
-        public double WhiteProb { get => whiteProb; set => whiteProb = value; }
-        public Point StartPoint { get => startPoint; set => startPoint = value; }
-        public Point FinishPoint { get => finishPoint; set => finishPoint = value; }
-        public bool IsDrawMethodEnabled { get => isDrawMethodEnabled; set => isDrawMethodEnabled = value; }
-        public int FeatureCode { get => featureCode; set => featureCode = value; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int Sleep { get; set; }
+        public bool AreAdditionalParamsEnabled { get; set; }
+        public bool IsGeneratedFromStart { get; set; }
+        public double Prob { get; set; }
+        public double WhiteProb { get; set; }
+        public Point StartPoint { get; set; }
+        public Point FinishPoint { get; set; }
+        public bool IsDrawMethodEnabled { get; set; }
+        public int FeatureCode { get; set; }
     }
 }
