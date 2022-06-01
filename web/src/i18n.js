@@ -10,7 +10,10 @@ const resources = {
                 "customization (you can choice algorithms for generating and solving, adding/removing some walls; you can even " +
                 "choose maze *style* - it can be colorful and bright or depressive and gray.",
             generationTitle: "Maze generation",
-            generationText: "",
+            generationText: "By default all mazes we create are *perfect - they have only one solution and " +
+                "there are no cycles and inaccessible areas. In this project there are only \"path carving\" algorithms - " +
+                "at the beginning, every cell isn't connected to each other (separated by walls). However, there are other " +
+                "approaches (for example, walls generation in maze without it).",
             solveTitle: "Maze solving",
             solveText: "",
             otherTitle: "Other stuff",

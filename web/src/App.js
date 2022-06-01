@@ -2,7 +2,8 @@ import './App.css';
 import React from 'react';
 import { useTranslation } from "react-i18next";
 import i18n from "./i18n";
-import GithubIcon from './GithubIcon';
+import GithubIcon from './components/GithubIcon';
+import MazeGeneration from './components/MazeGeneration';
 
 function App() {
     const {t} = useTranslation();
@@ -27,8 +28,7 @@ function App() {
             <main className="main-content">
                 <h2 className="main-headers">{t("aboutTitle")}</h2>
                 <div className="textBlocks">{t("aboutText")}</div>
-                <h2 className="main-headers">{t("generationTitle")}</h2>
-                <div className="textBlocks">{t("generationText")}</div>
+                <MazeGeneration/>
             </main>
             <footer className="footer-block">
                 <div>
