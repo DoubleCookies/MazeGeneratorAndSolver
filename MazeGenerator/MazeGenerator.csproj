@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="MazeGenerators\AbstractGenerator.cs" />
     <Compile Include="MazeGenerators\Generators\BacktrackingGenerator.cs" />
+    <Compile Include="MazeGenerators\Generators\EllerGenerator.cs" />
     <Compile Include="MazeGenerators\Generators\HuntAndKillGenerator.cs" />
     <Compile Include="MazeParameters\FilesGenerationForm.cs">
       <SubType>Form</SubType>

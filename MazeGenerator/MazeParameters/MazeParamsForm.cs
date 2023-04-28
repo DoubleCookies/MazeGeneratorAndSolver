@@ -33,9 +33,7 @@ namespace MazeGenerator
             try
             {
                 mazeParams.Sleep = int.Parse(textBoxSleep.Text);
-                if (mazeParams.IsDrawMethodEnabled) {
-                    mazeParams.FeatureCode = GetFeatureCode();
-                }
+                mazeParams.FeatureCode = mazeParams.IsDrawMethodEnabled ? GetFeatureCode() : 0;
                 if (mazeParams.AreAdditionalParamsEnabled) {
                     mazeParams.IsGeneratedFromStart = checkBoxFromBegin.Checked;
                     mazeParams.Prob = double.Parse(textBoxEmptyPlacesProb.Text);
