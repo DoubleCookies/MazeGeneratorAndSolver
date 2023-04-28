@@ -17,9 +17,6 @@ namespace MazeGenerator.MazeGenerators
         public int lastX; // Точка последней посещённой вертикали для повышения эффективности алгоритма Hunt-And-Kill
         public readonly int featureCode; // Код особенности отрисовки
         public readonly int sleep; // Время остановки потока при отрисовке
-        public bool ignored; // Были ли проигнорированные точки в алгоритме Hunt-And-Kill (если к ним не было прямого доступа)
-        public int ignoredCount; // Счётчик циклов игнорирования
-
 
         /// <summary>
         /// Конструктор класса

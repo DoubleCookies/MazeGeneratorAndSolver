@@ -7,8 +7,14 @@ namespace MazeGenerator.MazeGenerators
 {
     public class HuntAndKillGenerator : AbstractGenerator
     {
+        bool ignored;
+        int ignoredCount;
+
         public HuntAndKillGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random) 
-            : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random) {}
+            : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random) {
+            ignored = false;
+            ignoredCount = 0;
+        }
 
         public override void Generate(bool fromStart, double whiteProb)
         {
