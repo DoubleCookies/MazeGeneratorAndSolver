@@ -9,6 +9,7 @@ namespace MazeGenerator.MazeGenerators
     {
         bool ignored;
         int ignoredCount;
+        public int lastX; // Точка последней посещённой вертикали для повышения эффективности алгоритма Hunt-And-Kill
 
         public HuntAndKillGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random) 
             : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random) {
@@ -51,21 +52,14 @@ namespace MazeGenerator.MazeGenerators
         private void GoToNewPointHunt(Point newPoint)
         {
             Point clr = FoundPointBetweenTwoPoints(currentPoint, newPoint);
-            mazeArray[clr.X, clr.Y] = 2;
-            if (featureCode == 0)
-            {
-                view.DrawChange(clr, Color.White);
-                view.DrawChange(currentPoint, Color.White);
-            }
-            else
-            {
-                view.DrawChange(clr, featureCode);
-                view.DrawChange(currentPoint, featureCode);
-            }
+            mazeArray[clr.X, clr.Y] = (int)PointStatus.alreadyVisited;
+            view.DrawChange(clr, featureCode);
+            view.DrawChange(currentPoint, featureCode);
+
             currentPoint.X = newPoint.X;
             currentPoint.Y = newPoint.Y;
             view.DrawChange(currentPoint, Color.Red);
-            mazeArray[newPoint.X, newPoint.Y] = 2;
+            mazeArray[newPoint.X, newPoint.Y] = (int)PointStatus.alreadyVisited;
         }
 
         /// <summary>
@@ -124,10 +118,7 @@ namespace MazeGenerator.MazeGenerators
             }
             if (ignored && ignoredCount < 3)
             { lastX = 1; ignored = true; SecondCycle(fromStart); }
-            if (featureCode == 0)
-                view.DrawChange(currentPoint, Color.White);
-            else
-                view.DrawChange(currentPoint, featureCode);
+            view.DrawChange(currentPoint, featureCode);
             return false;
         }
 
@@ -167,10 +158,7 @@ namespace MazeGenerator.MazeGenerators
         /// <param name="j">Координата Y точки</param>
         private bool SelectNewPointOperations(int i, int j)
         {
-            if (featureCode == 0)
-                view.DrawChange(currentPoint, Color.White);
-            else
-                view.DrawChange(currentPoint, featureCode);
+            view.DrawChange(currentPoint, featureCode);
             currentPoint.X = i;
             currentPoint.Y = j;
             List<Point> possibleToConnect = PointOperations.GetConnectedVisitedPoints(mazeArray, currentPoint.X, currentPoint.Y, 2);
@@ -178,18 +166,10 @@ namespace MazeGenerator.MazeGenerators
                 return false;
             int selected = random.Next(0, possibleToConnect.Count);
             Point clr = FoundPointBetweenTwoPoints(currentPoint, possibleToConnect[selected]);
-            if (featureCode == 0)
-            {
-                view.DrawChange(clr, Color.White);
-                view.DrawChange(currentPoint, Color.White);
-            }
-            else
-            {
-                view.DrawChange(clr, featureCode);
-                view.DrawChange(currentPoint, featureCode);
-            }
-            mazeArray[clr.X, clr.Y] = 2;
-            mazeArray[currentPoint.X, currentPoint.Y] = 2;
+            view.DrawChange(clr, featureCode);
+            view.DrawChange(currentPoint, featureCode);
+            mazeArray[clr.X, clr.Y] = (int)PointStatus.alreadyVisited;
+            mazeArray[currentPoint.X, currentPoint.Y] = (int)PointStatus.alreadyVisited;
             return true;
         }
     }

@@ -54,11 +54,8 @@ namespace MazeGenerator.MazeGenerators
         {
             Point clr = FoundPointBetweenTwoPoints(currentPoint, newPoint);
             mazeArray[clr.X, clr.Y] = (int)PointStatus.alreadyVisited;
-            if (featureCode == 0)
-                view.DrawChange(clr, Color.White);
-            else
-                view.DrawChange(clr, featureCode);
             view.DrawChange(currentPoint, Color.FromArgb(255, 170, 102));
+            view.DrawChange(clr, Color.FromArgb(255, 170, 102));
             points.Add(newPoint);
             currentPoint = points.Last();
             view.DrawChange(currentPoint, Color.Red);
@@ -70,13 +67,13 @@ namespace MazeGenerator.MazeGenerators
         /// </summary>
         private void PointRollback()
         {
-            if (featureCode == 0)
-                view.DrawChange(points.Last(), Color.White);
-            else
-                view.DrawChange(points.Last(), featureCode);
+            view.DrawChange(points.Last(), featureCode);
             points.RemoveAt(points.Count - 1);
+
             if (points.Count != 0)
             {
+                Point clr = FoundPointBetweenTwoPoints(currentPoint, points.Last());
+                view.DrawChange(clr, featureCode);
                 currentPoint = points.Last();
                 view.DrawChange(currentPoint, Color.Red);
             }

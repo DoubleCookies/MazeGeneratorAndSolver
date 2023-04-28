@@ -14,7 +14,6 @@ namespace MazeGenerator.MazeGenerators
         public Point startpoint;
         public Point finishpoint;
         public Point currentPoint;
-        public int lastX; // Точка последней посещённой вертикали для повышения эффективности алгоритма Hunt-And-Kill
         public readonly int featureCode; // Код особенности отрисовки
         public readonly int sleep; // Время остановки потока при отрисовке
 
