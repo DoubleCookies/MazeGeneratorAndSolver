@@ -96,14 +96,8 @@ namespace MazeGenerator
                 if (i % 2 == 0) {
                     GraphicsObject.FillRectangle(brushBlack, 0, i * pixelSize, mazeWidth * pixelSize, pixelSize);
                     GraphicsObject.FillRectangle(brushBlack, i * pixelSize, 0, pixelSize, mazeHeight * pixelSize);
-                }
-                    
+                }   
             }
-            //for (int j = 0; j < mazeWidth; j++)
-            //{
-            //    if (j % 2 == 0)
-            //        GraphicsObject.FillRectangle(brushBlack, j * pixelSize, 0, pixelSize, mazeHeight * pixelSize);
-            //}
         }
 
         /// <summary>
