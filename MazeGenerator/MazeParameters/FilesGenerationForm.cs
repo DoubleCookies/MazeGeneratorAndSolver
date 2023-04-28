@@ -12,8 +12,8 @@ namespace MazeGenerator
 {
     public partial class FilesGenerationForm : Form
     {
-        private readonly ProgressForm progressForm = new ProgressForm();
-        private MazeForm mazeForm;
+
+        private readonly MazeForm mazeForm;
 
         public FilesGenerationForm(MazeForm mazeForm)
         {

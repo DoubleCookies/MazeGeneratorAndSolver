@@ -111,8 +111,6 @@ namespace MazeGenerator
         /// <summary>
         /// Метод для запуска решателя лабиринтов
         /// </summary>
-        /// <param name="launchMazeSolve">Делегат, передающий метод</param>
-        /// <param name="method">Название метода</param>
         private void SolveMaze()
         {
             mazeParamsForm.getUpdatedSleep(ref mazeParamsData);

@@ -4,7 +4,6 @@ using System.Drawing;
 
 namespace MazeGenerator
 {
-    //TODO: Может сделать статическим?
     public class View
     {
         private static readonly Color defaultBlack = Color.FromArgb(60, 60, 60);
@@ -94,14 +93,17 @@ namespace MazeGenerator
             //Отрисовка чёрных полос для создания поля
             for (int i = 0; i < mazeHeight; i++)
             {
-                if (i % 2 == 0)
+                if (i % 2 == 0) {
                     GraphicsObject.FillRectangle(brushBlack, 0, i * pixelSize, mazeWidth * pixelSize, pixelSize);
+                    GraphicsObject.FillRectangle(brushBlack, i * pixelSize, 0, pixelSize, mazeHeight * pixelSize);
+                }
+                    
             }
-            for (int j = 0; j < mazeWidth; j++)
-            {
-                if (j % 2 == 0)
-                    GraphicsObject.FillRectangle(brushBlack, j * pixelSize, 0, pixelSize, mazeHeight * pixelSize);
-            }
+            //for (int j = 0; j < mazeWidth; j++)
+            //{
+            //    if (j % 2 == 0)
+            //        GraphicsObject.FillRectangle(brushBlack, j * pixelSize, 0, pixelSize, mazeHeight * pixelSize);
+            //}
         }
 
         /// <summary>
