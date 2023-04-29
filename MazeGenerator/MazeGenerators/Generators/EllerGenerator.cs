@@ -99,20 +99,24 @@ namespace MazeGenerator.MazeGenerators.Generators
         {
             if (sleep != 0)
                 Thread.Sleep(sleep);
+            Dictionary<int, bool> isWithBorder = new Dictionary<int, bool>();
             Point newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
             Point belowPoint = new Point(currentPoint.X, currentPoint.Y + 2);
             int currentSet;
-            bool hasOneNonBorder = false;
             int size = 1;
             for (int i = 0; i < currentRow.Count; i++)
             {
                 currentSet = currentRow[i];
+                if (!isWithBorder.ContainsKey(currentSet))
+                    isWithBorder.Add(currentSet, false);
+
                 if (i != currentRow.Count - 1)
                 {
                     int nextSet = currentRow[i + 1];
                     if (currentSet != nextSet)
                     {
-                        if (hasOneNonBorder == true)
+                        isWithBorder.TryGetValue(currentSet, out bool isOneBorder);
+                        if (isOneBorder == true)
                         {
                             if (random.NextDouble() < 0.5)
                             {
@@ -120,7 +124,6 @@ namespace MazeGenerator.MazeGenerators.Generators
                             }
                         }
                         size = 1;
-                        hasOneNonBorder = false;
                     }
                     else
                     {
@@ -131,13 +134,13 @@ namespace MazeGenerator.MazeGenerators.Generators
                         }
                         else
                         {
-                            hasOneNonBorder = true;
+                            isWithBorder[currentSet] = true;
                         }
                     }
                 }
                 else
                 {
-                    if (size == 1 || hasOneNonBorder == false)
+                    if (size == 1 || isWithBorder.TryGetValue(currentSet, out _) == false)
                     {
                         continue;
                     }
