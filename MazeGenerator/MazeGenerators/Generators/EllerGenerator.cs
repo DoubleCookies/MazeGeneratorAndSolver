@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
 using System.Runtime.ConstrainedExecution;
+using System.Threading;
 
 namespace MazeGenerator.MazeGenerators.Generators
 {
@@ -40,6 +41,8 @@ namespace MazeGenerator.MazeGenerators.Generators
 
         private void ProcessFirstRow()
         {
+            if (sleep != 0)
+                Thread.Sleep(sleep);
             currentPoint = startpoint;
             // clear row from borders (in row and below) and assign sets
             int counter = 1;
@@ -94,6 +97,8 @@ namespace MazeGenerator.MazeGenerators.Generators
 
         private void ProcessBottomBorders()
         {
+            if (sleep != 0)
+                Thread.Sleep(sleep);
             Point newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
             Point belowPoint = new Point(currentPoint.X, currentPoint.Y + 2);
             int currentSet;
@@ -159,6 +164,8 @@ namespace MazeGenerator.MazeGenerators.Generators
 
         private void processMiddleRows()
         {
+            if (sleep != 0)
+                Thread.Sleep(sleep);
             for (int j = 2; j < mazeHeight - 2; j += 2) {
                 Point tempPoint;
                 currentPoint = new Point(1, currentPoint.Y + 2);
@@ -268,6 +275,8 @@ namespace MazeGenerator.MazeGenerators.Generators
 
         private void processLastRow()
         {
+            if (sleep != 0)
+                Thread.Sleep(sleep);
             Point tempPoint;
             currentPoint.X = 1;
             Point newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
