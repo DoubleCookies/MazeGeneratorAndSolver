@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Reflection;
-using System.Runtime.ConstrainedExecution;
 using System.Threading;
 
 namespace MazeGenerator.MazeGenerators.Generators
 {
     public class EllerGenerator : AbstractGenerator
     {
-        int mazeWidth;
-        int mazeHeight;
+        readonly int mazeWidth;
+        readonly int mazeHeight;
 
         public EllerGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random)
             : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random)
@@ -30,57 +28,66 @@ namespace MazeGenerator.MazeGenerators.Generators
             ClearBlackPointsList();
 
             ProcessFirstRow();
-            processMiddleRows();
-            processLastRow();
+            ProcessMiddleRows();
+            ProcessLastRow();
 
             if (whiteProb > 0)
                 WhiteGen(whiteProb);
         }
 
-        List<int> currentRow = new List<int>();
+        readonly List<int> currentRow = new List<int>();
 
         private void ProcessFirstRow()
         {
             if (sleep != 0)
                 Thread.Sleep(sleep);
             currentPoint = startpoint;
-            // clear row from borders (in row and below) and assign sets
+
+            ClearStartRowBorders();
+
+            currentPoint = startpoint;
+            ProcessFirstRowRightBorders();
+
+            currentPoint = startpoint;
+            ProcessBottomBorders();
+        }
+
+        private void ClearStartRowBorders()
+        {
             int counter = 1;
             Point newPoint;
             Point belowPoint;
             for (int i = 0; i < mazeWidth - 2; i += 2)
             {
+                if (featureCode > 0) {
+                    view.DrawChange(currentPoint, featureCode);
+                }
                 belowPoint = new Point(currentPoint.X, currentPoint.Y + 2);
-                Point clr2 = FoundPointBetweenTwoPoints(currentPoint, belowPoint);
-                mazeArray[clr2.X, clr2.Y] = (int)PointStatus.canVisit;
-                view.DrawChange(clr2, featureCode);
+                CreateAndDrawPointForVisit(belowPoint);
                 if (i != mazeWidth - 3)
                 {
                     newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
-                    Point clr = FoundPointBetweenTwoPoints(currentPoint, newPoint);
-                    mazeArray[clr.X, clr.Y] = (int)PointStatus.canVisit;
+                    CreateAndDrawPointForVisit(newPoint);
                     currentPoint = newPoint;
-                    view.DrawChange(clr, featureCode);
+
                 }
                 currentRow.Add(counter);
                 counter++;
             }
+        }
 
-            // right borders
-            currentPoint = startpoint;
-            newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
+        private void ProcessFirstRowRightBorders()
+        {
+            Point newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
             for (int i = 0; i < currentRow.Count; i++)
             {
                 if (random.NextDouble() < 0.5)
                 {
-                    // create border
-                    Point clr = FoundPointBetweenTwoPoints(currentPoint, newPoint);
-                    mazeArray[clr.X, clr.Y] = (int)PointStatus.wall;
-                    view.DrawChange(clr, Color.FromArgb(60, 60, 60));
+                    CreateAndDrawWall(newPoint);
                 }
                 else
                 {
-                    // don't create it
+                    //don't create wall and merge sets
                     if (i != currentRow.Count - 1)
                     {
                         currentRow[i + 1] = currentRow[i];
@@ -89,10 +96,6 @@ namespace MazeGenerator.MazeGenerators.Generators
                 currentPoint = newPoint;
                 newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
             }
-
-            // bottom borders
-            currentPoint = startpoint;
-            ProcessBottomBorders();
         }
 
         private void ProcessBottomBorders()
@@ -120,7 +123,7 @@ namespace MazeGenerator.MazeGenerators.Generators
                         {
                             if (random.NextDouble() < 0.5)
                             {
-                                createAndDrawWall(belowPoint);
+                                CreateAndDrawWall(belowPoint);
                             }
                         }
                         size = 1;
@@ -130,7 +133,7 @@ namespace MazeGenerator.MazeGenerators.Generators
                         size++;
                         if (random.NextDouble() < 0.5)
                         {
-                            createAndDrawWall(belowPoint);
+                            CreateAndDrawWall(belowPoint);
                         }
                         else
                         {
@@ -148,7 +151,7 @@ namespace MazeGenerator.MazeGenerators.Generators
                     {
                         if (random.NextDouble() < 0.5)
                         {
-                            createAndDrawWall(belowPoint);
+                            CreateAndDrawWall(belowPoint);
                         }
                     }
                 }
@@ -158,23 +161,32 @@ namespace MazeGenerator.MazeGenerators.Generators
             }
         }
 
-        private void createAndDrawWall(Point belowPoint)
+        private void CreateAndDrawWall(Point secondPoint)
         {
-            Point clr = FoundPointBetweenTwoPoints(currentPoint, belowPoint);
+            Point clr = FoundPointBetweenTwoPoints(currentPoint, secondPoint);
             mazeArray[clr.X, clr.Y] = (int)PointStatus.wall;
             view.DrawChange(clr, Color.FromArgb(60, 60, 60));
         }
 
-        private void processMiddleRows()
+        private void CreateAndDrawPointForVisit(Point secondPoint)
+        {
+            Point clr = FoundPointBetweenTwoPoints(currentPoint, secondPoint);
+            mazeArray[clr.X, clr.Y] = (int)PointStatus.canVisit;
+            view.DrawChange(clr, featureCode);
+        }
+
+        private void ProcessMiddleRows()
         {
             if (sleep != 0)
                 Thread.Sleep(sleep);
-            for (int j = 2; j < mazeHeight - 2; j += 2) {
+            for (int j = 2; j < mazeHeight - 2; j += 2)
+            {
                 Point tempPoint;
                 currentPoint = new Point(1, currentPoint.Y + 2);
 
-                //copy and draw row above
-                for (int i = 1; i < mazeWidth - 1; i++) {
+                //copy and draw row above (and its borders)
+                for (int i = 1; i < mazeWidth - 1; i++)
+                {
                     mazeArray[i, currentPoint.Y] = mazeArray[i, currentPoint.Y - 2];
                     tempPoint = new Point(i, currentPoint.Y);
                     if (mazeArray[i, currentPoint.Y] == (int)PointStatus.wall)
@@ -198,10 +210,8 @@ namespace MazeGenerator.MazeGenerators.Generators
                     if (i != mazeWidth - 3)
                     {
                         newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
-                        Point clr = FoundPointBetweenTwoPoints(currentPoint, newPoint);
-                        mazeArray[clr.X, clr.Y] = (int)PointStatus.canVisit;
+                        CreateAndDrawPointForVisit(newPoint);
                         currentPoint = newPoint;
-                        view.DrawChange(clr, featureCode);
                     }
                 }
 
@@ -210,8 +220,9 @@ namespace MazeGenerator.MazeGenerators.Generators
                 currentPoint.X = 1;
                 for (int i = 0; i < mazeWidth - 2; i += 2)
                 {
-                    tempPoint = new Point(currentPoint.X + i, currentPoint.Y+1);
-                    if (mazeArray[tempPoint.X, tempPoint.Y] == (int)PointStatus.wall) {
+                    tempPoint = new Point(currentPoint.X + i, currentPoint.Y + 1);
+                    if (mazeArray[tempPoint.X, tempPoint.Y] == (int)PointStatus.wall)
+                    {
                         currentRow[counter] = -1;
                         mazeArray[tempPoint.X, tempPoint.Y] = (int)PointStatus.canVisit;
                         view.DrawChange(tempPoint, featureCode);
@@ -219,26 +230,14 @@ namespace MazeGenerator.MazeGenerators.Generators
                     counter++;
                 }
 
-                //fill currentRow with values
-                int number = 1;
-                for (int i = 0; i < currentRow.Count; i++) {
-                    if (currentRow[i] > 0)
-                        continue;
-                    else {
-                        while (currentRow.Contains(number)) {
-                            number++;
-                        }
-                        currentRow[i] = number;
-                    }
-                }
-
+                FillCurrentRow();
 
                 //process right borders
                 currentPoint.X = 1;
                 newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
                 for (int i = 0; i < currentRow.Count; i++)
                 {
-                    if (i != currentRow.Count-1)
+                    if (i != currentRow.Count - 1)
                     {
                         if (currentRow[i] == currentRow[i + 1])
                         {
@@ -251,10 +250,7 @@ namespace MazeGenerator.MazeGenerators.Generators
                         {
                             if (random.NextDouble() < 0.5)
                             {
-                                // create border
-                                Point clr = FoundPointBetweenTwoPoints(currentPoint, newPoint);
-                                mazeArray[clr.X, clr.Y] = (int)PointStatus.wall;
-                                view.DrawChange(clr, Color.FromArgb(60, 60, 60));
+                                CreateAndDrawWall(newPoint);
                             }
                             else
                             {
@@ -276,7 +272,25 @@ namespace MazeGenerator.MazeGenerators.Generators
             }
         }
 
-        private void processLastRow()
+        private void FillCurrentRow()
+        {
+            int number = 1;
+            for (int i = 0; i < currentRow.Count; i++)
+            {
+                if (currentRow[i] > 0)
+                    continue;
+                else
+                {
+                    while (currentRow.Contains(number))
+                    {
+                        number++;
+                    }
+                    currentRow[i] = number;
+                }
+            }
+        }
+
+        private void ProcessLastRow()
         {
             if (sleep != 0)
                 Thread.Sleep(sleep);
@@ -299,17 +313,13 @@ namespace MazeGenerator.MazeGenerators.Generators
                 {
                     if (currentRow[i] != currentRow[i + 1])
                     {
-                        Point clr = FoundPointBetweenTwoPoints(currentPoint, newPoint);
-                        mazeArray[clr.X, clr.Y] = (int)PointStatus.canVisit;
-                        view.DrawChange(clr, featureCode);
+                        CreateAndDrawPointForVisit(newPoint);
                         currentRow[i + 1] = currentRow[i];
                     }
                 }
                 currentPoint.X += 2;
                 newPoint = new Point(currentPoint.X + 2, currentPoint.Y);
             }
-
-            int a = 0;
         }
     }
 }
