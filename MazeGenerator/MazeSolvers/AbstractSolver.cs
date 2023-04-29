@@ -19,7 +19,8 @@ namespace MazeGenerator.MazeSolvers
 
         private readonly View view;
 
-        public AbstractSolver(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featureCode, int sleep, bool isBitmapUsed) {
+        public AbstractSolver(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featureCode, int sleep, bool isBitmapUsed)
+        {
             IsBitmapUsed = isBitmapUsed;
             Maze = mazeArray;
             VisitedPoints = new List<Point>();
@@ -45,7 +46,8 @@ namespace MazeGenerator.MazeSolvers
             Maze[CurrentPoint.X, CurrentPoint.Y] = (int)PointStatus.alreadyVisited;
         }
 
-        public void Clear() {
+        public void Clear()
+        {
             MazeRouteClear();
         }
 

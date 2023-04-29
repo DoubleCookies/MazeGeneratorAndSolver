@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MazeGenerator
@@ -22,11 +16,11 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="mazeParams">Обновляемые параметры лабиринта</param>
         /// <returns>Возвращает true, если параметры введены верно</returns>
-        public bool FillAndCheckMazeParamsData(ref MazeParamsData mazeParams) 
+        public bool FillAndCheckMazeParamsData(ref MazeParamsData mazeParams)
         {
             mazeParams.IsDrawMethodEnabled = checkBoxFeatureUse.Checked;
             mazeParams.AreAdditionalParamsEnabled = checkBoxAdditionalGeneration.Checked;
-            mazeParams.StartPoint = (checkBoxStart.Checked && mazeParams.AreAdditionalParamsEnabled) ? 
+            mazeParams.StartPoint = (checkBoxStart.Checked && mazeParams.AreAdditionalParamsEnabled) ?
                 new Point(int.Parse(textBoxStartX.Text) * 2 + 1, int.Parse(textBoxStartY.Text) * 2 + 1) : new Point(1, 1);
             mazeParams.FinishPoint = (checkBoxFinish.Checked && mazeParams.AreAdditionalParamsEnabled) ?
                 new Point(int.Parse(textBoxEndX.Text) * 2 + 1, int.Parse(textBoxEndY.Text) * 2 + 1) : new Point(mazeParams.Width * 2 - 1, mazeParams.Height * 2 - 1);
@@ -34,20 +28,23 @@ namespace MazeGenerator
             {
                 mazeParams.Sleep = int.Parse(textBoxSleep.Text);
                 mazeParams.FeatureCode = mazeParams.IsDrawMethodEnabled ? GetFeatureCode() : 0;
-                if (mazeParams.AreAdditionalParamsEnabled) {
+                if (mazeParams.AreAdditionalParamsEnabled)
+                {
                     mazeParams.IsGeneratedFromStart = checkBoxFromBegin.Checked;
                     mazeParams.Prob = double.Parse(textBoxEmptyPlacesProb.Text);
                     mazeParams.WhiteProb = double.Parse(textBoxWhiteSpaceProb.Text);
                 }
             }
-            catch {
+            catch
+            {
                 MessageBox.Show("Неверно введены параметры для генерации лабиринта!");
                 return false;
             }
             return true;
         }
 
-        public void getUpdatedSleep(ref MazeParamsData mazeParams) {
+        public void getUpdatedSleep(ref MazeParamsData mazeParams)
+        {
             try
             {
                 mazeParams.Sleep = int.Parse(textBoxSleep.Text);
@@ -62,7 +59,8 @@ namespace MazeGenerator
         /// Метод получения кода особенности отрисовки
         /// </summary>
         /// <returns>Возвращает числовое представление кода</returns>
-        private int GetFeatureCode() {
+        private int GetFeatureCode()
+        {
             if (radioButtonFeatureChaos.Checked)
                 return 1;
             if (radioButtonFeatureRed.Checked)

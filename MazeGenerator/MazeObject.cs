@@ -1,4 +1,5 @@
 ﻿using MazeGenerator.MazeGenerators;
+using MazeGenerator.MazeGenerators.Generators;
 using MazeGenerator.MazeSolvers;
 using MazeGenerator.MazeSolvers.Solvers;
 using System;
@@ -59,7 +60,8 @@ namespace MazeGenerator
             this.bitmap = bitmap;
         }
 
-        public void Clear() {
+        public void Clear()
+        {
             //Solver = null;
             Maze = null;
         }
@@ -80,6 +82,16 @@ namespace MazeGenerator
         public void GenerateMazeWithHuntAndKill()
         {
             HuntAndKillGenerator generator = new HuntAndKillGenerator(Maze, startpoint, finishpoint, view, FeatureCode, Sleep, random);
+            generator.FillMazeArray(blackProb);
+            generator.Generate(fromStart, whiteProb);
+        }
+
+        /// <summary>
+        /// Генерация лабиринта методом Eller
+        /// </summary>
+        public void GenerateMazeWithEller()
+        {
+            EllerGenerator generator = new EllerGenerator(Maze, startpoint, finishpoint, view, FeatureCode, Sleep, random);
             generator.FillMazeArray(blackProb);
             generator.Generate(fromStart, whiteProb);
         }

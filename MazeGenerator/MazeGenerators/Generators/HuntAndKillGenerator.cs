@@ -11,8 +11,9 @@ namespace MazeGenerator.MazeGenerators
         int ignoredCount;
         public int lastX; // Точка последней посещённой вертикали для повышения эффективности алгоритма Hunt-And-Kill
 
-        public HuntAndKillGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random) 
-            : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random) {
+        public HuntAndKillGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random)
+            : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random)
+        {
             ignored = false;
             ignoredCount = 0;
         }

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MazeGenerator
@@ -36,7 +29,8 @@ namespace MazeGenerator
                 return;
             }
             FolderBrowserDialog dialog = new FolderBrowserDialog { Description = "Выберите папку для сохранения набора изображений" };
-            if (dialog.ShowDialog() == DialogResult.OK) {
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
                 generationData.SelectedPath = dialog.SelectedPath;
             }
             Hide();

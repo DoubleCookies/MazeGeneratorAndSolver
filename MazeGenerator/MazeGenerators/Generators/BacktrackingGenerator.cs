@@ -8,8 +8,8 @@ namespace MazeGenerator.MazeGenerators
 {
     public class BacktrackingGenerator : AbstractGenerator
     {
-        public BacktrackingGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random) 
-            : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random) {}
+        public BacktrackingGenerator(int[,] mazeArray, Point startpoint, Point finishpoint, View view, int featurecode, int sleep, Random random)
+            : base(mazeArray, startpoint, finishpoint, view, featurecode, sleep, random) { }
 
         public override void Generate(bool fromStart, double whiteProb)
         {

@@ -93,9 +93,10 @@ namespace MazeGenerator
             //Отрисовка чёрных полос для создания поля
             for (int i = 0; i < mazeHeight; i++)
             {
-                if (i % 2 == 0) {
+                if (i % 2 == 0)
+                {
                     GraphicsObject.FillRectangle(brushBlack, 0, i * pixelSize, mazeWidth * pixelSize, pixelSize);
-                }   
+                }
             }
             for (int j = 0; j < mazeWidth; j++)
             {
@@ -154,7 +155,7 @@ namespace MazeGenerator
         {
             switch (code)
             {
-                case 0: 
+                case 0:
                     {//Белый
                         return Color.White;
                     }

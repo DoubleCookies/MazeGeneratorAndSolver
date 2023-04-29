@@ -13,7 +13,7 @@ namespace MazeGenerator
     }
 
     public enum PointDirections
-    { 
+    {
         right = 0,
         down = 1,
         left = 2,
@@ -31,7 +31,7 @@ namespace MazeGenerator
         /// Поиск уже посещённых точек
         /// </summary>
         /// <returns>Возвращает список уже посещённых точек</returns>
-        public static List<Point> GetConnectedVisitedPoints(int[,] mazeArray, int x, int y, int cellCount) 
+        public static List<Point> GetConnectedVisitedPoints(int[,] mazeArray, int x, int y, int cellCount)
         {
             return PossiblePoints(mazeArray, x, y, cellCount, (int)PointStatus.alreadyVisited);
         }
@@ -96,7 +96,8 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="pointValue">Значение точки</param>
         /// <returns>true, если эту точку можно посетить</returns>
-        private static bool CanVisitPoint(int pointValue) {
+        private static bool CanVisitPoint(int pointValue)
+        {
             int pointStatus = (int)PointStatus.canVisit;
             return pointValue == pointStatus;
         }
@@ -120,7 +121,7 @@ namespace MazeGenerator
         {
             Point returnPoint;
             FoundPointsData data;
-            do 
+            do
             {
                 data = FindPointForDirection(GetPointDirectionForLeft(look));
                 if (data != null) break;
@@ -176,7 +177,8 @@ namespace MazeGenerator
             return null;
         }
 
-        private static PointDirections GetPointDirectionForLeft(int look) {
+        private static PointDirections GetPointDirectionForLeft(int look)
+        {
             return (PointDirections)((look + 3) % 4);
         }
 

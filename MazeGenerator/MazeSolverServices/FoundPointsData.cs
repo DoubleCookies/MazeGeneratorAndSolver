@@ -4,7 +4,8 @@ namespace MazeGenerator.MazeSolverServices
 {
     public class FoundPointsData
     {
-        public FoundPointsData(Point point, PointDirections direction) {
+        public FoundPointsData(Point point, PointDirections direction)
+        {
             Direction = direction;
             Point = point;
         }

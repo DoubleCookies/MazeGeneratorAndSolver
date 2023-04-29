@@ -19,12 +19,14 @@ namespace MazeGenerator
         private MazeObject mazeClassObject; // Основной объект лабиринта
         private readonly Random random;
 
-        enum DrawingMethod { 
+        enum DrawingMethod
+        {
             Picturebox,
             Bitmap
         }
 
-        enum ButtonsStatus { 
+        enum ButtonsStatus
+        {
             Enabled,
             Disabled
         }
@@ -54,27 +56,32 @@ namespace MazeGenerator
         /// <param name="isHuntMethod">Используется ли метод Hunt-And-Kill</param>
         private void RunMazeGeneration()
         {
-            if (!AreWidthAndHeightCorrect()) {
+            if (!AreWidthAndHeightCorrect())
+            {
+                ChangeGenerationAndSolveButtonsStatus(ButtonsStatus.Enabled);
                 return;
             }
 
             bool areParamsCorrect = mazeParamsForm.FillAndCheckMazeParamsData(ref mazeParamsData);
-            if (!areParamsCorrect) {
+            if (!areParamsCorrect)
+            {
                 ChangeGenerationAndSolveButtonsStatus(ButtonsStatus.Enabled);
                 return;
             }
-                
+
 
             drawingPicturebox = pictureBoxLabirint.CreateGraphics();
             view = new View(drawingPicturebox);
             bool isMazeCreated = CheckAndCreateMazeObject(DrawingMethod.Picturebox);
             if (isMazeCreated)
             {
-                int pixelSize = Math.Min(pictureBoxLabirint.Width / mazeClassObject.Maze.GetLength(0), 
+                int pixelSize = Math.Min(pictureBoxLabirint.Width / mazeClassObject.Maze.GetLength(0),
                     pictureBoxLabirint.Height / mazeClassObject.Maze.GetLength(1));
                 view.DrawMazeInitState(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), pixelSize);
                 if (comboBoxGenerationMethods.Text == "Backtracking")
                     mazeClassObject.GenerateMazeWithRecursiveBacktracker();
+                else if (comboBoxGenerationMethods.Text == "Eller")
+                    mazeClassObject.GenerateMazeWithEller();
                 else
                     mazeClassObject.GenerateMazeWithHuntAndKill();
             }
@@ -84,7 +91,8 @@ namespace MazeGenerator
                 buttonMazeGeneration.Enabled = true;
         }
 
-        private bool AreWidthAndHeightCorrect() {
+        private bool AreWidthAndHeightCorrect()
+        {
             try
             {
                 mazeParamsData.Width = int.Parse(textBoxWidth.Text);
@@ -145,7 +153,8 @@ namespace MazeGenerator
 
             if (mazeClassObject != null)
                 mazeClassObject.Clear();
-            if (AreMazeParamsValid(isBitmapUsed, mazeParamsData.Width, mazeParamsData.Height)) { 
+            if (AreMazeParamsValid(isBitmapUsed, mazeParamsData.Width, mazeParamsData.Height))
+            {
                 return CreateMaze(isBitmapUsed);
             }
             return false;
@@ -169,7 +178,8 @@ namespace MazeGenerator
         /// </summary>
         /// <param name="isBitmapUsed">Указывает, производится ли отрисовка на форме или в битмапе</param>
         /// <returns>Возвращает true, если объект создан успешно (иначе - false)</returns>
-        private bool CreateMaze(bool isBitmapUsed) {
+        private bool CreateMaze(bool isBitmapUsed)
+        {
             mazeClassObject = null;
             bool isFromStart = mazeParamsData.IsGeneratedFromStart;
             int featureCode = mazeParamsData.FeatureCode;

@@ -35,14 +35,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboBoxSolveMethods = new System.Windows.Forms.ComboBox();
+            this.labelSolveMethod = new System.Windows.Forms.Label();
+            this.labelGenerationMethod = new System.Windows.Forms.Label();
+            this.comboBoxGenerationMethods = new System.Windows.Forms.ComboBox();
             this.buttonAdditionalParams = new System.Windows.Forms.Button();
             this.buttonFilesGenerate = new System.Windows.Forms.Button();
             this.buttonMazeGeneration = new System.Windows.Forms.Button();
             this.buttonSolverStart = new System.Windows.Forms.Button();
-            this.comboBoxGenerationMethods = new System.Windows.Forms.ComboBox();
-            this.labelGenerationMethod = new System.Windows.Forms.Label();
-            this.labelSolveMethod = new System.Windows.Forms.Label();
-            this.comboBoxSolveMethods = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLabirint)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -81,7 +81,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(5, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 17);
+            this.label1.Size = new System.Drawing.Size(58, 16);
             this.label1.TabIndex = 3;
             this.label1.Text = "Ширина";
             // 
@@ -90,7 +90,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(181, 22);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 17);
+            this.label2.Size = new System.Drawing.Size(55, 16);
             this.label2.TabIndex = 4;
             this.label2.Text = "Высота";
             // 
@@ -118,6 +118,50 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Параметры";
+            // 
+            // comboBoxSolveMethods
+            // 
+            this.comboBoxSolveMethods.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSolveMethods.FormattingEnabled = true;
+            this.comboBoxSolveMethods.Items.AddRange(new object[] {
+            "Левые повороты",
+            "Правые повороты",
+            "Случайные повороты"});
+            this.comboBoxSolveMethods.Location = new System.Drawing.Point(8, 296);
+            this.comboBoxSolveMethods.Name = "comboBoxSolveMethods";
+            this.comboBoxSolveMethods.Size = new System.Drawing.Size(151, 24);
+            this.comboBoxSolveMethods.TabIndex = 63;
+            // 
+            // labelSolveMethod
+            // 
+            this.labelSolveMethod.AutoSize = true;
+            this.labelSolveMethod.Location = new System.Drawing.Point(10, 273);
+            this.labelSolveMethod.Name = "labelSolveMethod";
+            this.labelSolveMethod.Size = new System.Drawing.Size(108, 16);
+            this.labelSolveMethod.TabIndex = 62;
+            this.labelSolveMethod.Text = "Метод решения";
+            // 
+            // labelGenerationMethod
+            // 
+            this.labelGenerationMethod.AutoSize = true;
+            this.labelGenerationMethod.Location = new System.Drawing.Point(7, 65);
+            this.labelGenerationMethod.Name = "labelGenerationMethod";
+            this.labelGenerationMethod.Size = new System.Drawing.Size(122, 16);
+            this.labelGenerationMethod.TabIndex = 61;
+            this.labelGenerationMethod.Text = "Метод генерации";
+            // 
+            // comboBoxGenerationMethods
+            // 
+            this.comboBoxGenerationMethods.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxGenerationMethods.FormattingEnabled = true;
+            this.comboBoxGenerationMethods.Items.AddRange(new object[] {
+            "Backtracking",
+            "Hunt and Kill",
+            "Eller"});
+            this.comboBoxGenerationMethods.Location = new System.Drawing.Point(8, 89);
+            this.comboBoxGenerationMethods.Name = "comboBoxGenerationMethods";
+            this.comboBoxGenerationMethods.Size = new System.Drawing.Size(144, 24);
+            this.comboBoxGenerationMethods.TabIndex = 60;
             // 
             // buttonAdditionalParams
             // 
@@ -161,49 +205,6 @@
             this.buttonSolverStart.Text = "Решить лабиринт";
             this.buttonSolverStart.UseVisualStyleBackColor = true;
             this.buttonSolverStart.Click += new System.EventHandler(this.buttonSolverStart_Click);
-            // 
-            // comboBoxGenerationMethods
-            // 
-            this.comboBoxGenerationMethods.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxGenerationMethods.FormattingEnabled = true;
-            this.comboBoxGenerationMethods.Items.AddRange(new object[] {
-            "Backtracking",
-            "Hunt and Kill"});
-            this.comboBoxGenerationMethods.Location = new System.Drawing.Point(8, 89);
-            this.comboBoxGenerationMethods.Name = "comboBoxGenerationMethods";
-            this.comboBoxGenerationMethods.Size = new System.Drawing.Size(144, 24);
-            this.comboBoxGenerationMethods.TabIndex = 60;
-            // 
-            // labelGenerationMethod
-            // 
-            this.labelGenerationMethod.AutoSize = true;
-            this.labelGenerationMethod.Location = new System.Drawing.Point(7, 65);
-            this.labelGenerationMethod.Name = "labelGenerationMethod";
-            this.labelGenerationMethod.Size = new System.Drawing.Size(123, 17);
-            this.labelGenerationMethod.TabIndex = 61;
-            this.labelGenerationMethod.Text = "Метод генерации";
-            // 
-            // labelSolveMethod
-            // 
-            this.labelSolveMethod.AutoSize = true;
-            this.labelSolveMethod.Location = new System.Drawing.Point(10, 273);
-            this.labelSolveMethod.Name = "labelSolveMethod";
-            this.labelSolveMethod.Size = new System.Drawing.Size(113, 17);
-            this.labelSolveMethod.TabIndex = 62;
-            this.labelSolveMethod.Text = "Метод решения";
-            // 
-            // comboBoxSolveMethods
-            // 
-            this.comboBoxSolveMethods.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSolveMethods.FormattingEnabled = true;
-            this.comboBoxSolveMethods.Items.AddRange(new object[] {
-            "Левые повороты",
-            "Правые повороты",
-            "Случайные повороты"});
-            this.comboBoxSolveMethods.Location = new System.Drawing.Point(8, 296);
-            this.comboBoxSolveMethods.Name = "comboBoxSolveMethods";
-            this.comboBoxSolveMethods.Size = new System.Drawing.Size(151, 24);
-            this.comboBoxSolveMethods.TabIndex = 63;
             // 
             // MazeForm
             // 
