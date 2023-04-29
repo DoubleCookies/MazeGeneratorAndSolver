@@ -155,8 +155,8 @@
             this.comboBoxGenerationMethods.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxGenerationMethods.FormattingEnabled = true;
             this.comboBoxGenerationMethods.Items.AddRange(new object[] {
-            "Eller",
             "Backtracking",
+            "Eller",
             "Hunt and Kill"});
             this.comboBoxGenerationMethods.Location = new System.Drawing.Point(8, 89);
             this.comboBoxGenerationMethods.Name = "comboBoxGenerationMethods";
