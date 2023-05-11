@@ -11,7 +11,7 @@ namespace MazeGenerator
         private readonly ProgressForm progressForm = new ProgressForm();
         private readonly FilesGenerationForm filesGenerationForm;
 
-        private MazeParamsForm mazeParamsForm = new MazeParamsForm();
+        private readonly MazeParamsForm mazeParamsForm = new MazeParamsForm();
         private MazeParamsData mazeParamsData;
 
         private View view;
@@ -69,26 +69,51 @@ namespace MazeGenerator
                 return;
             }
 
-
-            drawingPicturebox = pictureBoxLabirint.CreateGraphics();
-            view = new View(drawingPicturebox);
+            CreateViewObject();
             bool isMazeCreated = CheckAndCreateMazeObject(DrawingMethod.Picturebox);
             if (isMazeCreated)
             {
-                int pixelSize = Math.Min(pictureBoxLabirint.Width / mazeClassObject.Maze.GetLength(0),
-                    pictureBoxLabirint.Height / mazeClassObject.Maze.GetLength(1));
-                view.DrawMazeInitState(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), pixelSize);
-                if (comboBoxGenerationMethods.Text == "Backtracking")
-                    mazeClassObject.GenerateMazeWithRecursiveBacktracker();
-                else if (comboBoxGenerationMethods.Text == "Eller")
-                    mazeClassObject.GenerateMazeWithEller();
-                else
-                    mazeClassObject.GenerateMazeWithHuntAndKill();
+                DrawInitMazeState();
+                ProcessMazeGeneration();
             }
+            UpdateButtonsAfterMazeGeneration();
+        }
+
+        private void UpdateButtonsAfterMazeGeneration()
+        {
             if (mazeClassObject != null)
                 ChangeGenerationAndSolveButtonsStatus(ButtonsStatus.Enabled);
             else
                 buttonMazeGeneration.Enabled = true;
+        }
+
+        private void ProcessMazeGeneration()
+        {
+            switch (comboBoxGenerationMethods.Text)
+            {
+                case "Backtracking":
+                    mazeClassObject.GenerateMazeWithRecursiveBacktracker();
+                    break;
+                case "Eller":
+                    mazeClassObject.GenerateMazeWithEller();
+                    break;
+                default:
+                    mazeClassObject.GenerateMazeWithHuntAndKill();
+                    break;
+            }
+        }
+
+        private void DrawInitMazeState()
+        {
+            int pixelSize = Math.Min(pictureBoxLabirint.Width / mazeClassObject.Maze.GetLength(0),
+                pictureBoxLabirint.Height / mazeClassObject.Maze.GetLength(1));
+            view.DrawMazeInitState(mazeClassObject.Maze.GetLength(0), mazeClassObject.Maze.GetLength(1), pixelSize);
+        }
+
+        private void CreateViewObject()
+        {
+            drawingPicturebox = pictureBoxLabirint.CreateGraphics();
+            view = new View(drawingPicturebox);
         }
 
         private bool AreWidthAndHeightCorrect()
@@ -121,12 +146,17 @@ namespace MazeGenerator
         /// </summary>
         private void SolveMaze()
         {
-            mazeParamsForm.getUpdatedSleep(ref mazeParamsData);
-            mazeClassObject.Sleep = mazeParamsData.Sleep;
-            mazeClassObject.FeatureCode = mazeParamsData.FeatureCode;
+            UpdateParamsBeforeSolve();
             SolverSelectAndStart();
             if (!mazeClassObject.IsSolutionFound)
                 MessageBox.Show("У лабиринта отсутствует решение.");
+        }
+
+        private void UpdateParamsBeforeSolve()
+        {
+            mazeParamsForm.getUpdatedSleep(ref mazeParamsData);
+            mazeClassObject.Sleep = mazeParamsData.Sleep;
+            mazeClassObject.FeatureCode = mazeParamsData.FeatureCode;
         }
 
         /// <summary>
@@ -151,8 +181,7 @@ namespace MazeGenerator
         {
             bool isBitmapUsed = drawingMethod == DrawingMethod.Bitmap;
 
-            if (mazeClassObject != null)
-                mazeClassObject.Clear();
+            mazeClassObject?.Clear();
             if (AreMazeParamsValid(isBitmapUsed, mazeParamsData.Width, mazeParamsData.Height))
             {
                 return CreateMaze(isBitmapUsed);
@@ -222,10 +251,8 @@ namespace MazeGenerator
         {
             pictureBoxLabirint.Width = Size.Width - 360;
             pictureBoxLabirint.Height = Size.Height - 80;
-            if (drawingPicturebox != null)
-                drawingPicturebox.Dispose();
-            drawingPicturebox = pictureBoxLabirint.CreateGraphics();
-            view = new View(drawingPicturebox);
+            drawingPicturebox?.Dispose();
+            CreateViewObject();
         }
 
         private void ButtonFilesGenerate_Click(object sender, EventArgs e)
@@ -245,24 +272,30 @@ namespace MazeGenerator
             if (isMazeCreated)
             {
                 progressForm.Show();
-                for (int i = 0; i < count; i++)
-                {
-                    view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0) * size, mazeClassObject.Maze.GetLength(1) * size, size);
-                    mazeClassObject.GenerateMazeWithRecursiveBacktracker();
-                    view.MazeBitmap.Save(selectedPath + "/maze" + i + ".png", ImageFormat.Png);
-                    if (isWithSolution)
-                    {
-                        SolverSelectAndStart();
-                        view.MazeBitmap.Save(selectedPath + "/maze" + i + "solved.png", ImageFormat.Png);
-                    }
-                    progressForm.ProgressBarUpdate();
-                    view.Dispose();
-                    drawingPicturebox.Dispose();
-                    CheckAndCreateMazeObject(DrawingMethod.Bitmap);
-                }
+                ProcessImagesCreation(size, count, isWithSolution, selectedPath);
                 progressForm.Hide();
             }
             progressForm.Dispose();
+        }
+
+        private void ProcessImagesCreation(int size, int count, bool isWithSolution, string selectedPath)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                view.InitMazeBitmap(mazeClassObject.Maze.GetLength(0) * size, mazeClassObject.Maze.GetLength(1) * size, size);
+                //TODO: другие методы при генерации изображений
+                mazeClassObject.GenerateMazeWithRecursiveBacktracker();
+                view.MazeBitmap.Save(selectedPath + "/maze" + i + ".png", ImageFormat.Png);
+                if (isWithSolution)
+                {
+                    SolverSelectAndStart();
+                    view.MazeBitmap.Save(selectedPath + "/maze" + i + "solved.png", ImageFormat.Png);
+                }
+                progressForm.ProgressBarUpdate();
+                view.Dispose();
+                drawingPicturebox.Dispose();
+                CheckAndCreateMazeObject(DrawingMethod.Bitmap);
+            }
         }
 
         private void ButtonAdditionalParams_Click(object sender, EventArgs e)
